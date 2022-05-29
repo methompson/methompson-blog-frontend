@@ -7,16 +7,22 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "build:css": "sass ./src/ui/scss/styles.scss ./src/ui/css/styles.css --no-source-map",
-    "build:css:watch": "sass ./src/ui/scss/styles.scss ./src/ui/css/styles.css --no-source-map -w"
+    "build:css:watch": "sass ./src/ui/scss/styles.scss ./src/ui/css/styles.css --no-source-map -w",
+    "test": "jest ./test/unit"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
+    "@types/uuid": "^8.3.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.0.2",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-typescript": "^7.17.12",
+    "@types/jest": "^27.5.1",
     "@types/node": "^17.0.35",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
@@ -24,14 +30,18 @@
     "@typescript-eslint/parser": "^5.26.0",
     "@vitejs/plugin-react": "^1.3.0",
     "autoprefixer": "^10.4.7",
+    "dotenv": "^16.0.1",
     "eslint": "^8.16.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
+    "jest": "^28.1.0",
     "postcss": "^8.4.14",
     "sass": "^1.52.1",
     "tailwindcss": "^3.0.24",
+    "ts-jest": "^28.0.3",
+    "ts-node": "^10.8.0",
     "typescript": "^4.6.3",
     "vite": "^2.9.9"
   },

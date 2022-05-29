@@ -167,6 +167,13 @@ class BlogPost extends NewBlogPost {
     return this._id;
   }
 
+  toJSON(): BlogPostInterface {
+    return {
+      ...super.toJSON(),
+      id: this.id,
+    };
+  }
+
   static fromJSON(input: unknown): BlogPost {
     if (!BlogPost.isBlogPostInterface(input)) {
       throw new InvalidInputError('Invalid Blog Post Input');
@@ -178,7 +185,6 @@ class BlogPost extends NewBlogPost {
   }
 
   static isBlogPostInterface(value: unknown): value is BlogPostInterface {
-    console.log(isRecord(value) && isString(value.id));
     return (
       isRecord(value) &&
       isString(value.id) &&

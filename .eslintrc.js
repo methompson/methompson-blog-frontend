@@ -101,7 +101,7 @@ module.exports = {
     'max-classes-per-file': 'off',
     strict: 'off',
     camelcase: 'off',
-    'no-console': 'off',
+    'no-console': 'warn',
     'import/no-extraneous-dependencies': 'off',
     'no-underscore-dangle': 'off',
     'no-multi-spaces': [

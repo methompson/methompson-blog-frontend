@@ -1,4 +1,5 @@
 import React from 'react';
+import { v4 } from 'uuid';
 
 import { BlogAPI } from '@src/api/blog_api';
 
@@ -13,6 +14,17 @@ export function GetBlogPostsButton() {
         const list = await bapi.getBlogList();
 
         console.log(list);
+      }} />
+  );
+}
+
+export function AddRandomMessageButton() {
+  return (
+    <DebugButton
+      title='Add Random Message'
+      action={async () => {
+        const title = v4();
+
       }} />
   );
 }
