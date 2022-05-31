@@ -56,7 +56,7 @@ module.exports = {
     ],
   },
   rules: {
-    semi: 'error',
+    semi: 'off',
     eqeqeq: ['error'],
     'no-trailing-spaces': ['error', {}],
     'no-multi-spaces': 'error',

@@ -1,11 +1,20 @@
-import React from 'react';
-import { v4 } from 'uuid';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { BlogAPI } from '@src/api/blog_api';
+import { actions, AppDispatch, selectors } from '@src/store';
+import { Duration } from '@src/shared/duration';
 
 import DebugButton from './debug_button';
 
-export function GetBlogPostsButton() {
+export function DebugButtonColumn() {
+  return <div className='my-3 flex flex-col'>
+    <GetBlogPostsButton />
+    <AddRandomMessageButton />
+  </div>;
+}
+
+function GetBlogPostsButton() {
   return (
     <DebugButton
       title='Get Blog Posts'
@@ -18,13 +27,22 @@ export function GetBlogPostsButton() {
   );
 }
 
-export function AddRandomMessageButton() {
+function AddRandomMessageButton() {
+  const dispatch = useDispatch<AppDispatch>();
+  const messages = useSelector(selectors.messages);
+
+  const [count, setCount] = useState(0);
+
   return (
     <DebugButton
       title='Add Random Message'
       action={async () => {
-        const title = v4();
+        dispatch(actions.addSuccessMessage({
+          message: `Hello, World! - ${count}`,
+          duration: new Duration({ seconds: 5 }),
+        }));
 
+        setCount(count + 1);
       }} />
   );
 }

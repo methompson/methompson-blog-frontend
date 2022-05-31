@@ -29,3 +29,12 @@ code {
 .blogFooter {
   background-color: blue;
 }
+
+.messageCard {
+  transition-property: opacity;
+  transition-duration: 250ms;
+}
+
+.messageCard.closed {
+  opacity: 0;
+}

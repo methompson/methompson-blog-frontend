@@ -23,11 +23,10 @@ interface NewMessageInterface {
   duration?: number;
 }
 
-interface MessageDurationInterface {
-  milliseconds?: number;
-  seconds?: number;
-  minutes?: number;
-  hours?: number;
+enum MessageType {
+  Info = 'info',
+  Success = 'success',
+  Error = 'error',
 }
 
 class Message {
@@ -36,7 +35,7 @@ class Message {
     protected _message: string,
     protected _timeAdded: number,
     protected _duration: number,
-    protected _messageType: string,
+    protected _messageType: MessageType,
   ) {}
 
   get id() {
@@ -70,8 +69,19 @@ class Message {
     return 60 * 1000;
   }
 
-  static get defaultMessageType(): string {
-    return 'info';
+  static get defaultMessageType(): MessageType {
+    return MessageType.Info;
+  }
+
+  static makeMessageType(messageType: string): MessageType {
+    switch (messageType.toLowerCase()) {
+      case 'error':
+        return MessageType.Error;
+      case 'success':
+        return MessageType.Success;
+      default:
+        return MessageType.Info;
+    }
   }
 
   static newMessage(input: unknown): Message {
@@ -81,7 +91,7 @@ class Message {
 
     const id = v4();
     const duration = input.duration ?? Message.defaultDuration;
-    const messageType = input.messageType ?? Message.defaultMessageType;
+    const messageType = Message.makeMessageType(input.messageType) ?? Message.defaultMessageType;
 
     const now = Date.now();
 
@@ -104,7 +114,7 @@ class Message {
       input.message,
       input.timeAdded,
       input.duration,
-      input.messageType,
+      Message.makeMessageType(input.messageType),
     );
   }
 
@@ -125,4 +135,64 @@ class Message {
   }
 }
 
-export { Message };
+class MessageCollection {
+  constructor(
+    protected _messages: Record<string, Message>,
+  ) {}
+
+  get messages(): Record<string, Message> {
+    return { ...this._messages };
+  }
+
+  get list(): Message[] {
+    return Object.values(this._messages);
+  }
+
+  get listByDate(): Message[] {
+    const messages = Object.values(this._messages).sort((a, b) => {
+      if (a.timeAdded < b.timeAdded) return -1;
+      if (a.timeAdded > b.timeAdded) return 1;
+      return 0;
+    });
+
+    return messages;
+  }
+
+  get totalMessages(): number {
+    return this.list.length;
+  }
+
+  hasMessage(id: string): boolean {
+    return this._messages[id] !== undefined;
+  }
+
+  addMessage(msg: Message) {
+    this._messages[msg.id] = msg;
+  }
+
+  copy(): MessageCollection {
+    return new MessageCollection(this._messages);
+  }
+
+  static fromJSON(input: unknown): MessageCollection {
+    if (!Array.isArray(input)) {
+      throw new InvalidInputError('Invalid input for Message');
+    }
+
+    const messages: Record<string, Message> = {};
+
+    for (const el of input) {
+      const msg = Message.fromJSON(el);
+      messages[msg.id] = msg;
+    }
+
+    return new MessageCollection(messages);
+  }
+}
+
+export {
+  Message,
+  MessageCollection,
+  MessageType,
+  MessageInterface,
+};

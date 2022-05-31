@@ -1,14 +1,12 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
+import {
+  messagingSlice,
+  messagingActions,
+} from './store';
 
-const messagingSlice = createSlice({
-  name: 'messaging',
-  initialState: {
-    messages: [],
-  },
-  reducers: {
-    addMessage: (state) => {},
-  },
-});
+import * as messagingSelectors from './selectors';
 
-export { messagingSlice };
+export {
+  messagingSlice,
+  messagingActions,
+  messagingSelectors,
+};

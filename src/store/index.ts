@@ -1,7 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { blogSlice } from '@src/store/blog';
-import { messagingSlice } from '@src/store/messaging';
+import {
+  messagingSlice,
+  messagingActions,
+  messagingSelectors,
+} from '@/src/store/messaging';
 
 const store = configureStore({
   reducer: {
@@ -10,9 +14,17 @@ const store = configureStore({
   },
 });
 
-const actions = {};
+const actions = {
+  ...messagingActions,
+};
 
-export { store, actions };
+const selectors = {
+  ...messagingSelectors,
+};
 
+export { store, actions, selectors };
+
+const state = store.getState();
+export type StateType = typeof state;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
