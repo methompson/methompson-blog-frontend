@@ -5,6 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "firefox",
+      "request": "attach",
+      "name": "Attach",
+      "pathMappings": [
+        {
+          "url": "file://",
+          "path": ""
+        }
+      ]
+    },
+    {
       "name": "Debug Jest Tests",
       "type": "node",
       "request": "launch",
@@ -15,7 +26,7 @@
         "--runInBand"
       ],
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { BlogPost } from '@src/models/blog_post_model';
+import { BlogPost } from '@/src/models/blog_post';
 import { BlogPostCollection } from '@/src/models/blog_collection';
 
 describe('BlogCollection', () => {

@@ -1,9 +1,14 @@
+@import 'prosemirror-view/style/prosemirror.css';
 .headerMenuItem {
   padding-left: 1em;
 }
 
 .centeredPageContainer {
   align-self: center;
+}
+
+.contentContainer {
+  width: 100%;
 }
 
 body {
@@ -37,4 +42,8 @@ code {
 
 .messageCard.closed {
   opacity: 0;
+}
+
+#editor div.ProseMirror {
+  min-height: 20em;
 }

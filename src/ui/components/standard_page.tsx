@@ -9,10 +9,10 @@ interface StandardPageProps {
 
 export default function StandardPage(props: StandardPageProps) {
   return (
-    <div className=''>
+    <div className='bg-white dark:bg-slate-800 text-slate-900 dark:text-white'>
       <div className='pageContainer min-h-screen flex flex-col justify-between items-center'>
         <Header />
-        <div className='contentContainer flex grow px-4'>
+        <div className='contentContainer container px-4 flex flex-col grow items-stretch'>
           {props.children}
         </div>
         <Footer />

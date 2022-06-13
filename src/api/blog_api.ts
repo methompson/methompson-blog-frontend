@@ -1,5 +1,7 @@
 import { getBaseApiUrl } from '@src/shared/get_base_url';
 import { BlogPostCollection } from '@src/models/blog_collection';
+import { BlogPost } from '@src/models/blog_post';
+import { getErrorByStatus } from '../errors/http_error';
 
 class BlogAPI {
   async getBlogList(page = 1, pagination = 10) {
@@ -9,16 +11,29 @@ class BlogAPI {
 
     const result = await fetch(url);
 
-    const body = await result.json();
-
     if (!result.ok) {
-      throw new Error(`Error attempting to retrieve blog: ${body}`);
+      throw getErrorByStatus(result.status, 'Error attempting to retrieve blog post');
     }
+
+    const body = await result.json();
 
     return BlogPostCollection.fromJSON(body);
   }
 
-  async getBlogPost(slug: string) {}
+  async getBlogPost(slug: string) {
+    const baseUrl = getBaseApiUrl();
+    const url = `${baseUrl}/blog/${slug}`;
+
+    const result = await fetch(url);
+
+    if (!result.ok) {
+      throw getErrorByStatus(result.status, 'Error attempting to retrieve blog post');
+    }
+
+    const body = await result.json();
+
+    return BlogPost.fromJSON(body);
+  }
 }
 
 export {

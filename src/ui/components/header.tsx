@@ -8,6 +8,7 @@ export default function BlogHeader() {
       <span>
         <span className='headerMenuItem'><Link to='/'>Home</Link></span>
         <span className='headerMenuItem'><Link to='/login'>Login</Link></span>
+        <span className='headerMenuItem'><Link to='/debug'>Debug</Link></span>
       </span>
     </span>
   </header>;

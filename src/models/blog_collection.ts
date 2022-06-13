@@ -1,4 +1,4 @@
-import { BlogPost } from '@src/models/blog_post_model';
+import { BlogPost } from '@/src/models/blog_post';
 import { InvalidInputError } from '@src/errors/invalid_input_error';
 import { NoResultError } from '@src/errors/no_result_error';
 
