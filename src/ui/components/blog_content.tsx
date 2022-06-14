@@ -40,7 +40,7 @@ export function BlogContentShort(props: BlogCardInput) {
 }
 
 export function BlogCard(props: BlogCardInput) {
-  return <figure className='md:flex rounded-xl p-8 shadow-lg'>
+  return <figure className='flex rounded-xl p-8 shadow-lg'>
     <BlogContentShort blogPost={props.blogPost} />
   </figure>;
 }

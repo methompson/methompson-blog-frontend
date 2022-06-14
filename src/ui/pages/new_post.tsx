@@ -5,9 +5,9 @@ import { TextEditor } from '@src/shared/text_editor';
 
 import { StandardPage } from '@src/ui/components/standard_page';
 import { LabeledTextInput } from '@src/ui/components/new_post/text_input';
+import { BlogContent } from '@src/ui/components/blog_content';
 
 import '@src/ui/css/prosemirror_editor.css';
-import { BlogContent } from '../components/blog_content';
 
 function removeAllChildNodes(parent: Element) {
   while (parent.firstChild) {

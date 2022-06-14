@@ -24,9 +24,11 @@ export function Home() {
 
   const blogComponents = blogPosts.list.map((bp) => <BlogCard key={bp.id} blogPost={bp} />);
 
-  return <StandardPage>
-    <div>
-      {blogComponents}
-    </div>
-  </StandardPage>;
+  return (
+    <StandardPage>
+      <div>
+        {blogComponents}
+      </div>
+    </StandardPage>
+  );
 }
