@@ -14,7 +14,7 @@
     "@heroicons/react": "^1.0.6",
     "@reduxjs/toolkit": "^1.8.2",
     "@types/uuid": "^8.3.4",
-    "firebase": "^9.8.2",
+    "firebase": "^9.8.3",
     "markdown-it": "^13.0.1",
     "prosemirror-example-setup": "^1.2.0",
     "prosemirror-markdown": "^1.9.1",

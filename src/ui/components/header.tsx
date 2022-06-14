@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function BlogHeader() {
+export function BlogHeader() {
   return <header className='blogHeader container py-8'>
     <span className='flex flex-row justify-between px-4'>
       <h1>Mat&lsquo;s Blog</h1>

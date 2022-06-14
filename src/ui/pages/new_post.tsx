@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-import StandardPage from '@src/ui/components/standard_page';
+import { BlogPost } from '@/src/models/blog_post';
 import { TextEditor } from '@src/shared/text_editor';
-import { MarkdownParser } from '@/src/shared/markdown_parser';
 
+import { StandardPage } from '@src/ui/components/standard_page';
 import { LabeledTextInput } from '@src/ui/components/new_post/text_input';
 
 import '@src/ui/css/prosemirror_editor.css';
+import { BlogContent } from '../components/blog_content';
 
 function removeAllChildNodes(parent: Element) {
   while (parent.firstChild) {
@@ -14,7 +15,7 @@ function removeAllChildNodes(parent: Element) {
   }
 }
 
-export default function NewPost() {
+export function NewPost() {
   const [preview, setPreview] = useState('');
 
   const [textEditor, setTextEditor] = useState(new TextEditor({
@@ -46,7 +47,10 @@ export default function NewPost() {
     // console.log(textEditor.getMarkdownContent());
   };
 
-  const mdp = new MarkdownParser(preview);
+  const bp = BlogPost.forPreview({
+    title,
+    body: preview,
+  });
 
   return (
     <StandardPage>
@@ -74,7 +78,10 @@ export default function NewPost() {
           </button>
         </div>
 
-        <div dangerouslySetInnerHTML={{ __html: mdp.parseToHTMLString() }}></div>
+        <div>Preview</div>
+
+        <BlogContent blogPost={bp} />
+
       </div>
     </StandardPage>
   );

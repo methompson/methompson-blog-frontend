@@ -1,7 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { BlogPost } from '@/src/models/blog_post';
-import { Link } from 'react-router-dom';
 
 interface BlogCardInput {
   blogPost: BlogPost;
@@ -21,7 +21,9 @@ export function BlogContent(props: BlogCardInput) {
 
     <BlogPostDate blogPost={props.blogPost} />
 
-    <p className='prose dark:prose-invert'>{props.blogPost.body}</p>
+    <div className='prose dark:prose-invert'>
+      <div dangerouslySetInnerHTML={{ __html: props.blogPost.bodyInHtml }}></div>
+    </div>
   </span>;
 }
 

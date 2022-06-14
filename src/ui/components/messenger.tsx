@@ -32,7 +32,7 @@ function messageDiff(currentMessages: MessageCollection, storeMessages: MessageC
   };
 }
 
-export default function Messenger() {
+export function Messenger() {
   const storeMessages = useSelector(selectors.messages);
   const [currentMessages, setCurrentMessages] = useState(storeMessages);
 

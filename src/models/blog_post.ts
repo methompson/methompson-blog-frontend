@@ -1,6 +1,7 @@
 import { isString, isRecord, isStringArray } from '@src/shared/type_guards';
 import { ValidDate, isValidDate } from '@src/shared/valid_date';
 import { InvalidInputError } from '@src/errors/invalid_input_error';
+import MarkdownIt from 'markdown-it';
 
 interface NewBlogPostInterface {
   title: string;
@@ -71,6 +72,12 @@ class NewBlogPost {
   }
   get dateUpdated(): ValidDate | null {
     return this._dateUpdated;
+  }
+  get bodyInHtml(): string {
+    const md = new MarkdownIt();
+    const render = md.render(this.body);
+
+    return render;
   }
 
   toJSON(): NewBlogPostInterface {
@@ -172,6 +179,26 @@ class BlogPost extends NewBlogPost {
       ...super.toJSON(),
       id: this.id,
     };
+  }
+
+  static forPreview(input: unknown): BlogPost {
+    if (!isRecord(input)
+      || !isString(input.title)
+      || !isString(input.body)
+    ) {
+      throw new InvalidInputError('Invalid Blog Post Input');
+    }
+
+    return new BlogPost(
+      '',
+      input.title,
+      input.title,
+      input.body,
+      [],
+      'authorId',
+      new Date(),
+      {},
+    );
   }
 
   static fromJSON(input: unknown): BlogPost {

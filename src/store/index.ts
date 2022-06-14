@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { blogSlice } from '@src/store/blog';
+import { blogSlice } from './blog';
 import {
   messagingSlice,
   messagingActions,
   messagingSelectors,
-} from '@/src/store/messaging';
+} from './messaging';
+
+import { authActions } from './auth';
 
 const store = configureStore({
   reducer: {
@@ -16,6 +18,7 @@ const store = configureStore({
 
 const actions = {
   ...messagingActions,
+  ...authActions,
 };
 
 const selectors = {

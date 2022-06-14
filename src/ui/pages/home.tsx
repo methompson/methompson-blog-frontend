@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import { BlogAPI } from '@src/api/blog_api';
 import { BlogPostCollection } from '@src/models/blog_collection';
-import StandardPage from '@src/ui/components/standard_page';
+import { StandardPage } from '@src/ui/components/standard_page';
 import { BlogCard } from '@/src/ui/components/blog_content';
 
-export default function Home() {
+export function Home() {
   const [blogPosts, setBlogPosts] = useState(new BlogPostCollection({}));
 
   useEffect(() => {

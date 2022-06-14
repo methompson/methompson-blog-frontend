@@ -5,7 +5,7 @@ import { BlogAPI } from '@src/api/blog_api';
 import { actions, AppDispatch } from '@src/store';
 import { Duration } from '@src/shared/duration';
 
-import DebugButton from './debug_button';
+import { DebugButton } from './debug_button';
 
 export function DebugButtonColumn() {
   return <div className='my-3 flex flex-col items-center'>

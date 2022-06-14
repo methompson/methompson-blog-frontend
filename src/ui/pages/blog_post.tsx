@@ -6,10 +6,10 @@ import { BlogAPI } from '@src/api/blog_api';
 import { BlogPost } from '@src/models/blog_post';
 import { actions, AppDispatch } from '@src/store';
 
-import StandardPage from '@src/ui/components/standard_page';
+import { StandardPage } from '@src/ui/components/standard_page';
 import { BlogContent } from '@src/ui/components/blog_content';
 
-export default function BlogCard() {
+export function BlogPostPage() {
   const dispatch = useDispatch<AppDispatch>();
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [loaded, setLoaded] = useState(false);

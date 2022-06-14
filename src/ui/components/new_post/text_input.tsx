@@ -64,7 +64,7 @@ export function LabeledTextInput(props: LabeledTextInputProps) {
 
   return (
     <label className={labelClasses} htmlFor={props.name}>
-      <span className='p-2'>
+      <span className='p-2 text-slate-400'>
         {props.name}
       </span>
       <TextInput
