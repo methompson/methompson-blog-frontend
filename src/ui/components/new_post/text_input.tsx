@@ -9,6 +9,7 @@ interface TextInputProps {
   className?: string;
   name?: string;
   border?: boolean;
+  type?: string;
 }
 
 export function TextInput(props: TextInputProps) {
@@ -27,12 +28,13 @@ export function TextInput(props: TextInputProps) {
   }
 
   const name = props.name ?? '';
+  const type = props.type ?? 'text';
 
   return <input
     className={classes}
     placeholder={props.placeholder ?? ''}
     value={props.value ?? ''}
-    type='text'
+    type={type}
     name={name}
     onFocus={props.onFocus}
     onBlur={props.onBlur}
