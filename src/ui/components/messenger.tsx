@@ -84,10 +84,6 @@ export function Messenger() {
 
   return (
     <div className={classNames.join(' ')}>
-      {/* <SuccessCard message='Test' />
-      <SuccessCard message='Test' />
-      <SuccessCard message='Test' />
-      <SuccessCard message='Test' /> */}
       {messageOutput}
     </div>
   );

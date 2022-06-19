@@ -13,6 +13,13 @@ interface TextInputProps {
 }
 
 export function TextInput(props: TextInputProps) {
+  const [value, setValue] = useState(props.value ?? '');
+
+  function setInputValue(e: React.ChangeEvent<HTMLInputElement>) {
+    setValue(e.target.value);
+    props.onChange(e);
+  }
+
   let classes = 'p-2 mr-1 placeholder:italic placeholder:text-slate-400'
     + ' text-lg sm:text-md';
 
@@ -33,12 +40,12 @@ export function TextInput(props: TextInputProps) {
   return <input
     className={classes}
     placeholder={props.placeholder ?? ''}
-    value={props.value ?? ''}
+    value={value}
     type={type}
     name={name}
     onFocus={props.onFocus}
     onBlur={props.onBlur}
-    onChange={props.onChange} />;
+    onChange={setInputValue} />;
 }
 
 interface LabeledTextInputProps {

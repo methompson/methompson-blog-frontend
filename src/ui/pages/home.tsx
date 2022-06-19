@@ -10,7 +10,6 @@ export function Home() {
 
   useEffect(() => {
     (async function getBlogPosts() {
-      console.log('Using Effect');
       const bapi = new BlogAPI();
 
       try {
@@ -19,8 +18,6 @@ export function Home() {
       } catch (e) {}
     })();
   }, []);
-
-  console.log('Total Posts', blogPosts.totalPosts);
 
   const blogComponents = blogPosts.list.map((bp) => <BlogCard key={bp.id} blogPost={bp} />);
 

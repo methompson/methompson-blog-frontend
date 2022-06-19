@@ -5,7 +5,7 @@ import { store } from '@src/store';
 
 import { BlogRouter } from '@src/ui/pages/router';
 import { Messenger } from '@/src/ui/components/messenger';
-import { AuthenticationHandler } from '@src/ui/components/authentication';
+import { AuthenticationHandler } from '@/src/ui/components/authentication_handler';
 
 export function App() {
   return (

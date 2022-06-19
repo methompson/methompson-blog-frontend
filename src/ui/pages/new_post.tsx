@@ -17,8 +17,10 @@ function removeAllChildNodes(parent: Element) {
 
 export function NewPost() {
   const [preview, setPreview] = useState('');
-
-  const [textEditor, setTextEditor] = useState(new TextEditor({
+  // We never change the text editor, but we want to make sure it doesn't change when this is re-rendered
+  // We don't define ths above the React component because we want to be able to eventually provide
+  // already created content into the TextEditor for when this function allows for editing posts
+  const [textEditor] = useState(new TextEditor({
     transactionCallback() {
       const content = textEditor.getMarkdownContent();
       setPreview(content);
@@ -34,7 +36,6 @@ export function NewPost() {
     const editorDiv = document.querySelector(`#${editorId}`);
 
     if (editorDiv === null) {
-      // console.log('It\'s null, Jim');
       return;
     }
 
@@ -44,7 +45,7 @@ export function NewPost() {
 
   const getCurrentContent = () => {
     // console.log('Click');
-    // console.log(textEditor.getMarkdownContent());
+    console.log(textEditor.getMarkdownContent());
   };
 
   const bp = BlogPost.forPreview({
@@ -53,8 +54,9 @@ export function NewPost() {
   });
 
   return (
+    // TODO shrink this container when the window is larger than md or lg
     <StandardPage>
-      <div className='centeredPageContainer w-full'>
+      <div className='centeredPageContainer w-full lg:max-w-3xl'>
 
         <LabeledTextInput
           name='Title'

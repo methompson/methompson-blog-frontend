@@ -1,18 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { blogSlice } from './blog';
+
 import {
   messagingSlice,
   messagingActions,
   messagingSelectors,
 } from './messaging';
 
-import { authActions } from './auth';
+import {
+  authActions,
+  authSlice,
+  authSelectors,
+} from './auth';
 
 const store = configureStore({
   reducer: {
     blog: blogSlice.reducer,
     messaging: messagingSlice.reducer,
+    auth: authSlice.reducer,
   },
 });
 
@@ -23,6 +29,7 @@ const actions = {
 
 const selectors = {
   ...messagingSelectors,
+  ...authSelectors,
 };
 
 export { store, actions, selectors };

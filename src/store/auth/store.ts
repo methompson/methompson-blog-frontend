@@ -9,27 +9,56 @@ import {
 } from 'firebase/auth';
 import { FirebaseError } from '@firebase/util';
 
-import { isString } from '@/src/shared/type_guards';
 import { FirebasePersistenceError, FirebaseLoginError } from '@/src/errors/firebase_errors';
+
+interface AuthState {
+  loggedIn: boolean;
+  authLoaded: boolean;
+}
+
+const initialStoreState: AuthState = {
+  loggedIn: false,
+  authLoaded: false,
+};
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: initialStoreState,
+  reducers: {
+    setUserData(state) {
+      // saveUserData(state, action: PayloadAction <AuthPayload> ) {
+      state.loggedIn = true;
+      state.authLoaded = true;
+    },
+    unsetUserData(state) {
+      state.loggedIn = false;
+      state.authLoaded = true;
+    },
+  },
+});
 
 interface LoginRequest {
   email: string;
   password: string;
 }
 
-const login = createAsyncThunk(
+const logIn = createAsyncThunk(
   'auth/login',
   async (loginRequest: LoginRequest) => {
+    console.log('logging in');
+
     const auth = getAuth();
 
     try {
       await setPersistence(auth, browserLocalPersistence);
     } catch (e) {
       const msg = `${e}`;
+      console.error('setPersistence error', msg);
       throw new FirebasePersistenceError(msg);
     }
 
     try {
+      console.log('Signing in with email and password');
       // cred = await signInWithEmailAndPassword(auth, loginRequest.email, loginRequest.password);
       await signInWithEmailAndPassword(auth, loginRequest.email, loginRequest.password);
     } catch (e) {
@@ -55,12 +84,14 @@ const login = createAsyncThunk(
         msg = `${e}`;
       }
 
+      console.error('sigin in error', msg);
+
       throw new FirebaseLoginError(msg);
     }
   },
 );
 
-const logout = createAsyncThunk(
+const logOut = createAsyncThunk(
   'auth/logOut',
   async () => {
     signOut(getAuth());
@@ -69,21 +100,26 @@ const logout = createAsyncThunk(
 
 const setLogin = createAsyncThunk(
   'auth/setLogin',
-  async () => {},
+  async (_, thunkAPI) => {
+    thunkAPI.dispatch(authSlice.actions.setUserData());
+  },
 );
 
 const setLogout = createAsyncThunk(
   'auth/setLogout',
-  async () => {},
+  async (_, thunkAPI) => {
+    thunkAPI.dispatch(authSlice.actions.unsetUserData());
+  },
 );
 
 const authActions = {
-  login,
-  logout,
+  logIn,
+  logOut,
   setLogin,
   setLogout,
 };
 
 export {
   authActions,
+  authSlice,
 };

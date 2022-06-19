@@ -1,3 +1,4 @@
-import { authActions } from './store';
+import { authActions, authSlice } from './store';
+import * as authSelectors from './selectors';
 
-export { authActions };
+export { authActions, authSlice, authSelectors };

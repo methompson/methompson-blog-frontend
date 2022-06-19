@@ -1,7 +1,4 @@
-import {
-  messagingSlice,
-  messagingActions,
-} from './store';
+import { messagingSlice, messagingActions } from './store';
 
 import * as messagingSelectors from './selectors';
 
