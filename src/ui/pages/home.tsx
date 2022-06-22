@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { BlogAPI } from '@src/api/blog_api';
+import { actions, AppDispatch } from '@src/store';
 import { BlogPostCollection } from '@src/models/blog_collection';
-import { StandardPage } from '@src/ui/components/standard_page';
+import { CenteredStandardPage } from '@src/ui/components/standard_page';
 import { BlogCard } from '@/src/ui/components/blog_content';
 
 export function Home() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [blogPosts, setBlogPosts] = useState(new BlogPostCollection({}));
 
   useEffect(() => {
     (async function getBlogPosts() {
-      const bapi = new BlogAPI();
-
       try {
-        const collection = await bapi.getBlogList();
-        setBlogPosts(collection);
-      } catch (e) {}
+        const collection = (await dispatch(actions.getBlogList({}))).payload;
+        const blogCollection = BlogPostCollection.fromJSON(collection);
+        setBlogPosts(blogCollection);
+      } catch (e) {
+        // TODO display an error message
+      }
     })();
-  }, []);
+  }, [dispatch]);
 
   const blogComponents = blogPosts.list.map((bp) => <BlogCard key={bp.id} blogPost={bp} />);
 
   return (
-    <StandardPage>
-      <div>
-        {blogComponents}
-      </div>
-    </StandardPage>
+    <CenteredStandardPage>
+      {blogComponents}
+    </CenteredStandardPage>
   );
 }

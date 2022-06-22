@@ -22,3 +22,11 @@ export function StandardPage(props: StandardPageProps) {
     </div>
   );
 }
+
+export function CenteredStandardPage(props: StandardPageProps) {
+  return <StandardPage>
+    <div className='centeredPageContainer w-full lg:max-w-3xl px-4 lg:px-0'>
+      {props.children}
+    </div>
+  </StandardPage>;
+}

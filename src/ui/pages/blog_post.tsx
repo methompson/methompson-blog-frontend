@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { BlogAPI } from '@src/api/blog_api';
 import { BlogPost } from '@src/models/blog_post';
 import { actions, AppDispatch } from '@src/store';
 
@@ -19,15 +18,14 @@ export function BlogPostPage() {
 
   useEffect(() => {
     (async function getBlogPost() {
-      const bapi = new BlogAPI();
-
       try {
-        const post = await bapi.getBlogPost(slug);
-        setBlogPost(post);
-      } catch (e) {
-        dispatch(actions.addErrorMessage({
-          message: 'Error retrieving blog post',
-        }));
+        const post = (await dispatch(actions.getBlogPost({ slug }))).payload;
+        setBlogPost(BlogPost.fromJSON(post));
+      } catch(e) {
+        // Display an error if there
+        // dispatch(actions.addErrorMessage({
+        //   message: 'Error retrieving blog post',
+        // }));
       }
 
       setLoaded(true);
@@ -39,7 +37,9 @@ export function BlogPostPage() {
   if (loaded && blogPost !== null) {
     content = <BlogContent blogPost={blogPost} />;
   } else if (loaded && blogPost === null) {
-    content = <div></div>;
+    content = (<div>
+      This Blog Post does not exist.
+    </div>);
   }
 
   return <StandardPage>

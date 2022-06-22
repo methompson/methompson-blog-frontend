@@ -1,6 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { blogSlice } from './blog';
+import {
+  blogSlice,
+  blogActions,
+ } from './blog';
 
 import {
   messagingSlice,
@@ -25,6 +28,7 @@ const store = configureStore({
 const actions = {
   ...messagingActions,
   ...authActions,
+  ...blogActions,
 };
 
 const selectors = {
@@ -35,6 +39,7 @@ const selectors = {
 export { store, actions, selectors };
 
 const state = store.getState();
+
 export type StateType = typeof state;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

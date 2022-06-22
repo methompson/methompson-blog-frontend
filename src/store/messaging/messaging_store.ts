@@ -10,7 +10,7 @@ import {
   InitialStateType,
   AddNewMessagePayload,
   RemoveMessagePayload,
-} from './types';
+} from './messaging_store_types';
 
 const makeMessage = createAsyncThunk(
   'messaging/makeMessage',

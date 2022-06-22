@@ -1,10 +1,6 @@
-import { BlogPost } from '@/src/models/blog_post';
+import { BlogPost, BlogPostInterface } from '@/src/models/blog_post';
 import { InvalidInputError } from '@src/errors/invalid_input_error';
 import { NoResultError } from '@src/errors/no_result_error';
-
-interface BlogPostCollectionInterface {
-  blogPostCollection: Record<string, BlogPost>;
-}
 
 class BlogPostCollection {
   constructor(
@@ -16,7 +12,11 @@ class BlogPostCollection {
   }
 
   get list() {
-    const list = Object.values(this._blogPostCollection);
+    return Object.values(this._blogPostCollection);
+  }
+
+  get sortedList() {
+    const list = this.list;
     list.sort((a, b) => {
       const aTime = a.dateAdded.getTime();
       const bTime = b.dateAdded.getTime();
@@ -36,6 +36,16 @@ class BlogPostCollection {
     }
 
     return post;
+  }
+
+  toJSON(): BlogPostInterface[] {
+    const output: BlogPostInterface[] = [];
+
+    for (const post of this.list) {
+      output.push(post.toJSON());
+    }
+
+    return output;
   }
 
   static fromJSON(input: unknown) {

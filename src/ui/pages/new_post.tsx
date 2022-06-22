@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
+import { AppDispatch, actions } from '@src/store';
 import { BlogPost } from '@/src/models/blog_post';
 import { TextEditor } from '@src/shared/text_editor';
 
-import { StandardPage } from '@src/ui/components/standard_page';
+import { CenteredStandardPage } from '@src/ui/components/standard_page';
 import { LabeledTextInput } from '@src/ui/components/new_post/text_input';
 import { BlogContent } from '@src/ui/components/blog_content';
 
@@ -30,6 +32,8 @@ export function NewPost() {
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const editorId = 'editor';
 
   useEffect(() => {
@@ -43,9 +47,16 @@ export function NewPost() {
     textEditor.makeAndInsertEditor(editorDiv);
   }, [textEditor]);
 
-  const getCurrentContent = () => {
-    // console.log('Click');
-    console.log(textEditor.getMarkdownContent());
+  const addNewPost = async () => {
+    const post = textEditor.getMarkdownContent();
+
+    console.log('Post:', post);
+
+    // try {
+    //   const result = await dispatch(actions.getBlogPost());
+    //   console.log('get result', result);
+    // } catch(e) {}
+
   };
 
   const bp = BlogPost.forPreview({
@@ -54,37 +65,34 @@ export function NewPost() {
   });
 
   return (
-    // TODO shrink this container when the window is larger than md or lg
-    <StandardPage>
-      <div className='centeredPageContainer w-full lg:max-w-3xl'>
+    <CenteredStandardPage>
 
-        <LabeledTextInput
-          name='Title'
-          value={title}
-          stretch={true}
-          onChange={(e) => setTitle(e.target.value)} />
+      <LabeledTextInput
+        name='Title'
+        value={title}
+        stretch={true}
+        onChange={(e) => setTitle(e.target.value)} />
 
-        <div id={editorId} />
+      <div id={editorId} />
 
-        <LabeledTextInput
-          name='Tags'
-          value={tags}
-          stretch={true}
-          onChange={(e) => setTags(e.target.value)} />
+      <LabeledTextInput
+        name='Tags'
+        value={tags}
+        stretch={true}
+        onChange={(e) => setTags(e.target.value)} />
 
-        <div>
-          <button
-            className='bg-red-500 hover:bg-red-700 text-white rounded-md p-2 mb-2'
-            onClick={getCurrentContent}>
-            Get Current Content
-          </button>
-        </div>
-
-        <div>Preview</div>
-
-        <BlogContent blogPost={bp} />
-
+      <div>
+        <button
+          className='bg-red-500 hover:bg-red-700 text-white rounded-md p-2 mb-2'
+          onClick={addNewPost}>
+          Submit Post
+        </button>
       </div>
-    </StandardPage>
+
+      <div>Preview</div>
+
+      <BlogContent blogPost={bp} />
+
+    </CenteredStandardPage>
   );
 }

@@ -1,10 +1,6 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
+import { blogSlice, blogActions } from './blog_store';
 
-const blogSlice = createSlice({
-  name: 'blog',
-  initialState: {},
-  reducers: {},
-});
-
-export { blogSlice };
+export {
+  blogSlice,
+  blogActions,
+};
