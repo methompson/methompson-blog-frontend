@@ -23,7 +23,7 @@ export function Home() {
     })();
   }, [dispatch]);
 
-  const blogComponents = blogPosts.list.map((bp) => <BlogCard key={bp.id} blogPost={bp} />);
+  const blogComponents = blogPosts.sortedList.map((bp) => <BlogCard key={bp.id} blogPost={bp} />);
 
   return (
     <CenteredStandardPage>

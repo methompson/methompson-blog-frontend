@@ -7,7 +7,7 @@ describe('BlogPost', () => {
 
   describe('fromJSON', () => {
     const tags: string[] = [];
-    const input = {
+    const input1 = {
       id: '62583158430e488788971352',
       authorId: '123',
       body: 'body',
@@ -17,46 +17,69 @@ describe('BlogPost', () => {
       title: 'title',
     };
 
-    test('Should parse a basic JSON object', () => {
-      const bp = BlogPost.fromJSON(input);
+    const input2 = {
+      'title': 'New Blog Title',
+      'slug': 'new_blog_title2',
+      'body': '**Test Bold**\n\n*Test Italics*\n\n[Test Link](https://methompson.com "Test Link")\n\n`Test Code`',
+      'tags': [
+        'tag1',
+        'tag2',
+      ],
+      'authorId': 'r3NVUF0c2iTEmOe42WVIGX2WkPK2',
+      'dateAdded': '2022-06-23T14:22:56.556Z',
+      'id': '62b84eb652e469d71aa73f69',
+    };
 
-      expect(bp.id).toBe(input.id);
-      expect(bp.authorId).toBe(input.authorId);
-      expect(bp.body).toBe(input.body);
-      expect(bp.dateAdded.toISOString()).toBe(input.dateAdded);
-      expect(bp.slug).toBe(input.slug);
-      expect(bp.title).toBe(input.title);
+    test('Should parse a basic JSON object', () => {
+      const bp1 = BlogPost.fromJSON(input1);
+
+      expect(bp1.id).toBe(input1.id);
+      expect(bp1.authorId).toBe(input1.authorId);
+      expect(bp1.body).toBe(input1.body);
+      expect(bp1.dateAdded.toISOString()).toBe(input1.dateAdded);
+      expect(bp1.slug).toBe(input1.slug);
+      expect(bp1.title).toBe(input1.title);
+
+      const bp2 = BlogPost.fromJSON(input2);
+
+      expect(bp2.id).toBe(input2.id);
+      expect(bp2.authorId).toBe(input2.authorId);
+      expect(bp2.body).toBe(input2.body);
+      expect(bp2.dateAdded.toISOString()).toBe(input2.dateAdded);
+      expect(bp2.slug).toBe(input2.slug);
+      expect(bp2.title).toBe(input2.title);
+
     });
 
     test('Throws an error if the JSON data is not valid', () => {
-      let i = { ...input };
+      let i = { ...input1 };
       expect(() => BlogPost.fromJSON(i)).not.toThrow();
 
-      i = { ...input };
+      i = { ...input1 };
       delete i.id;
       expect(() => BlogPost.fromJSON(i)).toThrow();
 
-      i = { ...input };
+      i = { ...input1 };
       delete i.authorId;
       expect(() => BlogPost.fromJSON(i)).toThrow();
 
-      i = { ...input };
+      i = { ...input1 };
       delete i.body;
       expect(() => BlogPost.fromJSON(i)).toThrow();
 
-      i = { ...input };
+      i = { ...input1 };
       delete i.dateAdded;
       expect(() => BlogPost.fromJSON(i)).toThrow();
 
-      i = { ...input };
+      i = { ...input1 };
       delete i.slug;
       expect(() => BlogPost.fromJSON(i)).toThrow();
 
-      i = { ...input };
+      i = { ...input1 };
       delete i.tags;
       expect(() => BlogPost.fromJSON(i)).toThrow();
 
-      i = { ...input };
+      i = { ...input1 };
       delete i.title;
       expect(() => BlogPost.fromJSON(i)).toThrow();
     });

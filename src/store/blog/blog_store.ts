@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
+// import { combineReducers } from 'redux';
 
 import { BlogAPI } from '@src/api/blog_api';
-import { BlogPostInterface } from '@/src/models/blog_post';
+import { BlogPostInterface, NewBlogPost } from '@/src/models/blog_post';
 
 const blogSlice = createSlice({
   name: 'blog',
@@ -12,11 +12,6 @@ const blogSlice = createSlice({
 
 interface GetBlogPostRequest {
   slug: string;
-}
-
-interface GetBlogListRequest {
-  page?: number;
-  pagination?: number;
 }
 
 const getBlogPost = createAsyncThunk(
@@ -34,6 +29,11 @@ const getBlogPost = createAsyncThunk(
   },
 );
 
+interface GetBlogListRequest {
+  page?: number;
+  pagination?: number;
+}
+
 const getBlogList = createAsyncThunk(
   'blog/getBlogList',
   async (getBlogListRequest: GetBlogListRequest) => {
@@ -44,9 +44,22 @@ const getBlogList = createAsyncThunk(
   },
 );
 
+interface AddBlogPostBody {
+  newPost: NewBlogPost,
+}
+
 const addBlogPost = createAsyncThunk(
   'blog/addBlogPost',
-  async() => {},
+  async(newBlogPost: AddBlogPostBody) => {
+    const bapi = new BlogAPI();
+    const post = await bapi.addBlogPost(
+      newBlogPost.newPost,
+    );
+
+    console.log('new blog post', post);
+
+    return post.toJSON();
+  },
 );
 
 const blogActions = {

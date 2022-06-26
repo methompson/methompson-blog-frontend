@@ -1,10 +1,10 @@
-import { Message } from '@src/models/message';
+import { Message, MessageType } from '@src/models/message';
 
 const id = 'id';
 const message = 'message';
 const timeAdded = 123;
 const duration = timeAdded;
-const messageType = 'info';
+const messageType = MessageType.Info;
 
 describe('Message', () => {
   describe('toJSON', () => {

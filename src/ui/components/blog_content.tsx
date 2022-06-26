@@ -35,7 +35,9 @@ export function BlogContentShort(props: BlogCardInput) {
 
     <BlogPostDate blogPost={props.blogPost} />
 
-    <p className='prose dark:prose-invert'>{props.blogPost.body}</p>
+    <div className='prose dark:prose-invert'>
+      <div dangerouslySetInnerHTML={{ __html: props.blogPost.bodyInHtml }}></div>
+    </div>
   </span>;
 }
 

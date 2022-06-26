@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import slugify from 'slugify';
 
 import { AppDispatch, actions } from '@src/store';
-import { BlogPost } from '@/src/models/blog_post';
+import { BlogPost, NewBlogPost } from '@/src/models/blog_post';
+import { getUserId } from '@/src/shared/auth_functions';
+import { Duration } from '@src/shared/duration';
 import { TextEditor } from '@src/shared/text_editor';
 
 import { CenteredStandardPage } from '@src/ui/components/standard_page';
@@ -18,6 +22,11 @@ function removeAllChildNodes(parent: Element) {
 }
 
 export function NewPost() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [title, setTitle] = useState('');
+  const [tagsString, setTagsString] = useState('');
+  const [shouldRedirectSlug, setShouldRedirectSlug] = useState('');
   const [preview, setPreview] = useState('');
   // We never change the text editor, but we want to make sure it doesn't change when this is re-rendered
   // We don't define ths above the React component because we want to be able to eventually provide
@@ -28,11 +37,6 @@ export function NewPost() {
       setPreview(content);
     },
   }));
-
-  const [title, setTitle] = useState('');
-  const [tags, setTags] = useState('');
-
-  const dispatch = useDispatch<AppDispatch>();
 
   const editorId = 'editor';
 
@@ -48,16 +52,43 @@ export function NewPost() {
   }, [textEditor]);
 
   const addNewPost = async () => {
-    const post = textEditor.getMarkdownContent();
+    const userId = await getUserId();
 
-    console.log('Post:', post);
+    const body = textEditor.getMarkdownContent();
+    const slug = slugify(title, {lower: true});
 
-    // try {
-    //   const result = await dispatch(actions.getBlogPost());
-    //   console.log('get result', result);
-    // } catch(e) {}
+    let tags = tagsString.split(',');
+    tags = tags.map((tag) => tag.trim());
 
+    const newPost = NewBlogPost.fromJSON({
+      title,
+      slug,
+      body,
+      tags,
+      authorId: userId,
+      dateAdded: (new Date()).toISOString(),
+    });
+
+    try {
+      const result = await dispatch(actions.addBlogPost({ newPost }));
+
+      const bp = BlogPost.fromJSON(result.payload);
+
+      console.log('redirection slug:', bp.slug);
+      setShouldRedirectSlug(bp.slug);
+    } catch(e) {
+      const message = `Error Adding New Blog Post ${e}`;
+      console.error(message);
+      dispatch(actions.addErrorMessage({
+        message,
+        duration: new Duration({minutes: 1}),
+      }));
+    }
   };
+
+  if (shouldRedirectSlug.length > 0) {
+    return <Navigate to={`/posts/${shouldRedirectSlug}`} />;
+  }
 
   const bp = BlogPost.forPreview({
     title,
@@ -77,9 +108,9 @@ export function NewPost() {
 
       <LabeledTextInput
         name='Tags'
-        value={tags}
+        value={tagsString}
         stretch={true}
-        onChange={(e) => setTags(e.target.value)} />
+        onChange={(e) => setTagsString(e.target.value)} />
 
       <div>
         <button

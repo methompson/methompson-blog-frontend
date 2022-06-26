@@ -206,7 +206,7 @@ describe('BlogAPI', () => {
       const bap = new BlogAPI();
       await bap.getBlogPost(testSlug);
 
-      const url = `${baseUrl}/${testSlug}`;
+      const url = `${baseUrl}/blog/${testSlug}`;
 
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(url);

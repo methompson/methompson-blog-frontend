@@ -20,8 +20,8 @@ class BlogPostCollection {
     list.sort((a, b) => {
       const aTime = a.dateAdded.getTime();
       const bTime = b.dateAdded.getTime();
-      if (aTime < bTime) return -1;
-      if (aTime > bTime) return 1;
+      if (aTime > bTime) return -1;
+      if (aTime < bTime) return 1;
       return 0;
     });
 
