@@ -154,13 +154,14 @@ function MessageCard(props: MessageCardProps) {
     props.textColor,
   ];
 
+  function close() {
+    dispatch(actions.removeMessage({ messageId: props.message.id }));
+  }
+
   return <div className={cardClasses.join(' ')}>
     <span>{props.message.message}</span>
 
-    <button onClick={() => {
-      // console.log('Click');
-      dispatch(actions.removeMessage({ messageId: props.message.id }));
-    }}>
+    <button onClick={close}>
       <XIcon className={iconClasses.join(' ')} />
     </button>
   </div>;

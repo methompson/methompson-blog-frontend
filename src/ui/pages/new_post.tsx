@@ -12,8 +12,7 @@ import { TextEditor } from '@src/shared/text_editor';
 import { CenteredStandardPage } from '@src/ui/components/standard_page';
 import { LabeledTextInput } from '@src/ui/components/new_post/text_input';
 import { BlogContent } from '@src/ui/components/blog_content';
-
-import '@src/ui/css/prosemirror_editor.css';
+import { RegularButton } from '@src/ui/components/regular_button';
 
 function removeAllChildNodes(parent: Element) {
   while (parent.firstChild) {
@@ -28,9 +27,10 @@ export function NewPost() {
   const [tagsString, setTagsString] = useState('');
   const [shouldRedirectSlug, setShouldRedirectSlug] = useState('');
   const [preview, setPreview] = useState('');
-  // We never change the text editor, but we want to make sure it doesn't change when this is re-rendered
-  // We don't define ths above the React component because we want to be able to eventually provide
-  // already created content into the TextEditor for when this function allows for editing posts
+  // We never change the text editor, but we want to make sure it doesn't change when
+  // this is re-rendered We don't define ths above the React component because we want
+  // to be able to eventually provide already created content into the TextEditor for
+  // when this function allows for editing posts
   const [textEditor] = useState(new TextEditor({
     transactionCallback() {
       const content = textEditor.getMarkdownContent();
@@ -51,7 +51,7 @@ export function NewPost() {
     textEditor.makeAndInsertEditor(editorDiv);
   }, [textEditor]);
 
-  const addNewPost = async () => {
+  const addNewPostAction = async () => {
     const userId = await getUserId();
 
     const body = textEditor.getMarkdownContent();
@@ -104,7 +104,9 @@ export function NewPost() {
         stretch={true}
         onChange={(e) => setTitle(e.target.value)} />
 
-      <div id={editorId} />
+      <div
+        className='border border-slate-300 dark:border-slate-600 rounded-md'
+        id={editorId} />
 
       <LabeledTextInput
         name='Tags'
@@ -113,11 +115,9 @@ export function NewPost() {
         onChange={(e) => setTagsString(e.target.value)} />
 
       <div>
-        <button
-          className='bg-red-500 hover:bg-red-700 text-white rounded-md p-2 mb-2'
-          onClick={addNewPost}>
-          Submit Post
-        </button>
+        <RegularButton
+          action={addNewPostAction}
+          text="Submit Post" />
       </div>
 
       <div>Preview</div>

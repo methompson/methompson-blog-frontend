@@ -8,6 +8,7 @@ import { StandardPage } from '@src/ui/components/standard_page';
 import { TextInput } from '@src/ui/components/new_post/text_input';
 import { isRecord } from '@/src/shared/type_guards';
 import { isString } from 'markdown-it/lib/common/utils';
+import { FullWidthButton, RegularButton } from '../components/regular_button';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,7 +18,6 @@ export function LoginPage() {
   const navigate = useNavigate();
 
   async function logUserIn() {
-    console.log('Logging User In');
     try {
       await dispatch(actions.logIn({email, password})).unwrap();
       // If We get here, we've successfully signed in.
@@ -49,7 +49,7 @@ export function LoginPage() {
   return (
     <StandardPage>
       <div className='flex justify-center items-center grow'>
-        <figure className={commonClasses + ' rounded-xl p-8 shadow-lg md:w-1/2'}>
+        <figure className={commonClasses + ' rounded-xl p-8 m-8 sm:m-0 shadow-lg w-full sm:w-96'}>
           <form onSubmit={onSubmit} >
             <h1 className='text-2xl font-extrabold pb-2'>Log In</h1>
             <div className={commonClasses + divClasses}>
@@ -67,11 +67,9 @@ export function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)} />
             </div>
 
-            <input
-              type='submit'
-              className='self-start bg-indigo-500 hover:bg-indigo-700 text-indigo-50 rounded-md p-2'
-              onClick={logUserIn}
-              value='Log In' />
+            <FullWidthButton
+              text='Log In'
+              action={logUserIn} />
           </form>
         </figure>
       </div>

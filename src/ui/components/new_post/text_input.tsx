@@ -20,7 +20,7 @@ export function TextInput(props: TextInputProps) {
     props.onChange(e);
   }
 
-  let classes = 'p-2 mr-1 placeholder:italic placeholder:text-slate-400'
+  let classes = 'p-2 mr-1 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-300'
     + ' text-lg sm:text-md';
 
   if (props.border !== false) {
@@ -59,7 +59,7 @@ interface LabeledTextInputProps {
 export function LabeledTextInput(props: LabeledTextInputProps) {
   const [focus, setFocus] = useState(false);
 
-  let labelClasses = 'labeledTextInput relative block my-3 border border-slate-300 rounded-md shadow-sm';
+  let labelClasses = 'labeledTextInput relative block my-3 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm';
   let textInputClasses = '';
 
   if (focus) {
@@ -68,8 +68,11 @@ export function LabeledTextInput(props: LabeledTextInputProps) {
 
   if (props.stretch === true) {
     labelClasses += ' flex justify-between flex-row items-center ';
-    textInputClasses = 'grow';
+    textInputClasses += ' grow';
   }
+
+  textInputClasses.trim();
+  labelClasses.trim();
 
   return (
     <label className={labelClasses} htmlFor={props.name}>

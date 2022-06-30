@@ -9,7 +9,7 @@ interface StandardPageProps {
 
 export function StandardPage(props: StandardPageProps) {
   return (
-    <div className='bg-white dark:bg-slate-800 text-slate-900 dark:text-white'>
+    <div className='bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-300'>
       <div className='pageContainer min-h-screen flex flex-col justify-between items-center'>
         <BlogHeader />
 

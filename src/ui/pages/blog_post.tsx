@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { BlogPost } from '@src/models/blog_post';
 import { actions, AppDispatch } from '@src/store';
 
-import { StandardPage } from '@src/ui/components/standard_page';
+import { CenteredStandardPage } from '@src/ui/components/standard_page';
 import { BlogContent } from '@src/ui/components/blog_content';
 
 export function BlogPostPage() {
@@ -22,7 +22,7 @@ export function BlogPostPage() {
         const post = (await dispatch(actions.getBlogPost({ slug }))).payload;
         setBlogPost(BlogPost.fromJSON(post));
       } catch(e) {
-        // Display an error if there
+        // Display an error if here
         // dispatch(actions.addErrorMessage({
         //   message: 'Error retrieving blog post',
         // }));
@@ -37,12 +37,13 @@ export function BlogPostPage() {
   if (loaded && blogPost !== null) {
     content = <BlogContent blogPost={blogPost} />;
   } else if (loaded && blogPost === null) {
+    // TODO redirect to 404 or show 404
     content = (<div>
       This Blog Post does not exist.
     </div>);
   }
 
-  return <StandardPage>
+  return <CenteredStandardPage>
     {content}
-  </StandardPage>;
+  </CenteredStandardPage>;
 }
