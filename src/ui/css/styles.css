@@ -391,3 +391,12 @@ img.ProseMirror-separator {
 .ProseMirror p {
   margin-bottom: 1em;
 }
+
+.animatedBackground {
+  transition: height 500ms;
+  width: 100vw;
+}
+
+.headerMenu .headerMenuItem {
+  padding-top: 0.5em;
+}
