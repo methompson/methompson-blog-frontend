@@ -77,6 +77,8 @@ class NewBlogPost {
     const md = new MarkdownIt();
     const render = md.render(this.body);
 
+    // console.log('parse', md.parse(this.body, {}));
+
     return render;
   }
 

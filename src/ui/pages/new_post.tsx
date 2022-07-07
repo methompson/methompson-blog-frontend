@@ -87,7 +87,7 @@ export function NewPost() {
   };
 
   if (shouldRedirectSlug.length > 0) {
-    return <Navigate to={`/posts/${shouldRedirectSlug}`} />;
+    return <Navigate to={`/post/${shouldRedirectSlug}`} />;
   }
 
   const bp = BlogPost.forPreview({

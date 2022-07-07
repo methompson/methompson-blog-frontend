@@ -25,7 +25,14 @@ class BlogAPI {
 
     const body = await result.json();
 
-    return BlogPostCollection.fromJSON(body);
+    console.log('body', body);
+
+    const posts = BlogPostCollection.fromJSON(body.posts);
+
+    return {
+      posts,
+      morePages: body.morePages ?? false,
+    };
   }
 
   async getBlogPost(slug: string) {

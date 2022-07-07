@@ -25,7 +25,7 @@ export function StandardPage(props: StandardPageProps) {
 
 export function CenteredStandardPage(props: StandardPageProps) {
   return <StandardPage>
-    <div className='centeredPageContainer w-full lg:max-w-3xl px-4 lg:px-0'>
+    <div className='centeredPageContainer flex flex-col grow w-full lg:max-w-3xl px-4 lg:px-0'>
       {props.children}
     </div>
   </StandardPage>;

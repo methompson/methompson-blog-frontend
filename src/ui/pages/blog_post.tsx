@@ -7,6 +7,7 @@ import { actions, AppDispatch } from '@src/store';
 
 import { CenteredStandardPage } from '@src/ui/components/standard_page';
 import { BlogContent } from '@src/ui/components/blog_content';
+import { FullHeightCard } from '@src/ui/components/card';
 
 export function BlogPostPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,6 +45,8 @@ export function BlogPostPage() {
   }
 
   return <CenteredStandardPage>
-    {content}
+    <FullHeightCard>
+      {content}
+    </FullHeightCard>
   </CenteredStandardPage>;
 }

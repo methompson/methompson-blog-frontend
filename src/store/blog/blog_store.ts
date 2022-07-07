@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { BlogAPI } from '@src/api/blog_api';
 import { BlogPostInterface, NewBlogPost } from '@/src/models/blog_post';
+import { isBoolean } from '@/src/shared/type_guards';
 
 const blogSlice = createSlice({
   name: 'blog',
@@ -14,7 +15,7 @@ interface GetBlogPostRequest {
   slug: string;
 }
 
-const getBlogPost = createAsyncThunk(
+const getBlogPost = createAsyncThunk<BlogPostInterface | null, GetBlogPostRequest>(
   'blog/getBlogPost',
   async (getBlogPostRequest: GetBlogPostRequest): Promise<BlogPostInterface | null> => {
     const bapi = new BlogAPI();
@@ -34,13 +35,25 @@ interface GetBlogListRequest {
   pagination?: number;
 }
 
-const getBlogList = createAsyncThunk(
-  'blog/getBlogList',
-  async (getBlogListRequest: GetBlogListRequest) => {
-    const bapi = new BlogAPI();
-    const collection = await bapi.getBlogList(getBlogListRequest.page, getBlogListRequest.pagination);
+interface GetBlogListOutput {
+  posts: BlogPostInterface[],
+  morePages: boolean,
+}
 
-    return collection.toJSON();
+const getBlogList = createAsyncThunk<GetBlogListOutput, GetBlogListRequest>(
+  'blog/getBlogList',
+  async (getBlogListRequest) => {
+    const bapi = new BlogAPI();
+    const result = await bapi.getBlogList(getBlogListRequest.page, getBlogListRequest.pagination);
+
+    const morePages = isBoolean(result.morePages)
+      ? result.morePages
+      : false;
+
+    return {
+      posts: result.posts.toJSON(),
+      morePages,
+    };
   },
 );
 
@@ -48,15 +61,15 @@ interface AddBlogPostBody {
   newPost: NewBlogPost,
 }
 
-const addBlogPost = createAsyncThunk(
+const addBlogPost = createAsyncThunk<BlogPostInterface, AddBlogPostBody>(
   'blog/addBlogPost',
-  async(newBlogPost: AddBlogPostBody) => {
+  async(newBlogPost) => {
     const bapi = new BlogAPI();
     const post = await bapi.addBlogPost(
       newBlogPost.newPost,
     );
 
-    console.log('new blog post', post);
+    // console.log('new blog post', post);
 
     return post.toJSON();
   },

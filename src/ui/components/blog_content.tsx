@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { BlogPost } from '@/src/models/blog_post';
+import { Card } from '@/src/ui/components/card';
 
 interface BlogCardInput {
   blogPost: BlogPost;
@@ -95,33 +96,42 @@ function BlogPostDate(props: BlogCardInput) {
 }
 
 export function BlogContent(props: BlogCardInput) {
-  return <span>
-    <BlogPostTitle blogPost={props.blogPost} />
+  return (
+    <span>
+      <BlogPostTitle blogPost={props.blogPost} />
 
-    <BlogPostDate blogPost={props.blogPost} />
+      <BlogPostDate blogPost={props.blogPost} />
 
-    <div className='prose dark:prose-invert'>
-      <div dangerouslySetInnerHTML={{ __html: props.blogPost.bodyInHtml }}></div>
-    </div>
-  </span>;
+      <div className='prose dark:prose-invert'>
+        <div dangerouslySetInnerHTML={{ __html: props.blogPost.bodyInHtml }}></div>
+      </div>
+    </span>
+  );
 }
 
 export function BlogContentShort(props: BlogCardInput) {
-  return <span>
-    <Link to={`/posts/${props.blogPost.slug}`}>
-      <BlogPostTitle blogPost={props.blogPost} />
-    </Link>
+  const link = `/post/${props.blogPost.slug}`;
+  return (
+    <span>
+      <Link className='underline' to={link}>
+        <BlogPostTitle blogPost={props.blogPost} />
+      </Link>
 
-    <BlogPostDate blogPost={props.blogPost} />
+      <BlogPostDate blogPost={props.blogPost} />
 
-    <div className='prose dark:prose-invert'>
-      <div dangerouslySetInnerHTML={{ __html: props.blogPost.bodyInHtml }}></div>
-    </div>
-  </span>;
+      <div className='prose blogContentShort dark:prose-invert'>
+        <div dangerouslySetInnerHTML={{ __html: props.blogPost.bodyInHtml }}></div>
+      </div>
+
+      <Link className='text-blue-600 font-bold underline' to={link}>
+        Read More
+      </Link>
+    </span>
+  );
 }
 
-export function BlogCard(props: BlogCardInput) {
-  return <figure className='flex rounded-xl p-8 shadow-lg'>
+export function ShortBlogCard(props: BlogCardInput) {
+  return <Card>
     <BlogContentShort blogPost={props.blogPost} />
-  </figure>;
+  </Card>;
 }

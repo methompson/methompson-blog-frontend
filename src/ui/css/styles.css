@@ -23,6 +23,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.blogContentShort p {
+  display: none;
+}
+.blogContentShort p:first-child {
+  display: block;
+}
+
 .messageCard {
   transition-property: opacity;
   transition-duration: 250ms;

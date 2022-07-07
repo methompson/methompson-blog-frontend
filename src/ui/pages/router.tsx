@@ -16,7 +16,8 @@ export function BlogRouter() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/debug' element={<DebugPage />} />
         <Route path='/posts' element={<Home />} />
-        <Route path='/posts/:slug' element={<BlogPostPage />} />
+        <Route path='/posts/:page' element={<Home />} />
+        <Route path='/post/:slug' element={<BlogPostPage />} />
         <Route path='/new_post' element={<NewPost />} />
         <Route path='*' element={<FourOhFour />} />
       </Routes>
