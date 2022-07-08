@@ -25,7 +25,7 @@ class BlogAPI {
 
     const body = await result.json();
 
-    console.log('body', body);
+    // console.log('body', body);
 
     const posts = BlogPostCollection.fromJSON(body.posts);
 

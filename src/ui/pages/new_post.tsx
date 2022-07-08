@@ -74,11 +74,9 @@ export function NewPost() {
 
       const bp = BlogPost.fromJSON(result.payload);
 
-      console.log('redirection slug:', bp.slug);
       setShouldRedirectSlug(bp.slug);
     } catch(e) {
       const message = `Error Adding New Blog Post ${e}`;
-      console.error(message);
       dispatch(actions.addErrorMessage({
         message,
         duration: new Duration({minutes: 1}),

@@ -130,13 +130,11 @@ class NewBlogPost {
 
   static isNewBlogPostInterface(value: unknown): value is NewBlogPostInterface {
     if (!isRecord(value)) {
-      console.log('not record');
       return false;
     }
 
     // If dateAdded is not a string or the string is not a valid date, return false
     if (!isString(value.dateAdded) || !isValidDate(new Date(value.dateAdded))) {
-      console.log('invalid dateAdded');
       return false;
     }
 
@@ -145,7 +143,6 @@ class NewBlogPost {
       isString(value.dateUpdated) &&
       !isValidDate(new Date(value.dateUpdated))
     ) {
-      console.log('invalid dateUpdated');
       return false;
     }
 

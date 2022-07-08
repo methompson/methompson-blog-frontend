@@ -37,7 +37,7 @@ const input4 = {
 describe('BlogAPI', () => {
   describe('getBlogList', () => {
     test('Calls fetch and json on the response', async () => {
-      const res = <unknown[]>[];
+      const res = { posts: <unknown[]>[], morePages: true };
       const { fetch, response } = makeFetchWithResponse(res);
 
       global.fetch = fetch;
@@ -54,17 +54,17 @@ describe('BlogAPI', () => {
 
     test('returns a BlogPostCollection with values from the response', async () => {
       const res = [input1, input2, input3, input4];
-      const { fetch } = makeFetchWithResponse(res);
+      const { fetch } = makeFetchWithResponse({posts: res});
 
       global.fetch = fetch;
 
       const bap = new BlogAPI();
       const result = await bap.getBlogList();
 
-      expect(result.getBySlug(input1.slug).slug).toBe(input1.slug);
-      expect(result.getBySlug(input2.slug).slug).toBe(input2.slug);
-      expect(result.getBySlug(input3.slug).slug).toBe(input3.slug);
-      expect(result.getBySlug(input4.slug).slug).toBe(input4.slug);
+      expect(result.posts.getBySlug(input1.slug).slug).toBe(input1.slug);
+      expect(result.posts.getBySlug(input2.slug).slug).toBe(input2.slug);
+      expect(result.posts.getBySlug(input3.slug).slug).toBe(input3.slug);
+      expect(result.posts.getBySlug(input4.slug).slug).toBe(input4.slug);
     });
 
     test('throws an error if fetch throws an error', async () => {

@@ -45,20 +45,17 @@ interface LoginRequest {
 const logIn = createAsyncThunk(
   'auth/login',
   async (loginRequest: LoginRequest) => {
-    console.log('logging in');
-
     const auth = getAuth();
 
     try {
       await setPersistence(auth, browserLocalPersistence);
     } catch (e) {
       const msg = `${e}`;
-      console.error('setPersistence error', msg);
+      // console.error('setPersistence error', msg);
       throw new FirebasePersistenceError(msg);
     }
 
     try {
-      console.log('Signing in with email and password');
       // cred = await signInWithEmailAndPassword(auth, loginRequest.email, loginRequest.password);
       await signInWithEmailAndPassword(auth, loginRequest.email, loginRequest.password);
     } catch (e) {
@@ -83,8 +80,6 @@ const logIn = createAsyncThunk(
       } else {
         msg = `${e}`;
       }
-
-      console.error('sigin in error', msg);
 
       throw new FirebaseLoginError(msg);
     }

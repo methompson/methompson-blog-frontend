@@ -24,7 +24,7 @@ function GetBlogPostsButton() {
         const bapi = new BlogAPI();
         try {
           const list = await bapi.getBlogList();
-          console.log(list);
+          // console.log(list);
         } catch (e) {
           dispatch(actions.addErrorMessage({
             message: `Unable to retrieve blog posts, ${e}`,

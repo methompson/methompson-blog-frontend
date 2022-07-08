@@ -29,8 +29,6 @@ export function Home() {
   const pageStr = useParams().page ?? '1';
   const page = getPage(pageStr);
 
-  console.log(pageStr, page);
-
   useEffect(() => {
     (async function getBlogPosts() {
       try {
