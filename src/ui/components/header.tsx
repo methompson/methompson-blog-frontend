@@ -83,8 +83,6 @@ function HeaderMenuButton(props: HeaderProps) {
     });
   });
 
-  let containerHeight = menuOpen ? 'w-full' : 'h-0';
-
   const headerContent = (
     <BlogHeaderContainer className='flex sm:hidden' >
       <span className='block sm:hidden h-8'>
@@ -97,7 +95,8 @@ function HeaderMenuButton(props: HeaderProps) {
     </BlogHeaderContainer>
   );
 
-  const styles = 'menuVeil animatedBackground w-full fixed top-0 left-0 h-full z-0 overflow-hidden';
+  const containerHeight = menuOpen ? 'h-full' : 'h-0';
+  const styles = 'menuVeil animatedBackground w-full fixed top-0 left-0 z-0 overflow-hidden';
 
   return (
     <span className='flex sm:hidden'>
