@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 
-import { MessageType, Message, MessageInterface } from '@src/models/message';
+import { MessageType, Message, MessageInterface } from '@/src/models/message';
 import { isNullOrUndefined } from '@/src/shared/type_guards';
 
 import {

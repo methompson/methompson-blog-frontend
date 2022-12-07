@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { MenuIcon } from '@heroicons/react/solid';
 
 import { selectors, actions, AppDispatch } from '@/src/store';
+import { LargeScreenMenuList, SmallScreenMenuList } from '@/src/ui/components/menu';
 
-const commonColors = 'bg-red-600 dark:bg-red-900 text-red-100 dark:text-red-300';
+export const commonColors = 'bg-red-600 dark:bg-red-900 text-red-100 dark:text-red-300';
 
 export function BlogHeader() {
   const isLoggedIn = useSelector(selectors.isLoggedIn);
@@ -31,14 +32,10 @@ export function BlogHeader() {
 
   return (
     <header className='w-full'>
-      <HeaderMenuButton>
-        {children}
-      </HeaderMenuButton>
+      <HeaderMenuWithButton />
 
       <BlogHeaderContainer className='hidden sm:flex'>
-        <HeaderList>
-          {children}
-        </HeaderList>
+        <LargeScreenMenuList />
       </BlogHeaderContainer>
     </header>
   );
@@ -62,11 +59,7 @@ function BlogHeaderContainer(props: BlogHeaderContainerProps) {
   );
 }
 
-interface HeaderProps {
-  children: React.ReactNode[];
-}
-
-function HeaderMenuButton(props: HeaderProps) {
+function HeaderMenuWithButton() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -98,36 +91,15 @@ function HeaderMenuButton(props: HeaderProps) {
   const containerHeight = menuOpen ? 'h-full' : 'h-0';
   const styles = 'menuVeil animatedBackground w-full fixed top-0 left-0 z-0 overflow-hidden';
 
+  const smallHeaderStyle = menuOpen ? 'hidden' : '';
+
   return (
     <span className='flex sm:hidden'>
       {headerContent}
-      <span className={`${styles} ${containerHeight} ${commonColors}`}>
+      <span className={`${styles} ${commonColors} ${containerHeight}`}>
         {headerContent}
-        <HeaderMenu>
-          {props.children}
-        </HeaderMenu>
+        <SmallScreenMenuList />
       </span>
     </span>
   );
-}
-
-// The menu that shows the links in mobile mode
-function HeaderMenu(props: HeaderProps) {
-  // positioning and alignment
-  let classes = 'flex flex-col items-end';
-  // colors and style
-  classes += ' font-bold text-3xl ' + commonColors;
-  // padding
-  classes += ' pr-8 pt-8';
-
-  return <div className={'headerMenu ' + classes}>
-    {props.children}
-  </div>;
-}
-
-// Displays links horizontally on larger screens
-function HeaderList(props: HeaderProps) {
-  return <span className='hidden sm:block'>
-    {props.children}
-  </span>;
 }

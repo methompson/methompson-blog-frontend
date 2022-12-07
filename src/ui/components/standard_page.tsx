@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { BlogHeader } from '@src/ui/components/header';
-import { BlogFooter } from '@src/ui/components/footer';
+import { BlogHeader } from '@/src/ui/components/header';
+import { BlogFooter } from '@/src/ui/components/footer';
 
 interface StandardPageProps {
   children: React.ReactNode;

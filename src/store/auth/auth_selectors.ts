@@ -1,4 +1,4 @@
-import { StateType } from '@src/store';
+import { StateType } from '@/src/store';
 
 function isLoggedIn(state: StateType) {
   return state.auth.loggedIn;

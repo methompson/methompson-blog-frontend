@@ -3,16 +3,16 @@ import { Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import slugify from 'slugify';
 
-import { AppDispatch, actions } from '@src/store';
+import { AppDispatch, actions } from '@/src/store';
 import { BlogPost, NewBlogPost } from '@/src/models/blog_post';
 import { getUserId } from '@/src/shared/auth_functions';
-import { Duration } from '@src/shared/duration';
-import { TextEditor } from '@src/shared/text_editor';
+import { Duration } from '@/src/shared/duration';
+import { TextEditor } from '@/src/shared/text_editor';
 
-import { CenteredStandardPage } from '@src/ui/components/standard_page';
-import { LabeledTextInput } from '@src/ui/components/new_post/text_input';
-import { BlogContent } from '@src/ui/components/blog_content';
-import { RegularButton } from '@src/ui/components/regular_button';
+import { CenteredStandardPage } from '@/src/ui/components/standard_page';
+import { LabeledTextInput } from '@/src/ui/components/new_post/text_input';
+import { BlogContent } from '@/src/ui/components/blog_content';
+import { RegularButton } from '@/src/ui/components/regular_button';
 
 function removeAllChildNodes(parent: Element) {
   while (parent.firstChild) {

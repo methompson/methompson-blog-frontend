@@ -1,4 +1,4 @@
-import { isDate } from '@src/shared/type_guards';
+import { isDate } from '@/src/shared/type_guards';
 
 export type ValidDate = Date;
 

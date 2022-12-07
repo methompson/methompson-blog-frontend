@@ -1,5 +1,5 @@
-import { Duration } from '@src/shared/duration';
-import { MessageType, MessageInterface } from '@src/models/message';
+import { Duration } from '@/src/shared/duration';
+import { MessageType, MessageInterface } from '@/src/models/message';
 
 export interface MessagePayload {
   messageType: MessageType;

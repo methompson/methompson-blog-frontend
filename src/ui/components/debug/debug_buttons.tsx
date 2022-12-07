@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { BlogAPI } from '@src/api/blog_api';
-import { actions, AppDispatch } from '@src/store';
-import { Duration } from '@src/shared/duration';
+import { BlogAPI } from '@/src/api/blog_api';
+import { actions, AppDispatch } from '@/src/store';
+import { Duration } from '@/src/shared/duration';
 
 import { DebugButton } from './debug_button';
 
@@ -11,6 +11,8 @@ export function DebugButtonColumn() {
   return <div className='my-3 flex flex-col items-center'>
     <GetBlogPostsButton />
     <AddRandomMessageButton />
+    <GetFileList />
+    <UploadFile />
   </div>;
 }
 
@@ -50,5 +52,68 @@ function AddRandomMessageButton() {
 
         setCount(count + 1);
       }} />
+  );
+}
+
+function GetFileList() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  return (
+    <DebugButton
+      title='Get File List'
+      action={async () => {
+        try {
+          dispatch(actions.getFileList({}));
+        } catch (e) {}
+      }} />
+  );
+}
+
+function UploadFile() {
+  const dispatch = useDispatch<AppDispatch>();
+  const [files, setFiles] = useState<FileList | undefined>();
+  const [isPrivate, setIsPrivate] = useState(true);
+
+  return (
+    <div className="flex flex-row justify-between items-center w-full">
+      <input
+        type="file"
+        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+          console.log(ev);
+
+          console.log(ev.target.files);
+
+          setFiles(ev.target.files);
+        }}/>
+
+      <div className='flex items-center'>
+        <input
+          type='checkbox'
+          id='isPrivate'
+          name='isPrivate'
+          checked={isPrivate}
+          onChange={(ev) => setIsPrivate(ev?.target?.checked ?? true)}/>
+        <label className='px-1' htmlFor='isPrivate'>Private</label>
+      </div>
+
+      <DebugButton
+        title="Upload File"
+        action={async () => {
+          if (files.length === 0) {
+            dispatch(actions.addErrorMessage({
+              message: 'Must Select at least one file',
+              duration: new Duration({ seconds: 5 }),
+            }));
+            return;
+          }
+
+          console.log('Dispatching');
+
+          dispatch(actions.uploadFiles({
+            files,
+            isPrivate,
+          }));
+        }} />
+    </div>
   );
 }

@@ -1,15 +1,15 @@
 import { getAuth } from 'firebase/auth';
 
-import { getBaseApiUrl } from '@src/shared/get_base_url';
+import { getBaseApiUrl } from '@/src/shared/get_base_url';
 
-import { BlogPostCollection } from '@src/models/blog_collection';
-import { BlogPost, NewBlogPost } from '@src/models/blog_post';
+import { BlogPostCollection } from '@/src/models/blog_collection';
+import { BlogPost, NewBlogPost } from '@/src/models/blog_post';
 
-import { AddBlogError } from '@src/errors/blog_errors';
-import { getErrorByStatus } from '@src/errors/http_error';
+import { AddBlogError } from '@/src/errors/blog_errors';
+import { getErrorByStatus } from '@/src/errors/http_error';
 
-import { getAuthToken } from '@src/shared/auth_functions';
-import { isString } from '@src/shared/type_guards';
+import { getAuthToken } from '@/src/shared/auth_functions';
+import { isString } from '@/src/shared/type_guards';
 
 class BlogAPI {
   async getBlogList(page = 1, pagination = 10) {
@@ -36,6 +36,8 @@ class BlogAPI {
   }
 
   async getBlogPost(slug: string) {
+    const authToken = await getAuthToken();
+    console.log(authToken);
     const baseUrl = getBaseApiUrl();
     const url = `${baseUrl}/blog/${slug}`;
 

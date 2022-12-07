@@ -1,6 +1,6 @@
 import { getAuth } from 'firebase/auth';
 
-import { FirebaseLoginError } from '@src/errors/firebase_errors';
+import { FirebaseLoginError } from '@/src/errors/firebase_errors';
 
 async function getUserId(): Promise<string | null> {
   const auth = getAuth();

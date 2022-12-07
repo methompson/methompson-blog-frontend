@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { StandardPage } from '@src/ui/components/standard_page';
+import { StandardPage } from '@/src/ui/components/standard_page';
 
 export function FourOhFour() {
   return (

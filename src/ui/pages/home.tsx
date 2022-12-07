@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
-import { actions, AppDispatch } from '@src/store';
-import { BlogPostCollection } from '@src/models/blog_collection';
-import { CenteredStandardPage } from '@src/ui/components/standard_page';
+import { actions, AppDispatch } from '@/src/store';
+import { BlogPostCollection } from '@/src/models/blog_collection';
+import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { ShortBlogCard } from '@/src/ui/components/blog_content';
 
 function getPage(input: string): number {

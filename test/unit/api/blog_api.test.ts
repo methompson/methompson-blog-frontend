@@ -1,4 +1,4 @@
-import { BlogAPI } from '@src/api/blog_api';
+import { BlogAPI } from '@/src/api/blog_api';
 
 import { makeFetchWithError, makeFetchWithResponse } from '@/test/util/make_fetch_mock';
 import { Http400Error, Http500Error, HttpBadRequestError, HttpForbiddenError, HttpGatewayTimeoutError, HttpInternalServerError, HttpNotFoundError, HttpServiceUnavailableError, HttpUnauthorizedError } from '@/src/errors/http_error';
@@ -6,7 +6,7 @@ import { Http400Error, Http500Error, HttpBadRequestError, HttpForbiddenError, Ht
 global.fetch = jest.fn();
 
 const baseUrl = 'abc';
-jest.mock('@src/shared/get_base_url', () => ({
+jest.mock('@/src/shared/get_base_url', () => ({
   getBaseApiUrl() {
     return baseUrl;
   },

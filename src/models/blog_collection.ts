@@ -1,6 +1,6 @@
 import { BlogPost, BlogPostInterface } from '@/src/models/blog_post';
-import { InvalidInputError } from '@src/errors/invalid_input_error';
-import { NoResultError } from '@src/errors/no_result_error';
+import { InvalidInputError } from '@/src/errors/invalid_input_error';
+import { NoResultError } from '@/src/errors/no_result_error';
 
 class BlogPostCollection {
   constructor(

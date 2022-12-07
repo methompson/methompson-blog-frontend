@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { BlogPost } from '@src/models/blog_post';
-import { actions, AppDispatch } from '@src/store';
+import { BlogPost } from '@/src/models/blog_post';
+import { actions, AppDispatch } from '@/src/store';
 
-import { CenteredStandardPage } from '@src/ui/components/standard_page';
-import { BlogContent } from '@src/ui/components/blog_content';
-import { FullHeightCard } from '@src/ui/components/card';
+import { CenteredStandardPage } from '@/src/ui/components/standard_page';
+import { BlogContent } from '@/src/ui/components/blog_content';
+import { FullHeightCard } from '@/src/ui/components/card';
 
 export function BlogPostPage() {
   const dispatch = useDispatch<AppDispatch>();

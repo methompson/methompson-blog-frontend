@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { actions, AppDispatch, selectors } from '@src/store';
+import { actions, AppDispatch, selectors } from '@/src/store';
 
-import { StandardPage } from '@src/ui/components/standard_page';
-import { TextInput } from '@src/ui/components/new_post/text_input';
+import { StandardPage } from '@/src/ui/components/standard_page';
+import { TextInput } from '@/src/ui/components/new_post/text_input';
 import { isRecord } from '@/src/shared/type_guards';
 import { isString } from 'markdown-it/lib/common/utils';
 import { FullWidthButton, RegularButton } from '../components/regular_button';

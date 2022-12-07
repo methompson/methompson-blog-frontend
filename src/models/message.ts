@@ -6,8 +6,8 @@ import {
   isNumber,
   isStringOrNullOrUndefined,
   isNumberOrNullOrUndefined,
-} from '@src/shared/type_guards';
-import { InvalidInputError } from '@src/errors/invalid_input_error';
+} from '@/src/shared/type_guards';
+import { InvalidInputError } from '@/src/errors/invalid_input_error';
 
 interface MessageInterface {
   id: string;

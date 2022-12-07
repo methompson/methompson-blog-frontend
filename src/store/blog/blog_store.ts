@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { combineReducers } from 'redux';
 
-import { BlogAPI } from '@src/api/blog_api';
+import { BlogAPI } from '@/src/api/blog_api';
 import { BlogPostInterface, NewBlogPost } from '@/src/models/blog_post';
 import { isBoolean } from '@/src/shared/type_guards';
 

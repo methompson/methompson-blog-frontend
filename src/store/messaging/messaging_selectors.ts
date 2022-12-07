@@ -1,6 +1,6 @@
-import { StateType } from '@src/store';
+import { StateType } from '@/src/store';
 
-import { MessageCollection } from '@src/models/message';
+import { MessageCollection } from '@/src/models/message';
 
 export const messages = (state: StateType) => {
   const messageCollection = MessageCollection.fromJSON(Object.values(state.messaging.messages));

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { XIcon } from '@heroicons/react/solid';
 
-import { actions, AppDispatch, selectors } from '@src/store';
+import { actions, AppDispatch, selectors } from '@/src/store';
 
 import { MessageType, Message, MessageCollection } from '@/src/models/message';
 

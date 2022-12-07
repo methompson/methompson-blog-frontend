@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-import { actions, AppDispatch } from '@src/store';
+import { actions, AppDispatch } from '@/src/store';
 import { getFirebaseConfig } from '@/src/shared/get_firebase_config';
 
 export function AuthenticationHandler() {

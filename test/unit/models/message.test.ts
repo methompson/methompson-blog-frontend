@@ -1,4 +1,4 @@
-import { Message, MessageType } from '@src/models/message';
+import { Message, MessageType } from '@/src/models/message';
 
 const id = 'id';
 const message = 'message';

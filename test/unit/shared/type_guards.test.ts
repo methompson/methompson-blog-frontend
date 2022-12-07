@@ -1,7 +1,7 @@
 import {
   isRecord,
   isNumberOrNullOrUndefined,
-} from '@src/shared/type_guards';
+} from '@/src/shared/type_guards';
 
 describe('Type Guards', () => {
   describe('isRecord', () => {

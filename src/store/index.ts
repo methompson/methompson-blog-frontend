@@ -6,6 +6,11 @@ import {
  } from './blog';
 
 import {
+  fileSlice,
+  fileActions,
+ } from './file';
+
+import {
   messagingSlice,
   messagingActions,
   messagingSelectors,
@@ -20,6 +25,7 @@ import {
 const store = configureStore({
   reducer: {
     blog: blogSlice.reducer,
+    file: fileSlice.reducer,
     messaging: messagingSlice.reducer,
     auth: authSlice.reducer,
   },
@@ -29,6 +35,7 @@ const actions = {
   ...messagingActions,
   ...authActions,
   ...blogActions,
+  ...fileActions,
 };
 
 const selectors = {

@@ -1,6 +1,6 @@
-import { isString, isRecord, isStringArray } from '@src/shared/type_guards';
-import { ValidDate, isValidDate } from '@src/shared/valid_date';
-import { InvalidInputError } from '@src/errors/invalid_input_error';
+import { isString, isRecord, isStringArray } from '@/src/shared/type_guards';
+import { ValidDate, isValidDate } from '@/src/shared/valid_date';
+import { InvalidInputError } from '@/src/errors/invalid_input_error';
 import MarkdownIt from 'markdown-it';
 
 interface NewBlogPostInterface {
