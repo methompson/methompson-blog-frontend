@@ -1,15 +1,20 @@
 import { FileDetails, FileDetailsJSON } from '@/src/models/file_models';
 
 import { getAuthToken } from '@/src/shared/auth_functions';
-import { getBaseFileApiUrl } from '@/src/shared/get_base_url';
+import { getBaseApiUrl } from '@/src/shared/get_base_url';
 import { isBoolean, isNumber, isRecord } from '@/src/shared/type_guards';
-import { basicHttpErrorHandling } from '../shared/http_error_handling';
+import { basicHttpErrorHandling } from '@/src/shared/http_error_handling';
 
 export interface FileListResponse {
   files: FileDetailsJSON[];
   totalFiles: number;
   page: number;
   pagination: number;
+}
+
+export interface ImageFileUploadRequest {
+  files: FileList;
+  isPrivate: boolean;
 }
 
 export interface FileUploadRequest {
@@ -19,7 +24,7 @@ export interface FileUploadRequest {
 
 export class FileAPI {
   async getFileList(_page = 1, _pagination = 20): Promise<FileListResponse> {
-    const baseUrl = getBaseFileApiUrl();
+    const baseUrl = getBaseApiUrl();
     const queryParams = `page=${_page}&pagination=${_pagination}`;
 
     const url = `${baseUrl}/list?${queryParams}`;
@@ -63,7 +68,7 @@ export class FileAPI {
   }
 
   async uploadFiles(req: FileUploadRequest) {
-    const baseUrl = getBaseFileApiUrl();
+    const baseUrl = getBaseApiUrl();
     const url = `${baseUrl}/upload`;
 
     const token = await getAuthToken();
@@ -80,6 +85,40 @@ export class FileAPI {
     body.append('ops', JSON.stringify({
       isPrivate: req.isPrivate,
     }));
+
+    const resp = await fetch(url, { method: 'POST', headers, body });
+
+    const json = await resp.json();
+
+    console.log(json);
+
+    if (!Array.isArray(json)) {
+      throw new Error('Invalid response from server');
+    }
+
+    const output = json.map((el) => FileDetails.fromJSON(el));
+
+    return output;
+  }
+
+  async uploadImages(req: ImageFileUploadRequest) {
+    const baseUrl = getBaseApiUrl();
+    const url = `${baseUrl}/file/image_upload`;
+
+    const token = await getAuthToken();
+    const headers = {
+      authorization: token,
+    };
+
+    const body = new FormData();
+
+    for (const file of req.files) {
+      body.append('image', file);
+    }
+
+    body.append('ops', JSON.stringify([{
+      isPrivate: req.isPrivate,
+    }]));
 
     const resp = await fetch(url, { method: 'POST', headers, body });
 

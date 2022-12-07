@@ -109,7 +109,7 @@ function UploadFile() {
 
           console.log('Dispatching');
 
-          dispatch(actions.uploadFiles({
+          dispatch(actions.uploadImages({
             files,
             isPrivate,
           }));

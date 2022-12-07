@@ -39,7 +39,23 @@ const uploadFiles = createAsyncThunk<unknown, FileUploadRequest>(
   },
 );
 
+const uploadImages = createAsyncThunk<unknown, FileUploadRequest>(
+  'file/uploadImages',
+  async (uploadFilesRequest: FileUploadRequest): Promise<unknown> => {
+    const fapi = new FileAPI();
+
+    try {
+      const result = await fapi.uploadImages(uploadFilesRequest);
+      console.log(result);
+    } catch (e) {
+      console.error('Error getting file list:', e);
+    }
+    return null;
+  },
+);
+
 export const fileActions = {
   getFileList,
   uploadFiles,
+  uploadImages,
 };

@@ -89,7 +89,7 @@ function HeaderMenuWithButton() {
   );
 
   const containerHeight = menuOpen ? 'h-full' : 'h-0';
-  const styles = 'menuVeil animatedBackground w-full fixed top-0 left-0 z-0 overflow-hidden';
+  const styles = 'menuVeil animatedBackground w-full fixed top-0 left-0 z-20 overflow-hidden';
 
   const smallHeaderStyle = menuOpen ? 'hidden' : '';
 
