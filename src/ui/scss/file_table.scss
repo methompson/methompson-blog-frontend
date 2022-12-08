@@ -1,0 +1,21 @@
+.fileTable, .imageOpTable {
+  td, th {
+    padding: 0.25em 1.5em 0.25em 0.25em;
+  }
+
+  tbody {
+    td:last-child {
+      text-align: end;
+    }
+  }
+
+  thead {
+    .tableLeft th {
+      text-align: left;
+    }
+
+    th h1 {
+      padding-bottom: 0.5em;
+    }
+  }
+}

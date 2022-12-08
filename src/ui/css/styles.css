@@ -505,3 +505,15 @@ img.ProseMirror-separator {
     opacity: 0;
   }
 }
+.fileTable td, .fileTable th, .imageOpTable td, .imageOpTable th {
+  padding: 0.25em 1.5em 0.25em 0.25em;
+}
+.fileTable tbody td:last-child, .imageOpTable tbody td:last-child {
+  text-align: end;
+}
+.fileTable thead .tableLeft th, .imageOpTable thead .tableLeft th {
+  text-align: left;
+}
+.fileTable thead th h1, .imageOpTable thead th h1 {
+  padding-bottom: 0.5em;
+}
