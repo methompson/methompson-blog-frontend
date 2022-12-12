@@ -8,7 +8,7 @@ import { DebugPage } from '@/src/ui/pages/debug';
 import { NewPost } from '@/src/ui/pages/new_post';
 import { FourOhFour } from '@/src/ui/pages/404';
 import { FileList } from '@/src/ui/pages/file_list';
-import { ImageUpload } from '@/src/ui/pages/image_upload';
+import { ImageUploadPage } from '@/src/ui/pages/image_upload';
 
 export function BlogRouter() {
   return (
@@ -22,7 +22,7 @@ export function BlogRouter() {
         <Route path='/post/:slug' element={<BlogPostPage />} />
         <Route path='/new_post' element={<NewPost />} />
         <Route path='/files' element={<FileList />} />
-        <Route path='/upload_image' element={<ImageUpload />} />
+        <Route path='/upload_image' element={<ImageUploadPage />} />
         <Route path='*' element={<FourOhFour />} />
       </Routes>
     </span>

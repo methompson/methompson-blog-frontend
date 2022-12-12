@@ -79,10 +79,6 @@ function UploadFile() {
       <input
         type="file"
         onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-          console.log(ev);
-
-          console.log(ev.target.files);
-
           setFiles(ev.target.files);
         }}/>
 
