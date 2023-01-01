@@ -6,9 +6,11 @@ import {
   isNumber,
   isStringOrNullOrUndefined,
   isNumberOrNullOrUndefined,
+  isNullOrUndefined,
 } from '@/src/shared/type_guards';
 import { InvalidInputError } from '@/src/errors/invalid_input_error';
 import React from 'react';
+import { Duration } from '@/src/shared/duration';
 
 interface MessageInterface {
   id: string;
@@ -21,7 +23,7 @@ interface MessageInterface {
 interface NewMessageInterface {
   message: string | JSX.Element;
   messageType?: string;
-  duration?: number;
+  duration?: Duration | number;
 }
 
 enum MessageType {
@@ -35,7 +37,7 @@ class Message {
     protected _id: string,
     protected _message: string | JSX.Element,
     protected _timeAdded: number,
-    protected _duration: number,
+    protected _duration: Duration,
     protected _messageType: MessageType,
   ) {}
 
@@ -60,14 +62,14 @@ class Message {
       id: this._id,
       message: this._message,
       timeAdded: this._timeAdded,
-      duration: this._duration,
+      duration: this._duration.inMilliseconds,
       messageType: this._messageType,
     };
   }
 
   // 1 minute
-  static get defaultDuration(): number {
-    return 60 * 1000;
+  static get defaultDuration(): Duration {
+    return new Duration({minutes: 1});
   }
 
   static get defaultMessageType(): MessageType {
@@ -91,7 +93,15 @@ class Message {
     }
 
     const id = v4();
-    const duration = input.duration ?? Message.defaultDuration;
+    let duration: Duration = Message.defaultDuration;
+
+    if (isNumber(input.duration)) {
+      duration = new Duration({milliseconds: input.duration});
+    } else if (input.duration instanceof Duration) {
+      duration = input.duration;
+    }
+
+    // const duration = input.duration ?? Message.defaultDuration;
     const messageType = Message.makeMessageType(input.messageType) ?? Message.defaultMessageType;
 
     const now = Date.now();
@@ -114,7 +124,7 @@ class Message {
       input.id,
       input.message,
       input.timeAdded,
-      input.duration,
+      new Duration({milliseconds: input.duration}),
       Message.makeMessageType(input.messageType),
     );
   }
@@ -132,7 +142,7 @@ class Message {
     return isRecord(input)
       && (isString(input.message) || React.isValidElement(input.message))
       && isStringOrNullOrUndefined(input.messageType)
-      && isNumberOrNullOrUndefined(input.duration);
+      && (isNullOrUndefined(input.duration) || input.duration instanceof Duration || isNumber(input.duration));
   }
 }
 

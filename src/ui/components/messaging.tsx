@@ -103,7 +103,7 @@ interface TypeMessageCardProps {
 
 function ErrorCard(props: TypeMessageCardProps) {
   return <MessageCard
-    backgroundColor='bg-red-500'
+    backgroundColor='bg-orange-500'
     textColor='text-red-50'
     message={props.message}
     closed={props.closed} />;

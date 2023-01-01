@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { TrashIcon } from '@heroicons/react/solid';
 import { v4 as uuidv4 } from 'uuid';
+import { TrashIcon } from '@heroicons/react/solid';
 
-import { actions, AppDispatch } from '@/src/store';
-import { CenteredStandardPage } from '@/src/ui/components/standard_page';
-import { RegularButton } from '@/src/ui/components/regular_button';
-import { TextInput } from '@/src/ui/components/new_post/text_input';
 import { CheckBox } from '@/src/ui/components/check_box';
-import { isNullOrUndefined } from '@/src/shared/type_guards';
-import { ImageOp } from '@/src/shared/image_op';
+import { TextInput } from '@/src/ui/components/new_post/text_input';
+import { RegularButton } from '@/src/ui/components/regular_button';
+import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 
+import { ImageOp } from '@/src/shared/image_op';
 import { messengerInstance } from '@/src/shared/messenger';
-import { Message, MessageType } from '@/src/models/message';
+import { isNullOrUndefined } from '@/src/shared/type_guards';
+import { actions, AppDispatch } from '@/src/store';
 
 const acceptedImageTypes = [
   'image/png',
@@ -22,10 +21,6 @@ const acceptedImageTypes = [
   'image/bmp',
   'image/tiff',
 ];
-
-interface DragAndDropProps {
-  onAddFiles: (files: File[]) => void;
-}
 
 interface FileItem {
   file: File;
@@ -57,6 +52,10 @@ function Banner() {
       Image Upload
     </h1>
   </div>;
+}
+
+interface DragAndDropProps {
+  onAddFiles: (files: File[]) => void;
 }
 
 function DragAndDrop(props: DragAndDropProps) {
@@ -237,7 +236,7 @@ function AddImageOps(props: AddImageOpProps) {
 
   return <div id='addImageOpSection' className='flex justify-center m-2'>
     <div className={`${diffBg} w-full flex justify-center flex-col p-2`}>
-      <h1 className='text-lg font-bold'>Add Image Operation</h1>
+      <h1 className='text-lg font-bold text-center'>Add Image Operation</h1>
 
       <div className={flexBetween}>
         <span className={leftSide}>Identifier</span>
@@ -430,12 +429,16 @@ function SubtmittingButton() {
   </div>;
 }
 
+function SuccessMessage(props: {successUrl: string}) {
+  return <span>Message Created! See here: <a href={props.successUrl}>Link</a> </span>;
+}
+
 export function ImageUploadPage() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [files, setFiles] = useState<FileItem[]>([]);
   const [imageOps, setImageOps] = useState<Record<string, ImageOp>>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
-
-  const dispatch = useDispatch<AppDispatch>();
 
   function addFiles(fileList: File[]) {
     const fileItems = fileList.map((file) => ({
@@ -466,41 +469,38 @@ export function ImageUploadPage() {
   }
 
   async function uploadImages() {
+
     const ops = Object.values(imageOps);
     const fileList = files.map((f) => f.file);
 
     // TODOs:
-    // disable button until success
     // Show message with error or success
     // Show information about image, including link to image.
 
-    // await dispatch(actions.uploadImages({
-    //   files: fileList,
-    //   ops,
-    // }));
-
     setSubmitting(true);
 
-    await new Promise((resolve) => {
-      setTimeout(resolve, 1000);
-    });
+    try {
+      await dispatch(actions.uploadImages({
+        files: fileList,
+        ops,
+      }));
 
-    let successMessage: JSX.Element = <span>Message Created! See here: <a href='/'>Link</a> </span>;
+      // await new Promise((resolve) => {
+      //   setTimeout(resolve, 1000);
+      // });
 
-    // dispatch(actions.addSuccessMessage({
-    //   message: successMessage,
-    // }));
-    // dispatch(actions.addErrorMessage({
-    //   message: 'Error Uploading Image',
-    // }));
+      let successMessage = <SuccessMessage successUrl='/' />;
 
-    messengerInstance.addMessage(Message.newMessage({
-      messageType: MessageType.Success,
-      message: successMessage,
-      duration: 10000,
-    }));
+      messengerInstance.addSuccessMessage({
+        message: successMessage,
+        // duration: new Duration({minutes: 10}),
+      });
+    } catch(e) {
+      messengerInstance.addErrorMessage({
+        message: `Error Uploading Images: ${e}`,
+      });
+    }
 
-    console.log('Done', successMessage);
     setSubmitting(false);
   }
 

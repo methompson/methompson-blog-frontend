@@ -39,6 +39,10 @@ code {
   opacity: 0;
 }
 
+.messageCard a {
+  text-decoration-line: underline;
+}
+
 #editor div.ProseMirror {
   min-height: 20em;
 }

@@ -9,6 +9,7 @@ import { StandardPage } from '@/src/ui/components/standard_page';
 import { TextInput } from '@/src/ui/components/new_post/text_input';
 import { FullWidthButton, RegularButton } from '@/src/ui/components/regular_button';
 import { isRecord } from '@/src/shared/type_guards';
+import { messengerInstance } from '@/src/shared/messenger';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -31,9 +32,9 @@ export function LoginPage() {
       }
 
       // If We get here, we've had an issue and we should notify the user.
-      dispatch(actions.addErrorMessage({
+      messengerInstance.addErrorMessage({
         message: msg,
-      }));
+      });
     }
 
   };

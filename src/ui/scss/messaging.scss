@@ -6,3 +6,7 @@
 .messageCard.closed {
   opacity: 0;
 }
+
+.messageCard a {
+  text-decoration-line: underline;
+}

@@ -6,6 +6,7 @@ import { actions, AppDispatch } from '@/src/store';
 import { BlogPostCollection } from '@/src/models/blog_collection';
 import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { ShortBlogCard } from '@/src/ui/components/blog_content';
+import { messengerInstance } from '@/src/shared/messenger';
 
 function getPage(input: string): number {
   const parsedPage = parseInt(input, 10);
@@ -40,9 +41,10 @@ export function Home() {
         setBlogPosts(blogCollection);
         setMorePages(payload.morePages);
       } catch (e) {
-        dispatch(actions.addErrorMessage({
-          message: `Error Receiving Blog Posts: ${e}`,
-        }));
+        // console.log('error receiving blog posts', e);
+        messengerInstance.addErrorMessage({
+          message: `Error Receiving Blog Posts: ${e.toString()}`,
+        });
       }
     })();
   }, [dispatch, page]);

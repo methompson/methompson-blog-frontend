@@ -1,4 +1,11 @@
-import { Message, MessageCollection } from '@/src/models/message';
+import { Message, MessageCollection, MessageType } from '@/src/models/message';
+import { Duration } from '@/src/shared/duration';
+import { isNull, isNullOrUndefined } from './type_guards';
+
+interface AddMessageInterface {
+  message: string | JSX.Element;
+  duration?: Duration;
+}
 
 class Messenger {
   private messages: Record<string, Message> = {};
@@ -12,10 +19,38 @@ class Messenger {
     return new MessageCollection(this.messages);
   }
 
+  // TODO
+  addSuccessMessage(message: AddMessageInterface) {
+    this.makeNewMessage(message, MessageType.Success);
+  }
+
+  addInfoMessage(message: AddMessageInterface) {
+    this.makeNewMessage(message, MessageType.Info);
+  }
+
+  addErrorMessage(message: AddMessageInterface) {
+    this.makeNewMessage(message, MessageType.Error);
+  }
+
+  makeNewMessage(message: AddMessageInterface, messageType: MessageType) {
+    const msgData: Record<string, unknown> = {
+      messageType,
+      message: message.message,
+    };
+
+    if (!isNullOrUndefined(message.duration)) {
+      msgData.duration = message.duration.inMilliseconds;
+    }
+
+    const msg = Message.newMessage(msgData);
+
+    this.addMessage(msg);
+  }
+
   addMessage(message: Message) {
     this.messages[message.id] = message;
 
-    const timerId = window.setTimeout(() => this.removeMessage(message.id), message.duration);
+    const timerId = window.setTimeout(() => this.removeMessage(message.id), message.duration.inMilliseconds);
     this.timers[message.id] = timerId;
 
     this.notifySubscribers();

@@ -8,10 +8,10 @@ interface DurationInput {
   milliseconds?: number;
 }
 
-const msInSecond = 1000;
-const msInMinute = msInSecond * 60;
-const msInHour = msInMinute * 60;
-const msInDay = msInHour * 24;
+const secondInMs = 1000;
+const MinuteInMs = secondInMs * 60;
+const hourInMs = MinuteInMs * 60;
+const dayInMs = hourInMs * 24;
 
 export class Duration {
   protected _milliseconds: number;
@@ -20,16 +20,16 @@ export class Duration {
     let milliseconds = 0;
 
     if (isNumber(input.days)) {
-      milliseconds += input.days * msInDay;
+      milliseconds += input.days * dayInMs;
     }
     if (isNumber(input.hours)) {
-      milliseconds += input.hours * msInHour;
+      milliseconds += input.hours * hourInMs;
     }
     if (isNumber(input.minutes)) {
-      milliseconds += input.minutes * msInMinute;
+      milliseconds += input.minutes * MinuteInMs;
     }
     if (isNumber(input.seconds)) {
-      milliseconds += input.seconds * msInSecond;
+      milliseconds += input.seconds * secondInMs;
     }
     if (isNumber(input.milliseconds)) {
       milliseconds += input.milliseconds;
@@ -38,7 +38,11 @@ export class Duration {
     this._milliseconds = milliseconds;
   }
 
-  get inMilliseconds() {
+  get inMilliseconds(): number {
     return this._milliseconds;
+  }
+
+  get inSeconds(): number {
+    return Math.trunc(this._milliseconds / secondInMs);
   }
 }

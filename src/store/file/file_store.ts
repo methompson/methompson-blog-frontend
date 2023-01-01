@@ -1,5 +1,6 @@
-import { FileAPI, FileUploadRequest, ImageFileUploadRequest } from '@/src/api/file_api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+import { FileAPI, FileUploadRequest, ImageFileUploadRequest } from '@/src/api/file_api';
 
 export const fileSlice = createSlice({
   name: 'file',
@@ -48,7 +49,7 @@ const uploadImages = createAsyncThunk<unknown, ImageFileUploadRequest>(
       const result = await fapi.uploadImages(uploadFilesRequest);
       console.log(result);
     } catch (e) {
-      console.error('Error getting file list:', e);
+      console.error('Error uploading image:', e);
     }
     return null;
   },

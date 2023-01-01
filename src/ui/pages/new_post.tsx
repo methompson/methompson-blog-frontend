@@ -13,6 +13,7 @@ import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { LabeledTextInput } from '@/src/ui/components/new_post/text_input';
 import { BlogContent } from '@/src/ui/components/blog_content';
 import { RegularButton } from '@/src/ui/components/regular_button';
+import { messengerInstance } from '@/src/shared/messenger';
 
 function removeAllChildNodes(parent: Element) {
   while (parent.firstChild) {
@@ -77,10 +78,10 @@ export function NewPost() {
       setShouldRedirectSlug(bp.slug);
     } catch(e) {
       const message = `Error Adding New Blog Post ${e}`;
-      dispatch(actions.addErrorMessage({
+      messengerInstance.addErrorMessage({
         message,
         duration: new Duration({minutes: 1}),
-      }));
+      });
     }
   };
 

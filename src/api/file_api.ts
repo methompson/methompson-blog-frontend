@@ -2,9 +2,9 @@ import { FileDetails, FileDetailsJSON } from '@/src/models/file_models';
 
 import { getAuthToken } from '@/src/shared/auth_functions';
 import { getBaseApiUrl } from '@/src/shared/get_base_url';
-import { isBoolean, isNumber, isRecord } from '@/src/shared/type_guards';
 import { basicHttpErrorHandling } from '@/src/shared/http_error_handling';
 import { ImageOp } from '@/src/shared/image_op';
+import { isBoolean, isNumber, isRecord } from '@/src/shared/type_guards';
 
 export interface FileListResponse {
   files: FileDetailsJSON[];

@@ -37,7 +37,7 @@ class BlogAPI {
 
   async getBlogPost(slug: string) {
     const authToken = await getAuthToken();
-    console.log(authToken);
+    // console.log(authToken);
     const baseUrl = getBaseApiUrl();
     const url = `${baseUrl}/blog/${slug}`;
 

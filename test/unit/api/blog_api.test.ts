@@ -1,7 +1,19 @@
 import { BlogAPI } from '@/src/api/blog_api';
 
 import { makeFetchWithError, makeFetchWithResponse } from '@/test/util/make_fetch_mock';
-import { Http400Error, Http500Error, HttpBadRequestError, HttpForbiddenError, HttpGatewayTimeoutError, HttpInternalServerError, HttpNotFoundError, HttpServiceUnavailableError, HttpUnauthorizedError } from '@/src/errors/http_error';
+import {
+  Http400Error,
+  Http500Error,
+  HttpBadRequestError,
+  HttpForbiddenError,
+  HttpGatewayTimeoutError,
+  HttpInternalServerError,
+  HttpNotFoundError,
+  HttpServiceUnavailableError,
+  HttpUnauthorizedError,
+} from '@/src/errors/http_error';
+
+import * as authFunctions from '@/src/shared/auth_functions';
 
 global.fetch = jest.fn();
 
@@ -11,6 +23,12 @@ jest.mock('@/src/shared/get_base_url', () => ({
     return baseUrl;
   },
 }));
+
+jest.mock('@/src/shared/auth_functions', () => {
+  const getAuthToken = jest.fn();
+
+  return { getAuthToken };
+});
 
 const input1 = {
   id: '62583158430e488788971352',
@@ -73,7 +91,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow('Test Error');
+      await expect(() => bap.getBlogList()).rejects.toThrow('Test Error');
     });
 
     test('throws an error if the response is a 400 response', async () => {
@@ -86,7 +104,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(HttpBadRequestError);
+      await expect(() => bap.getBlogList()).rejects.toThrow(HttpBadRequestError);
     });
 
     test('throws an error if the response is a 401 response', async () => {
@@ -99,7 +117,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(HttpUnauthorizedError);
+      await expect(() => bap.getBlogList()).rejects.toThrow(HttpUnauthorizedError);
     });
 
     test('throws an error if the response is a 403 response', async () => {
@@ -112,7 +130,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(HttpForbiddenError);
+      await expect(() => bap.getBlogList()).rejects.toThrow(HttpForbiddenError);
     });
 
     test('throws an error if the response is a 404 response', async () => {
@@ -125,7 +143,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(HttpNotFoundError);
+      await expect(() => bap.getBlogList()).rejects.toThrow(HttpNotFoundError);
     });
 
     test('throws an error if the response is a 500 response', async () => {
@@ -138,7 +156,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(HttpInternalServerError);
+      await expect(() => bap.getBlogList()).rejects.toThrow(HttpInternalServerError);
     });
 
     test('throws an error if the response is a 503 response', async () => {
@@ -151,7 +169,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(HttpServiceUnavailableError);
+      await expect(() => bap.getBlogList()).rejects.toThrow(HttpServiceUnavailableError);
     });
 
     test('throws an error if the response is a 504 response', async () => {
@@ -164,7 +182,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(HttpGatewayTimeoutError);
+      await expect(() => bap.getBlogList()).rejects.toThrow(HttpGatewayTimeoutError);
     });
 
     test('throws an error if the response is in the 400 response range, but not a specific number', async () => {
@@ -177,7 +195,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(Http400Error);
+      await expect(() => bap.getBlogList()).rejects.toThrow(Http400Error);
     });
 
     test('throws an error if the response is in the 500 response range, but not a specific number', async () => {
@@ -190,7 +208,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogList()).rejects.toThrow(Http500Error);
+      await expect(() => bap.getBlogList()).rejects.toThrow(Http500Error);
     });
   });
 
@@ -237,7 +255,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow('Test Error');
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow('Test Error');
     });
 
     test('throws an error if the response is a 400 response', async () => {
@@ -250,7 +268,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpBadRequestError);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpBadRequestError);
     });
 
     test('throws an error if the response is a 401 response', async () => {
@@ -263,7 +281,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpUnauthorizedError);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpUnauthorizedError);
     });
 
     test('throws an error if the response is a 403 response', async () => {
@@ -276,7 +294,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpForbiddenError);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpForbiddenError);
     });
 
     test('throws an error if the response is a 404 response', async () => {
@@ -289,7 +307,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpNotFoundError);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpNotFoundError);
     });
 
     test('throws an error if the response is a 500 response', async () => {
@@ -302,7 +320,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpInternalServerError);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpInternalServerError);
     });
 
     test('throws an error if the response is a 503 response', async () => {
@@ -315,7 +333,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpServiceUnavailableError);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpServiceUnavailableError);
     });
 
     test('throws an error if the response is a 504 response', async () => {
@@ -328,7 +346,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpGatewayTimeoutError);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(HttpGatewayTimeoutError);
     });
 
     test('throws an error if the response is in the 400 response range, but not a specific number', async () => {
@@ -341,7 +359,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(Http400Error);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(Http400Error);
     });
 
     test('throws an error if the response is in the 500 response range, but not a specific number', async () => {
@@ -354,7 +372,7 @@ describe('BlogAPI', () => {
       global.fetch = fetch;
 
       const bap = new BlogAPI();
-      expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(Http500Error);
+      await expect(() => bap.getBlogPost(testSlug)).rejects.toThrow(Http500Error);
     });
   });
 });

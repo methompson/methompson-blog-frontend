@@ -1,9 +1,10 @@
 import { Message, MessageType } from '@/src/models/message';
+import { Duration } from '@/src/shared/duration';
 
 const id = 'id';
 const message = 'message';
 const timeAdded = 123;
-const duration = timeAdded;
+const duration = new Duration({milliseconds: 2000});
 const messageType = MessageType.Info;
 
 describe('Message', () => {
@@ -15,7 +16,7 @@ describe('Message', () => {
         id,
         message,
         timeAdded,
-        duration,
+        duration: duration.inMilliseconds,
         messageType,
       });
     });
@@ -23,6 +24,7 @@ describe('Message', () => {
 
   describe('newMessage', () => {
     const validInput = { message, messageType, duration };
+
     test('Returns a new message with values provided', () => {
       const msg = Message.newMessage(validInput);
 
@@ -46,7 +48,7 @@ describe('Message', () => {
       delete input.duration;
       const msg = Message.newMessage(input);
 
-      expect(msg.duration).toBe(Message.defaultDuration);
+      expect(msg.duration.inMilliseconds).toBe(Message.defaultDuration.inMilliseconds);
     });
 
     test('Uses a default value if no messageType is provided', () => {
@@ -60,13 +62,32 @@ describe('Message', () => {
   });
 
   describe('fromJSON', () => {
+    const validInput = {
+      id,
+      message,
+      timeAdded,
+      duration: duration.inMilliseconds,
+      messageType,
+     };
+
     test('Returns a message object with passed in values', () => {
-      const msg = Message.fromJSON({ id, message, timeAdded, duration, messageType });
-      expect(msg.toJSON()).toStrictEqual({ id, message, timeAdded, duration, messageType });
+      const msg = Message.fromJSON({
+        id,
+        message,
+        timeAdded,
+        duration: duration.inMilliseconds,
+        messageType,
+      });
+      expect(msg.toJSON()).toStrictEqual({
+        id,
+        message,
+        timeAdded,
+        duration: duration.inMilliseconds,
+        messageType,
+      });
     });
 
     test('Throws an error if the input is invalid', () => {
-      const validInput = { id, message, timeAdded, duration, messageType };
       // Confirm that the input works.
       expect(() => Message.fromJSON(validInput)).not.toThrow();
 
@@ -94,7 +115,7 @@ describe('Message', () => {
     });
 
     test('toJSON can be fed into fromJSON and have the same results', () => {
-      const msg1 = Message.fromJSON({ id, message, timeAdded, duration, messageType });
+      const msg1 = Message.fromJSON(validInput);
       const msg2 = Message.fromJSON(msg1.toJSON());
 
       expect(msg1.toJSON()).toStrictEqual(msg2.toJSON());
@@ -102,7 +123,13 @@ describe('Message', () => {
   });
 
   describe('isMessageInterface', () => {
-    const validInput = { id, message, timeAdded, duration, messageType };
+    const validInput = {
+      id,
+      message,
+      timeAdded,
+      duration: duration.inMilliseconds,
+      messageType,
+    };
 
     test('returns true for a valid input', () => {
       expect(Message.isMessageInterface(validInput)).toBe(true);
@@ -148,6 +175,11 @@ describe('Message', () => {
 
     test('returns true for a valid input', () => {
       expect(Message.isNewMessageInterface(validInput)).toBe(true);
+
+      expect(Message.isNewMessageInterface({
+        ...validInput,
+        duration: duration.inMilliseconds,
+      })).toBe(true);
     });
 
     test('returns false for an invalid input', () => {
