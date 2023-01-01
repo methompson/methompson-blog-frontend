@@ -14,7 +14,6 @@ export function DebugButtonColumn() {
     <GetBlogPostsButton />
     <AddNewRandomMessageButton />
     <GetFileList />
-    <UploadFile />
   </div>;
 }
 
@@ -70,52 +69,5 @@ function GetFileList() {
           dispatch(actions.getFileList({}));
         } catch (e) {}
       }} />
-  );
-}
-
-function UploadFile() {
-  const dispatch = useDispatch<AppDispatch>();
-  const [files, setFiles] = useState<File[]>([]);
-  const [isPrivate, setIsPrivate] = useState(true);
-
-  return (
-    <div className="flex flex-row justify-between items-center w-full">
-      <input
-        type="file"
-        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-          const fileList: File[] = [];
-          for (const file of ev.target.files) {
-            fileList.push(file);
-          }
-          setFiles(fileList);
-        }}/>
-
-      <div className='flex items-center'>
-        <input
-          type='checkbox'
-          id='isPrivate'
-          name='isPrivate'
-          checked={isPrivate}
-          onChange={(ev) => setIsPrivate(ev?.target?.checked ?? true)}/>
-        <label className='px-1' htmlFor='isPrivate'>Private</label>
-      </div>
-
-      <DebugButton
-        title="Upload File"
-        action={async () => {
-          if (files.length === 0) {
-            // dispatch(actions.addErrorMessage({
-            //   message: 'Must Select at least one file',
-            //   duration: new Duration({ seconds: 5 }),
-            // }));
-            return;
-          }
-
-          dispatch(actions.uploadImages({
-            files,
-            ops: [],
-          }));
-        }} />
-    </div>
   );
 }

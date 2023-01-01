@@ -45,12 +45,9 @@ const uploadImages = createAsyncThunk<unknown, ImageFileUploadRequest>(
   async (uploadFilesRequest: ImageFileUploadRequest): Promise<unknown> => {
     const fapi = new FileAPI();
 
-    try {
-      const result = await fapi.uploadImages(uploadFilesRequest);
-      console.log(result);
-    } catch (e) {
-      console.error('Error uploading image:', e);
-    }
+    const result = await fapi.uploadImages(uploadFilesRequest);
+    console.log(result);
+
     return null;
   },
 );

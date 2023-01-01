@@ -28,7 +28,7 @@ export class FileAPI {
     const baseUrl = getBaseApiUrl();
     const queryParams = `page=${_page}&pagination=${_pagination}`;
 
-    const url = `${baseUrl}/list?${queryParams}`;
+    const url = `${baseUrl}/file/list?${queryParams}`;
 
     const token = await getAuthToken();
     const headers = {
@@ -113,17 +113,21 @@ export class FileAPI {
 
     const body = new FormData();
 
+    // console.log('Files', req.files);
+
     for (const file of req.files) {
       body.append('image', file);
     }
 
     body.append('ops', JSON.stringify(req.ops));
 
+    // console.log('body', body);
+
     const resp = await fetch(url, { method: 'POST', headers, body });
 
     const json = await resp.json();
 
-    console.log(json);
+    // console.log(json);
 
     if (!Array.isArray(json)) {
       throw new Error('Invalid response from server');

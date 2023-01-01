@@ -21,44 +21,6 @@ function getPage(input: string): number {
   return parsedPage;
 }
 
-export function Home() {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const [blogPosts, setBlogPosts] = useState(new BlogPostCollection({}));
-  const [morePages, setMorePages] = useState(false);
-
-  const pageStr = useParams().page ?? '1';
-  const page = getPage(pageStr);
-
-  useEffect(() => {
-    (async function getBlogPosts() {
-      try {
-        const result = dispatch(actions.getBlogList({ page }));
-        // const payload = result.payload;
-        const payload = await result.unwrap();
-
-        const blogCollection = BlogPostCollection.fromJSON(payload.posts);
-        setBlogPosts(blogCollection);
-        setMorePages(payload.morePages);
-      } catch (e) {
-        // console.log('error receiving blog posts', e);
-        messengerInstance.addErrorMessage({
-          message: `Error Receiving Blog Posts: ${e.toString()}`,
-        });
-      }
-    })();
-  }, [dispatch, page]);
-
-  const blogComponents = blogPosts.sortedList.map((bp) => <ShortBlogCard key={bp.id} blogPost={bp} />);
-
-  return (
-    <CenteredStandardPage>
-      {blogComponents}
-      <PageMovementBlock pageNumber={page} morePages={morePages}/>
-    </CenteredStandardPage>
-  );
-}
-
 interface PageMovementBlockInput {
   pageNumber: number
   morePages: boolean
@@ -126,4 +88,51 @@ interface NavigationLinkProps {
 
 function NavigationLink(props: NavigationLinkProps) {
   return <Link className='underline font-bold' to={props.linkUrl}>{props.displayTitle}</Link>;
+}
+
+function NoPostsBlock() {
+  return <h1
+    className='text-2xl font-bold text-center'>
+    No Blog Posts Yet. Check Back Soon!
+  </h1>;
+}
+
+export function Home() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [blogPosts, setBlogPosts] = useState(new BlogPostCollection({}));
+  const [morePages, setMorePages] = useState(false);
+
+  const pageStr = useParams().page ?? '1';
+  const page = getPage(pageStr);
+
+  useEffect(() => {
+    (async function getBlogPosts() {
+      try {
+        const result = dispatch(actions.getBlogList({ page }));
+        // const payload = result.payload;
+        const payload = await result.unwrap();
+
+        const blogCollection = BlogPostCollection.fromJSON(payload.posts);
+        setBlogPosts(blogCollection);
+        setMorePages(payload.morePages);
+      } catch (e) {
+        // console.log('error receiving blog posts', e);
+        messengerInstance.addErrorMessage({
+          message: `Error Receiving Blog Posts: ${e.toString()}`,
+        });
+      }
+    })();
+  }, [dispatch, page]);
+
+  const blogComponents = blogPosts.sortedList.map((bp) => <ShortBlogCard key={bp.id} blogPost={bp} />);
+
+  const output = blogComponents.length > 0 ? blogComponents : <NoPostsBlock />;
+
+  return (
+    <CenteredStandardPage>
+      {output}
+      <PageMovementBlock pageNumber={page} morePages={morePages}/>
+    </CenteredStandardPage>
+  );
 }

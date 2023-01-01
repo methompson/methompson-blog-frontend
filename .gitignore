@@ -26,3 +26,8 @@ yarn-error.log*
 
 # Local Files with sensitive info
 *.local
+
+/dist
+/docker/artifacts
+docker-run.sh
+docker/dist
