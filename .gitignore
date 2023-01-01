@@ -29,5 +29,5 @@ yarn-error.log*
 
 /dist
 /docker/artifacts
-docker-run.sh
+docker_run.sh
 docker/dist
