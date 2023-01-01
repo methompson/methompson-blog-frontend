@@ -1,5 +1,5 @@
 export function LoadingSpinner() {
-  return <div className="lds-spinner">
+  return <div className="loading-spinner">
     <div></div>
     <div></div>
     <div></div>

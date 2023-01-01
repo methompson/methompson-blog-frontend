@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
 import { XIcon } from '@heroicons/react/solid';
 
 import { actions, AppDispatch, selectors } from '@/src/store';
 
 import { MessageType, Message, MessageCollection } from '@/src/models/message';
+
+import { messengerInstance } from '@/src/shared/messenger';
 
 function messageDiff(currentMessages: MessageCollection, storeMessages: MessageCollection) {
   let hasDiff = false;
@@ -32,11 +34,16 @@ function messageDiff(currentMessages: MessageCollection, storeMessages: MessageC
   };
 }
 
-export function Messenger() {
-  const storeMessages = useSelector(selectors.messages);
-  const [currentMessages, setCurrentMessages] = useState(storeMessages);
+export function MessagingComponent() {
+  // const storeMessages = useSelector(selectors.messages);
+  const [messageCollection, setMessageCollection] = useState<MessageCollection>(new MessageCollection({}));
+  const [currentMessages, setCurrentMessages] = useState<MessageCollection>(new MessageCollection({}));
 
-  const diff = messageDiff(currentMessages, storeMessages);
+  useEffect(() => {
+    messengerInstance.registerMessagingOp((col) => setMessageCollection(col));
+  }, []);
+
+  const diff = messageDiff(currentMessages, messageCollection);
 
   const messagesToShow = currentMessages.copy();
 
@@ -50,7 +57,7 @@ export function Messenger() {
   // messages diff to show an animation.
   if (diff.hasDiff) {
     setTimeout(() => {
-      setCurrentMessages(storeMessages);
+      setCurrentMessages(messageCollection.copy());
     }, 255);
   }
 
@@ -70,7 +77,7 @@ export function Messenger() {
   ];
 
   const messageOutput = currentMessages.listByDate.map((el) => {
-    const closed = !storeMessages.hasMessage(el.id);
+    const closed = !messageCollection.hasMessage(el.id);
 
     switch (el.messageType) {
       case MessageType.Error:
@@ -126,7 +133,7 @@ interface MessageCardProps {
 }
 
 function MessageCard(props: MessageCardProps) {
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
 
   const cardClasses = [
     'messageCard',
@@ -155,7 +162,8 @@ function MessageCard(props: MessageCardProps) {
   ];
 
   function close() {
-    dispatch(actions.removeMessage({ messageId: props.message.id }));
+    messengerInstance.removeMessage(props.message.id);
+    // dispatch(actions.removeMessage({ messageId: props.message.id }));
   }
 
   return <div className={cardClasses.join(' ')}>

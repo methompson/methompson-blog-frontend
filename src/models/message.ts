@@ -8,17 +8,18 @@ import {
   isNumberOrNullOrUndefined,
 } from '@/src/shared/type_guards';
 import { InvalidInputError } from '@/src/errors/invalid_input_error';
+import React from 'react';
 
 interface MessageInterface {
   id: string;
-  message: string;
+  message: string | JSX.Element;
   timeAdded: number;
   duration: number;
   messageType: string;
 }
 
 interface NewMessageInterface {
-  message: string;
+  message: string | JSX.Element;
   messageType?: string;
   duration?: number;
 }
@@ -32,7 +33,7 @@ enum MessageType {
 class Message {
   constructor(
     protected _id: string,
-    protected _message: string,
+    protected _message: string | JSX.Element,
     protected _timeAdded: number,
     protected _duration: number,
     protected _messageType: MessageType,
@@ -121,7 +122,7 @@ class Message {
   static isMessageInterface(input: unknown): input is MessageInterface {
     return isRecord(input)
       && isString(input.id)
-      && isString(input.message)
+      && (isString(input.message) || React.isValidElement(input.message))
       && isString(input.messageType)
       && isNumber(input.timeAdded)
       && isNumber(input.duration);
@@ -129,7 +130,7 @@ class Message {
 
   static isNewMessageInterface(input: unknown): input is NewMessageInterface {
     return isRecord(input)
-      && isString(input.message)
+      && (isString(input.message) || React.isValidElement(input.message))
       && isStringOrNullOrUndefined(input.messageType)
       && isNumberOrNullOrUndefined(input.duration);
   }
@@ -171,7 +172,7 @@ class MessageCollection {
   }
 
   copy(): MessageCollection {
-    return new MessageCollection(this._messages);
+    return new MessageCollection({...this._messages});
   }
 
   static fromJSON(input: unknown): MessageCollection {

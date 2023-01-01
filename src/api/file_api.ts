@@ -4,6 +4,7 @@ import { getAuthToken } from '@/src/shared/auth_functions';
 import { getBaseApiUrl } from '@/src/shared/get_base_url';
 import { isBoolean, isNumber, isRecord } from '@/src/shared/type_guards';
 import { basicHttpErrorHandling } from '@/src/shared/http_error_handling';
+import { ImageOp } from '@/src/shared/image_op';
 
 export interface FileListResponse {
   files: FileDetailsJSON[];
@@ -13,12 +14,12 @@ export interface FileListResponse {
 }
 
 export interface ImageFileUploadRequest {
-  files: FileList;
-  isPrivate: boolean;
+  files: File[];
+  ops: ImageOp[];
 }
 
 export interface FileUploadRequest {
-  files: FileList;
+  files: File[];
   isPrivate: boolean;
 }
 
@@ -116,9 +117,7 @@ export class FileAPI {
       body.append('image', file);
     }
 
-    body.append('ops', JSON.stringify([{
-      isPrivate: req.isPrivate,
-    }]));
+    body.append('ops', JSON.stringify(req.ops));
 
     const resp = await fetch(url, { method: 'POST', headers, body });
 

@@ -9,6 +9,10 @@ import { RegularButton } from '@/src/ui/components/regular_button';
 import { TextInput } from '@/src/ui/components/new_post/text_input';
 import { CheckBox } from '@/src/ui/components/check_box';
 import { isNullOrUndefined } from '@/src/shared/type_guards';
+import { ImageOp } from '@/src/shared/image_op';
+
+import { messengerInstance } from '@/src/shared/messenger';
+import { Message, MessageType } from '@/src/models/message';
 
 const acceptedImageTypes = [
   'image/png',
@@ -26,15 +30,6 @@ interface DragAndDropProps {
 interface FileItem {
   file: File;
   id: string;
-}
-
-interface ImageOp {
-  identifier: string;
-  retainImage: boolean;
-  imageFormat?: string;
-  longestSideResolution?: number;
-  stripMetadata?: boolean;
-  isPrivate: boolean;
 }
 
 const diffBg = 'bg-slate-200 dark:bg-slate-700';
@@ -133,7 +128,7 @@ function FilesTable(props: FilesTableProps) {
       file={file}
       deleteFile={props.deleteFile}/>);
 
-  return <div className='flex justify-center m-2 fileTable'>
+  return <div id='filesTable' className='flex justify-center m-2 fileTable'>
     <table className='table-auto w-full text-sm'>
       <thead className={diffBg}>
         <tr>
@@ -240,8 +235,8 @@ function AddImageOps(props: AddImageOpProps) {
     props.addImageOp(imageOp);
   };
 
-  return <div className='flex justify-center m-2'>
-    <div className={`${diffBg} w-full flex justify-center m-2 flex-col p-2`}>
+  return <div id='addImageOpSection' className='flex justify-center m-2'>
+    <div className={`${diffBg} w-full flex justify-center flex-col p-2`}>
       <h1 className='text-lg font-bold'>Add Image Operation</h1>
 
       <div className={flexBetween}>
@@ -410,22 +405,37 @@ function OpRow(props: OpRowProps) {
 
 interface UploadButtonProps {
   action: () => Promise<void>;
-  disabled: boolean;
+  enabled: boolean;
 }
 
 function UploadButton(props: UploadButtonProps) {
-  return <div className='text-center'>
+  return <div id='uploadingButton' className='text-center'>
     <RegularButton
-      disabled={props.disabled}
+      disabled={!props.enabled}
       text='Upload Images'
-      classes={`${dropShadow} dark:bg-red-700 text-xl font-bold`}
+      classes={`${dropShadow} text-xl font-bold`}
       action={props.action} />
+  </div>;
+}
+
+function SubtmittingButton() {
+  const lightSubmitColors = 'bg-red-200 text-red-500 hover:bg-red-200 hover:text-red-500';
+  const darkSubmitColors = 'dark:bg-red-300 dark:text-red-700 hover:dark:bg-red-300 hover:dark:text-red-700';
+  return <div id='submittingButton' className='text-center'>
+    <RegularButton
+      disabled={true}
+      text='Uploading'
+      classes={`${dropShadow} ${lightSubmitColors} ${darkSubmitColors} text-xl font-bold cursor-progress`}
+      action={() => {}} />
   </div>;
 }
 
 export function ImageUploadPage() {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [imageOps, setImageOps] = useState<Record<string, ImageOp>>({});
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   function addFiles(fileList: File[]) {
     const fileItems = fileList.map((file) => ({
@@ -455,19 +465,66 @@ export function ImageUploadPage() {
     setImageOps(ops);
   }
 
-  async function uploadImages() {}
+  async function uploadImages() {
+    const ops = Object.values(imageOps);
+    const fileList = files.map((f) => f.file);
 
-  // TODO add some state
+    // TODOs:
+    // disable button until success
+    // Show message with error or success
+    // Show information about image, including link to image.
+
+    // await dispatch(actions.uploadImages({
+    //   files: fileList,
+    //   ops,
+    // }));
+
+    setSubmitting(true);
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
+    let successMessage: JSX.Element = <span>Message Created! See here: <a href='/'>Link</a> </span>;
+
+    // dispatch(actions.addSuccessMessage({
+    //   message: successMessage,
+    // }));
+    // dispatch(actions.addErrorMessage({
+    //   message: 'Error Uploading Image',
+    // }));
+
+    messengerInstance.addMessage(Message.newMessage({
+      messageType: MessageType.Success,
+      message: successMessage,
+      duration: 10000,
+    }));
+
+    console.log('Done', successMessage);
+    setSubmitting(false);
+  }
+
+  let uploadButton = <SubtmittingButton />;
+
+  if (!submitting) {
+    console.log('Not Submitting');
+
+    const enabled = files.length > 0 && Object.keys(imageOps).length > 0;
+    uploadButton = <UploadButton action={uploadImages} enabled={enabled}/>;
+  }
+
   return (
     <CenteredStandardPage authRestricted={true}>
-      <Banner />
-      <DragAndDrop onAddFiles={addFiles}/>
-      <FilesTable
-        files={files}
-        deleteFile={deleteFile}/>
-      <AddImageOps addImageOp={addImageOp}/>
-      <ImageOpsTable imageOps={imageOps} deleteOp={deleteOp}/>
-      <UploadButton action={uploadImages} disabled={true}/>
+      <div id='imageUploadContainer' className='my-5'>
+        <Banner />
+        <DragAndDrop onAddFiles={addFiles}/>
+        <FilesTable
+          files={files}
+          deleteFile={deleteFile}/>
+        <AddImageOps addImageOp={addImageOp}/>
+        <ImageOpsTable imageOps={imageOps} deleteOp={deleteOp}/>
+        {uploadButton}
+      </div>
     </CenteredStandardPage>
   );
 }

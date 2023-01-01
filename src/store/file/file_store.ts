@@ -1,4 +1,4 @@
-import { FileAPI, FileUploadRequest } from '@/src/api/file_api';
+import { FileAPI, FileUploadRequest, ImageFileUploadRequest } from '@/src/api/file_api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const fileSlice = createSlice({
@@ -39,9 +39,9 @@ const uploadFiles = createAsyncThunk<unknown, FileUploadRequest>(
   },
 );
 
-const uploadImages = createAsyncThunk<unknown, FileUploadRequest>(
+const uploadImages = createAsyncThunk<unknown, ImageFileUploadRequest>(
   'file/uploadImages',
-  async (uploadFilesRequest: FileUploadRequest): Promise<unknown> => {
+  async (uploadFilesRequest: ImageFileUploadRequest): Promise<unknown> => {
     const fapi = new FileAPI();
 
     try {

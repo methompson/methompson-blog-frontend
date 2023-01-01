@@ -4,13 +4,15 @@ import { useDispatch } from 'react-redux';
 import { BlogAPI } from '@/src/api/blog_api';
 import { actions, AppDispatch } from '@/src/store';
 import { Duration } from '@/src/shared/duration';
+import { messengerInstance } from '@/src/shared/messenger';
 
 import { DebugButton } from './debug_button';
+import { Message, MessageType } from '@/src/models/message';
 
 export function DebugButtonColumn() {
   return <div className='my-3 flex flex-col items-center'>
     <GetBlogPostsButton />
-    <AddRandomMessageButton />
+    <AddNewRandomMessageButton />
     <GetFileList />
     <UploadFile />
   </div>;
@@ -36,22 +38,24 @@ function GetBlogPostsButton() {
   );
 }
 
-function AddRandomMessageButton() {
-  const dispatch = useDispatch<AppDispatch>();
-
+function AddNewRandomMessageButton() {
   const [count, setCount] = useState(0);
+
+  function addMessage() {
+    const msg = Message.newMessage({
+      messageType: MessageType.Success,
+      message: 'A Message',
+      duration: 4000,
+    });
+
+    messengerInstance.addMessage(msg);
+    setCount(count + 1);
+  }
 
   return (
     <DebugButton
-      title='Add Random Message'
-      action={async () => {
-        dispatch(actions.addSuccessMessage({
-          message: `Hello, World! - ${count}`,
-          duration: new Duration({ seconds: 5 }),
-        }));
-
-        setCount(count + 1);
-      }} />
+      title='Add New Random Message'
+      action={addMessage} />
   );
 }
 
@@ -71,7 +75,7 @@ function GetFileList() {
 
 function UploadFile() {
   const dispatch = useDispatch<AppDispatch>();
-  const [files, setFiles] = useState<FileList | undefined>();
+  const [files, setFiles] = useState<File[]>([]);
   const [isPrivate, setIsPrivate] = useState(true);
 
   return (
@@ -79,7 +83,11 @@ function UploadFile() {
       <input
         type="file"
         onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-          setFiles(ev.target.files);
+          const fileList: File[] = [];
+          for (const file of ev.target.files) {
+            fileList.push(file);
+          }
+          setFiles(fileList);
         }}/>
 
       <div className='flex items-center'>
@@ -96,18 +104,16 @@ function UploadFile() {
         title="Upload File"
         action={async () => {
           if (files.length === 0) {
-            dispatch(actions.addErrorMessage({
-              message: 'Must Select at least one file',
-              duration: new Duration({ seconds: 5 }),
-            }));
+            // dispatch(actions.addErrorMessage({
+            //   message: 'Must Select at least one file',
+            //   duration: new Duration({ seconds: 5 }),
+            // }));
             return;
           }
 
-          console.log('Dispatching');
-
           dispatch(actions.uploadImages({
             files,
-            isPrivate,
+            ops: [],
           }));
         }} />
     </div>
