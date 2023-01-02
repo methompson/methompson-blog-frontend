@@ -8,7 +8,7 @@ interface ButtonProps {
 export function RegularButton(props: ButtonProps) {
   const colorClasses = 'bg-red-500 hover:bg-red-600 active:bg-red-500 text-white';
   const darkColorClasses = 'dark:bg-red-700 dark:hover:bg-red-600 dark:active:bg-red-700';
-  const spaceClasses = 'inline-block rounded-md p-2 mb-2 cursor-pointer ';
+  const spaceClasses = 'inline-block rounded-md p-2 mb-2 cursor-pointer text-center ';
 
   const baseClasses = `${spaceClasses} ${props.classes ?? ''} select-none`;
 
