@@ -2,7 +2,7 @@ import { Provider } from 'react-redux';
 
 import { store } from '@/src/store';
 
-import { BlogRouter } from '@/src/ui/pages/router';
+import { BlogRouter } from '@/src/ui/router';
 import { MessagingComponent } from '@/src/ui/components/messaging';
 import { AuthenticationHandler } from '@/src/ui/components/authentication_handler';
 

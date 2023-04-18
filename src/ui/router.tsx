@@ -9,7 +9,7 @@ import { NewPost } from '@/src/ui/pages/new_post';
 import { FourOhFour } from '@/src/ui/pages/404';
 import { FileList } from '@/src/ui/pages/file_list';
 import { ImageUploadPage } from '@/src/ui/pages/image_upload';
-import { TestSingleton } from './test_singleton';
+import { BudgetPage } from '@/src/ui/pages/budget';
 
 export function BlogRouter() {
   return (
@@ -23,8 +23,8 @@ export function BlogRouter() {
         <Route path='/post/:slug' element={<BlogPostPage />} />
         <Route path='/new_post' element={<NewPost />} />
         <Route path='/files' element={<FileList />} />
+        <Route path='/budget' element={<BudgetPage />} />
         <Route path='/upload_image' element={<ImageUploadPage />} />
-        <Route path='/test' element={<TestSingleton />} />
         <Route path='*' element={<FourOhFour />} />
       </Routes>
     </span>
