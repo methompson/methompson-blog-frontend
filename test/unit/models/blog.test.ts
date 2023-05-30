@@ -52,7 +52,7 @@ describe('BlogPost', () => {
     });
 
     test('Throws an error if the JSON data is not valid', () => {
-      let i = { ...input1 };
+      let i: Record<string, unknown> = { ...input1 };
       expect(() => BlogPost.fromJSON(i)).not.toThrow();
 
       i = { ...input1 };
@@ -103,7 +103,7 @@ describe('BlogPost', () => {
     });
 
     test('returns true if update information is missing', () => {
-      const newPost = { ...validPost };
+      const newPost: Record<string, unknown> = { ...validPost };
       delete newPost.updateAuthorId;
       delete newPost.dateUpdated;
 
@@ -111,14 +111,14 @@ describe('BlogPost', () => {
     });
 
     test('returns false if updateAuthorId is present, but not dateUpdated', () => {
-      const newPost = { ...validPost };
+      const newPost: Record<string, unknown> = { ...validPost };
       delete newPost.updateAuthorId;
 
       expect(BlogPost.isBlogPostInterface(newPost)).toBe(false);
     });
 
     test('returns false if dateUpdate is present, but not updateAuthorId', () => {
-      const newPost = { ...validPost };
+      const newPost: Record<string, unknown> = { ...validPost };
       delete newPost.dateUpdated;
 
       expect(BlogPost.isBlogPostInterface(newPost)).toBe(false);
@@ -182,7 +182,7 @@ describe('NewBlogPost', () => {
     });
 
     test('returns true if update information is missing', () => {
-      const newPost = { ...validPost };
+      const newPost: Record<string, unknown> = { ...validPost };
       delete newPost.updateAuthorId;
       delete newPost.dateUpdated;
 
@@ -190,14 +190,14 @@ describe('NewBlogPost', () => {
     });
 
     test('returns false if updateAuthorId is present, but not dateUpdated', () => {
-      const newPost = { ...validPost };
+      const newPost: Record<string, unknown> = { ...validPost };
       delete newPost.updateAuthorId;
 
       expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(false);
     });
 
     test('returns false if dateUpdate is present, but not updateAuthorId', () => {
-      const newPost = { ...validPost };
+      const newPost: Record<string, unknown> = { ...validPost };
       delete newPost.dateUpdated;
 
       expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(false);

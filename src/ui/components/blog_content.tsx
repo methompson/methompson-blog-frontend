@@ -57,6 +57,7 @@ function getMonth(date: Date): string {
     case(10):
       return 'November';
     case(11):
+    default:
       return 'December';
   }
 }

@@ -65,7 +65,11 @@ function DragAndDrop(props: DragAndDropProps) {
     const files: File[] = [];
     for (const item of ev.dataTransfer.items) {
       if (acceptedImageTypes.includes(item.type)) {
-        files.push(item.getAsFile());
+        const file = item.getAsFile();
+
+        if (file) {
+          files.push(file);
+        }
       }
     }
 
@@ -97,11 +101,18 @@ function DragAndDrop(props: DragAndDropProps) {
             accept={acceptedTypes}
             onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
               const rawFiles = ev.target.files;
+
+              if (!rawFiles) {
+                return;
+              }
+
               const files: File[] = [];
 
               for (let x = 0; x < rawFiles.length; x++) {
                 const file = rawFiles.item(x);
-                files.push(file);
+                if (file) {
+                  files.push(file);
+                }
               }
               props.onAddFiles(files);
             }}/>

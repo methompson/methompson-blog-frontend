@@ -14,7 +14,7 @@ function MenuChildren(): React.ReactNode[] {
   const children = [];
 
   children.push(<span className='headerMenuItem' key='header_home_link'><Link to='/'>Home</Link></span>);
-  children.push(<span className='headerMenuItem' key='header_budget_link'><Link to='/budget'>Budget</Link></span>);
+  // children.push(<span className='headerMenuItem' key='header_budget_link'><Link to='/budget'>Budget</Link></span>);
 
   if (isLoggedIn) {
     children.push(<span className='headerMenuItem' key='header_debug_link'><Link to='/debug'>Debug</Link></span>);

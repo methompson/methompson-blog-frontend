@@ -17,7 +17,7 @@ interface TextEditorInput {
 export class TextEditor {
   protected mySchema: Schema;
   protected state: EditorState;
-  protected view?: EditorView = null;
+  protected view?: EditorView = undefined;
   protected transactionCallback: () => void;
 
   constructor(input: TextEditorInput) {
@@ -30,8 +30,10 @@ export class TextEditor {
 
     const inputText = input.inputText ?? '';
 
+    const doc = defaultMarkdownParser.parse(inputText) ?? undefined;
+
     this.state = EditorState.create({
-      doc: defaultMarkdownParser.parse(inputText),
+      doc,
       plugins: exampleSetup({ schema: this.mySchema }),
       schema: this.mySchema,
     });

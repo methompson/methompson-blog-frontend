@@ -191,14 +191,14 @@ describe('Message', () => {
     });
 
     test('returns true if there is no duration value', () => {
-      const input = { ...validInput };
+      const input: Record<string, unknown> = { ...validInput };
       delete input.duration;
 
       expect(Message.isNewMessageInterface(validInput)).toBe(true);
     });
 
     test('returns true if there is no messageType value', () => {
-      const input = { ...validInput };
+      const input: Record<string, unknown> = { ...validInput };
       delete input.messageType;
 
       expect(Message.isNewMessageInterface(validInput)).toBe(true);

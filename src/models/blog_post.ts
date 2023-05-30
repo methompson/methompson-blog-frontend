@@ -1,4 +1,4 @@
-import { isString, isRecord, isStringArray } from '@/src/shared/type_guards';
+import { isString, isRecord, isStringArray, isNullOrUndefined } from '@/src/shared/type_guards';
 import { ValidDate, isValidDate } from '@/src/shared/valid_date';
 import { InvalidInputError } from '@/src/errors/invalid_input_error';
 import MarkdownIt from 'markdown-it';
@@ -32,8 +32,8 @@ interface BlogPostInputOptions {
 }
 
 class NewBlogPost {
-  protected _updateAuthorId: string | null;
-  protected _dateUpdated: ValidDate | null;
+  protected _updateAuthorId: string | undefined;
+  protected _dateUpdated: ValidDate | undefined;
 
   constructor(
     protected _title: string,
@@ -44,8 +44,8 @@ class NewBlogPost {
     protected _dateAdded: ValidDate,
     options: BlogPostInputOptions,
   ) {
-    this._updateAuthorId = options.updateAuthorId ?? null;
-    this._dateUpdated = options.dateUpdated ?? null;
+    this._updateAuthorId = options.updateAuthorId ?? undefined;
+    this._dateUpdated = options.dateUpdated ?? undefined;
   }
 
   // Protecting immutability while giving access to values
@@ -67,10 +67,10 @@ class NewBlogPost {
   get dateAdded(): ValidDate {
     return this._dateAdded;
   }
-  get updateAuthorId(): string | null {
+  get updateAuthorId(): string | undefined {
     return this._updateAuthorId;
   }
-  get dateUpdated(): ValidDate | null {
+  get dateUpdated(): ValidDate | undefined {
     return this._dateUpdated;
   }
   get bodyInHtml(): string {
@@ -92,10 +92,10 @@ class NewBlogPost {
       dateAdded: this.dateAdded.toISOString(),
     };
 
-    if (this.updateAuthorId !== null) {
+    if (isNullOrUndefined(this.updateAuthorId)) {
       output.updateAuthorId = this.updateAuthorId;
     }
-    if (this.dateUpdated !== null) {
+    if (!isNullOrUndefined(this.dateUpdated)) {
       output.dateUpdated = this.dateUpdated.toDateString();
     }
 

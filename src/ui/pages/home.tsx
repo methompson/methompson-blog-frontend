@@ -119,7 +119,7 @@ export function Home() {
       } catch (e) {
         // console.log('error receiving blog posts', e);
         messengerInstance.addErrorMessage({
-          message: `Error Receiving Blog Posts: ${e.toString()}`,
+          message: `Error Receiving Blog Posts: ${e}`,
         });
       }
     })();

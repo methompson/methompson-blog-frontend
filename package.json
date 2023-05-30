@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "build_css": "sass ./src/ui/scss/styles.scss ./src/ui/css/styles.css --no-source-map",
     "build_css_watch": "sass ./src/ui/scss/styles.scss ./src/ui/css/styles.css --no-source-map -w",
-    "test": "jest ./test/unit"
+    "test": "jest ./test/unit",
+    "typescript_errors": "tsc --noEmit"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",

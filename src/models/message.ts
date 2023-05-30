@@ -76,7 +76,7 @@ class Message {
     return MessageType.Info;
   }
 
-  static makeMessageType(messageType: string): MessageType {
+  static makeMessageType(messageType: string | undefined): MessageType {
     switch (messageType?.toLowerCase()) {
       case 'error':
         return MessageType.Error;

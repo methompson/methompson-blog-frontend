@@ -20,7 +20,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "./",
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "sourceMap": true,
     "paths": {
       "@/*": [

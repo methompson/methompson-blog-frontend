@@ -15,7 +15,7 @@ export function BlogPostPage() {
   const [loaded, setLoaded] = useState(false);
 
   const params = useParams();
-  const slug = params.slug;
+  const slug = params.slug ?? '';
 
   useEffect(() => {
     (async function getBlogPost() {
