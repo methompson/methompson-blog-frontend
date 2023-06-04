@@ -75,10 +75,19 @@ const addBlogPost = createAsyncThunk<BlogPostInterface, AddBlogPostBody>(
   },
 );
 
+const deleteBlogPost = createAsyncThunk<void, string>(
+  'blog/deleteBlogPost',
+  async(slug: string) => {
+    const bapi = new BlogAPI();
+    await bapi.deleteBlogPost(slug);
+  },
+);
+
 const blogActions = {
   getBlogPost,
   getBlogList,
   addBlogPost,
+  deleteBlogPost,
 };
 
 export {

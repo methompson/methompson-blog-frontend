@@ -79,6 +79,26 @@ class BlogAPI {
 
     return BlogPost.fromJSON(json);
   }
+
+  async deleteBlogPost(slug: string) {
+    const baseUrl = getBaseApiUrl();
+    const url = `${baseUrl}/blog/delete/${slug}`;
+
+    const token = await getAuthToken();
+    const headers = {
+      'Content-Type': 'application/json',
+      authorization: token,
+    };
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers,
+    });
+
+    const json = await resp.json();
+
+    console.log('json', json);
+  }
 }
 
 export {

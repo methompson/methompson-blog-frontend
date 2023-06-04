@@ -1,20 +1,36 @@
-import { isString, isRecord, isStringArray, isNullOrUndefined } from '@/src/shared/type_guards';
+import { isString, isRecord, isStringArray, isNullOrUndefined, isUndefined } from '@/src/shared/type_guards';
 import { ValidDate, isValidDate } from '@/src/shared/valid_date';
 import { InvalidInputError } from '@/src/errors/invalid_input_error';
 import MarkdownIt from 'markdown-it';
 
-interface NewBlogPostInterface {
+export enum BlogStatus {
+  Posted = 'posted',
+  Draft = 'draft',
+}
+
+export function blogStatusFromString(input: unknown): BlogStatus {
+  switch (input) {
+    case 'draft':
+      return BlogStatus.Draft;
+    case 'posted':
+    default:
+      return BlogStatus.Posted;
+  }
+}
+
+export interface NewBlogPostInterface {
   title: string;
   slug: string;
   body: string;
   tags: string[];
   authorId: string;
   dateAdded: string;
+  status?: string;
   updateAuthorId?: string;
   dateUpdated?: string;
 }
 
-interface BlogPostInterface {
+export interface BlogPostInterface {
   id: string;
   title: string;
   slug: string;
@@ -31,7 +47,7 @@ interface BlogPostInputOptions {
   dateUpdated?: ValidDate;
 }
 
-class NewBlogPost {
+export class NewBlogPost {
   protected _updateAuthorId: string | undefined;
   protected _dateUpdated: ValidDate | undefined;
 
@@ -42,6 +58,7 @@ class NewBlogPost {
     protected _tags: string[],
     protected _authorId: string,
     protected _dateAdded: ValidDate,
+    protected _status: BlogStatus,
     options: BlogPostInputOptions,
   ) {
     this._updateAuthorId = options.updateAuthorId ?? undefined;
@@ -67,6 +84,9 @@ class NewBlogPost {
   get dateAdded(): ValidDate {
     return this._dateAdded;
   }
+  get status(): BlogStatus {
+    return this._status;
+  }
   get updateAuthorId(): string | undefined {
     return this._updateAuthorId;
   }
@@ -90,6 +110,7 @@ class NewBlogPost {
       tags: this.tags,
       authorId: this.authorId,
       dateAdded: this.dateAdded.toISOString(),
+      status: this.status,
     };
 
     if (isNullOrUndefined(this.updateAuthorId)) {
@@ -106,6 +127,8 @@ class NewBlogPost {
     if (!NewBlogPost.isNewBlogPostInterface(input)) {
       throw new InvalidInputError('Invalid Blog Post Input');
     }
+
+    const status = blogStatusFromString(input.status);
 
     const options: BlogPostInputOptions = {};
 
@@ -124,41 +147,56 @@ class NewBlogPost {
       input.tags,
       input.authorId,
       new Date(input.dateAdded),
+      status,
       options,
     );
   }
 
-  static isNewBlogPostInterface(value: unknown): value is NewBlogPostInterface {
-    if (!isRecord(value)) {
-      return false;
+  static isNewBlogPostInterface(input: unknown): input is NewBlogPostInterface {
+    const result = NewBlogPost.newBlogPostInterfaceTest(input);
+
+    return result.length === 0;
+  }
+
+  static newBlogPostInterfaceTest(input: unknown): string[] {
+    const output: string[] = [];
+
+    if (!isRecord(input)) {
+      return ['root'];
     }
 
     // If dateAdded is not a string or the string is not a valid date, return false
-    if (!isString(value.dateAdded) || !isValidDate(new Date(value.dateAdded))) {
-      return false;
+    if (!isString(input.dateAdded) || !isValidDate(new Date(input.dateAdded))) {
+      output.push('dateAdded');
     }
 
-    // If dateUpdated IS a string, but is not a valid date, return false
-    if (
-      isString(value.dateUpdated) &&
-      !isValidDate(new Date(value.dateUpdated))
+    if (!isString(input.title)) output.push('title');
+    if (!isString(input.slug)) output.push('slug');
+    if (!isString(input.body)) output.push('body');
+    if (!isStringArray(input.tags)) output.push('tags');
+    if (!isString(input.authorId)) output.push('authorId');
+    if (!isString(input.status) && !isUndefined(input.status)) {
+      output.push('status');
+    }
+
+    if (!isUndefined(input.updateAuthorId) && !isString(input.updateAuthorId)) {
+      output.push('updateAuthorId');
+    }
+
+    if (!isUndefined(input.dateUpdated) && !isString(input.dateUpdated)) {
+      output.push('dateUpdated');
+    } else if (
+      isString(input.dateUpdated) &&
+      !isValidDate(new Date(input.dateUpdated))
     ) {
-      return false;
+      output.push('dateUpdated');
     }
 
-    return (
-      isString(value.title) &&
-      isString(value.slug) &&
-      isString(value.body) &&
-      isString(value.authorId) &&
-      isStringArray(value.tags) &&
-      ((isString(value.updateAuthorId) && isString(value.dateUpdated)) ||
-        (value.updateAuthorId === undefined && value.dateUpdated === undefined))
-    );
+    return output;
   }
 }
 
-class BlogPost extends NewBlogPost {
+export class BlogPost extends NewBlogPost {
   constructor(
     protected _id: string,
     title: string,
@@ -167,9 +205,10 @@ class BlogPost extends NewBlogPost {
     tags: string[],
     authorId: string,
     dateAdded: ValidDate,
+    status: BlogStatus,
     options: BlogPostInputOptions,
   ) {
-    super(title, slug, body, tags, authorId, dateAdded, options);
+    super(title, slug, body, tags, authorId, dateAdded, status, options);
   }
 
   get id(): string {
@@ -199,6 +238,7 @@ class BlogPost extends NewBlogPost {
       [],
       'authorId',
       new Date(),
+      BlogStatus.Draft,
       {},
     );
   }
@@ -213,12 +253,18 @@ class BlogPost extends NewBlogPost {
     return BlogPost.fromNewBlogPost(input.id, newBP);
   }
 
-  static isBlogPostInterface(value: unknown): value is BlogPostInterface {
-    return (
-      isRecord(value) &&
-      isString(value.id) &&
-      NewBlogPost.isNewBlogPostInterface(value)
-    );
+  static isBlogPostInterface(input: unknown): input is BlogPostInterface {
+    const result = BlogPost.blogPostInterfaceTest(input);
+
+    return result.length === 0;
+  }
+
+  static blogPostInterfaceTest(input: unknown): string[] {
+    const output: string[] = NewBlogPost.newBlogPostInterfaceTest(input);
+
+    if (isRecord(input) && !isString(input.id)) output.push('id');
+
+    return output;
   }
 
   static fromNewBlogPost(id: string, input: NewBlogPost): BlogPost {
@@ -230,6 +276,7 @@ class BlogPost extends NewBlogPost {
       input.tags,
       input.authorId,
       input.dateAdded,
+      input.status,
       {
         dateUpdated: input.dateUpdated,
         updateAuthorId: input.updateAuthorId,
@@ -237,10 +284,3 @@ class BlogPost extends NewBlogPost {
     );
   }
 }
-
-export {
-  NewBlogPostInterface,
-  BlogPostInterface,
-  BlogPost,
-  NewBlogPost,
-};

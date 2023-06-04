@@ -28,6 +28,7 @@ export function NewPost() {
   const [tagsString, setTagsString] = useState('');
   const [shouldRedirectSlug, setShouldRedirectSlug] = useState('');
   const [preview, setPreview] = useState('');
+  const [draft, setDraft] = useState(false);
   // We never change the text editor, but we want to make sure it doesn't change when
   // this is re-rendered We don't define ths above the React component because we want
   // to be able to eventually provide already created content into the TextEditor for
@@ -53,6 +54,15 @@ export function NewPost() {
   }, [textEditor]);
 
   const addNewPostAction = async () => {
+    if (title.length === 0) {
+      messengerInstance.addErrorMessage({
+        message: 'Blog Title is required',
+        duration: new Duration({minutes: 1}),
+      });
+
+      return;
+    }
+
     const userId = await getUserId();
 
     const body = textEditor.getMarkdownContent();
@@ -61,16 +71,19 @@ export function NewPost() {
     let tags = tagsString.split(',');
     tags = tags.map((tag) => tag.trim());
 
-    const newPost = NewBlogPost.fromJSON({
-      title,
-      slug,
-      body,
-      tags,
-      authorId: userId,
-      dateAdded: (new Date()).toISOString(),
-    });
+    const status = draft ? 'draft' : 'posted';
 
     try {
+      const newPost = NewBlogPost.fromJSON({
+        title,
+        slug,
+        body,
+        tags,
+        authorId: userId,
+        status,
+        dateAdded: (new Date()).toISOString(),
+      });
+
       const result = await dispatch(actions.addBlogPost({ newPost }));
 
       const bp = BlogPost.fromJSON(result.payload);
@@ -94,6 +107,11 @@ export function NewPost() {
     body: preview,
   });
 
+  const checkHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target.checked);
+    setDraft(!draft);
+  };
+
   return (
     <CenteredStandardPage>
 
@@ -112,6 +130,16 @@ export function NewPost() {
         value={tagsString}
         stretch={true}
         onChange={(e) => setTagsString(e.target.value)} />
+
+      <div className="py-2">
+        <input
+          type="checkbox"
+          id="draft"
+          name="draft"
+          onChange={checkHandler}
+          checked={draft} />
+        <label className="px-2" htmlFor="draft">Draft</label>
+      </div>
 
       <div>
         <RegularButton

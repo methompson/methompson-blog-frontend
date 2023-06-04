@@ -52,7 +52,10 @@ function BlogHeaderContainer(props: BlogHeaderContainerProps) {
   return (
     <span className={'blogHeader w-full flex justify-center ' + commonColors}>
       <span className={classes}>
-        <h1 className='text-xl font-extrabold'>Mat&lsquo;s Blog</h1>
+        <Link to='/'>
+          <h1 className='text-xl font-extrabold'>Mat&lsquo;s Blog</h1>
+        </Link>
+
         {props.children}
       </span>
     </span>
