@@ -1,5 +1,5 @@
 import { isString, isRecord, isStringArray, isNullOrUndefined, isUndefined } from '@/src/shared/type_guards';
-import { ValidDate, isValidDate } from '@/src/shared/valid_date';
+import { ValidDate, isValidDate, isValidDateString } from '@/src/shared/valid_date';
 import { InvalidInputError } from '@/src/errors/invalid_input_error';
 import MarkdownIt from 'markdown-it';
 
@@ -30,16 +30,8 @@ export interface NewBlogPostInterface {
   dateUpdated?: string;
 }
 
-export interface BlogPostInterface {
+export interface BlogPostInterface extends NewBlogPostInterface {
   id: string;
-  title: string;
-  slug: string;
-  body: string;
-  tags: string[];
-  authorId: string;
-  dateAdded: string;
-  updateAuthorId?: string;
-  dateUpdated?: string;
 }
 
 interface BlogPostInputOptions {
@@ -113,11 +105,11 @@ export class NewBlogPost {
       status: this.status,
     };
 
-    if (isNullOrUndefined(this.updateAuthorId)) {
+    if (!isNullOrUndefined(this.updateAuthorId)) {
       output.updateAuthorId = this.updateAuthorId;
     }
     if (!isNullOrUndefined(this.dateUpdated)) {
-      output.dateUpdated = this.dateUpdated.toDateString();
+      output.dateUpdated = this.dateUpdated.toISOString();
     }
 
     return output;
@@ -125,18 +117,20 @@ export class NewBlogPost {
 
   static fromJSON(input: unknown): NewBlogPost {
     if (!NewBlogPost.isNewBlogPostInterface(input)) {
-      throw new InvalidInputError('Invalid Blog Post Input');
+      const results = NewBlogPost.newBlogPostInterfaceTest(input);
+      throw new InvalidInputError(`Invalid Blog Post Input: ${results.join()}`);
+    }
+
+    if (input.slug.length === 0) {
+      throw new InvalidInputError('Invalid Slug');
     }
 
     const status = blogStatusFromString(input.status);
 
     const options: BlogPostInputOptions = {};
 
-    if (isValidDate(input.dateUpdated)) {
-      options.dateUpdated = input.dateUpdated;
-    }
-
-    if (isString(input.updateAuthorId)) {
+    if (isValidDateString(input.dateUpdated) && isString(input.updateAuthorId)) {
+      options.dateUpdated = new Date(input.dateUpdated);
       options.updateAuthorId = input.updateAuthorId;
     }
 
@@ -245,7 +239,8 @@ export class BlogPost extends NewBlogPost {
 
   static fromJSON(input: unknown): BlogPost {
     if (!BlogPost.isBlogPostInterface(input)) {
-      throw new InvalidInputError('Invalid Blog Post Input');
+      const results = BlogPost.blogPostInterfaceTest(input);
+      throw new InvalidInputError(`Invalid Blog Post Input: ${results.join()}`);
     }
 
     const newBP = NewBlogPost.fromJSON(input);

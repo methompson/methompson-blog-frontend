@@ -9,9 +9,10 @@ import { AuthenticationHandler } from '@/src/ui/components/authentication_handle
 export function App() {
   return (
     <Provider store={store}>
-      <BlogRouter />
-      <MessagingComponent />
-      <AuthenticationHandler />
+      <AuthenticationHandler>
+        <BlogRouter />
+        <MessagingComponent />
+      </AuthenticationHandler>
     </Provider>
   );
 }

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { combineReducers } from 'redux';
 
 import { BlogAPI } from '@/src/api/blog_api';
-import { BlogPostInterface, NewBlogPost } from '@/src/models/blog_post';
+import { BlogPost, BlogPostInterface, NewBlogPost } from '@/src/models/blog_post';
 import { isBoolean } from '@/src/shared/type_guards';
 
 const blogSlice = createSlice({
@@ -57,6 +57,23 @@ const getBlogList = createAsyncThunk<GetBlogListOutput, GetBlogListRequest>(
   },
 );
 
+const getFullBlogList = createAsyncThunk<GetBlogListOutput, GetBlogListRequest>(
+  'blog/getBlogList',
+  async (getBlogListRequest) => {
+    const bapi = new BlogAPI();
+    const result = await bapi.getFullBlogList(getBlogListRequest.page, getBlogListRequest.pagination);
+
+    const morePages = isBoolean(result.morePages)
+      ? result.morePages
+      : false;
+
+    return {
+      posts: result.posts.toJSON(),
+      morePages,
+    };
+  },
+);
+
 interface AddBlogPostBody {
   newPost: NewBlogPost,
 }
@@ -75,18 +92,40 @@ const addBlogPost = createAsyncThunk<BlogPostInterface, AddBlogPostBody>(
   },
 );
 
+interface UpdateBlogPostBody {
+  post: BlogPost;
+  oldSlug: string;
+}
+
+const updateBlogPost = createAsyncThunk<BlogPostInterface, UpdateBlogPostBody>(
+  'blog/updateBlogPost',
+  async(updatedBlogPost) => {
+    const bapi = new BlogAPI();
+    const post = await bapi.updateBlogPost(updatedBlogPost.oldSlug, updatedBlogPost.post);
+
+    return post.toJSON();
+  },
+);
+
 const deleteBlogPost = createAsyncThunk<void, string>(
   'blog/deleteBlogPost',
-  async(slug: string) => {
+  async(slug: string, { rejectWithValue }) => {
     const bapi = new BlogAPI();
-    await bapi.deleteBlogPost(slug);
+    try {
+      await bapi.deleteBlogPost(slug);
+    } catch (e) {
+      rejectWithValue(e);
+      throw e;
+    }
   },
 );
 
 const blogActions = {
   getBlogPost,
   getBlogList,
+  getFullBlogList,
   addBlogPost,
+  updateBlogPost,
   deleteBlogPost,
 };
 

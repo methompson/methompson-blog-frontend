@@ -1,206 +1,150 @@
-import { BlogPost, NewBlogPost } from '@/src/models/blog_post';
-
-describe('BlogPost', () => {
-  describe('constructor', () => {});
-
-  describe('toJSON', () => {});
-
-  describe('fromJSON', () => {
-    const tags: string[] = [];
-    const input1 = {
-      id: '62583158430e488788971352',
-      authorId: '123',
-      body: 'body',
-      dateAdded: '2022-04-14T08:39:00.000Z',
-      slug: 'slug',
-      tags,
-      title: 'title',
-    };
-
-    const input2 = {
-      'title': 'New Blog Title',
-      'slug': 'new_blog_title2',
-      'body': '**Test Bold**\n\n*Test Italics*\n\n[Test Link](https://methompson.com "Test Link")\n\n`Test Code`',
-      'tags': [
-        'tag1',
-        'tag2',
-      ],
-      'authorId': 'r3NVUF0c2iTEmOe42WVIGX2WkPK2',
-      'dateAdded': '2022-06-23T14:22:56.556Z',
-      'id': '62b84eb652e469d71aa73f69',
-    };
-
-    test('Should parse a basic JSON object', () => {
-      const bp1 = BlogPost.fromJSON(input1);
-
-      expect(bp1.id).toBe(input1.id);
-      expect(bp1.authorId).toBe(input1.authorId);
-      expect(bp1.body).toBe(input1.body);
-      expect(bp1.dateAdded.toISOString()).toBe(input1.dateAdded);
-      expect(bp1.slug).toBe(input1.slug);
-      expect(bp1.title).toBe(input1.title);
-
-      const bp2 = BlogPost.fromJSON(input2);
-
-      expect(bp2.id).toBe(input2.id);
-      expect(bp2.authorId).toBe(input2.authorId);
-      expect(bp2.body).toBe(input2.body);
-      expect(bp2.dateAdded.toISOString()).toBe(input2.dateAdded);
-      expect(bp2.slug).toBe(input2.slug);
-      expect(bp2.title).toBe(input2.title);
-
-    });
-
-    test('Throws an error if the JSON data is not valid', () => {
-      let i: Record<string, unknown> = { ...input1 };
-      expect(() => BlogPost.fromJSON(i)).not.toThrow();
-
-      i = { ...input1 };
-      delete i.id;
-      expect(() => BlogPost.fromJSON(i)).toThrow();
-
-      i = { ...input1 };
-      delete i.authorId;
-      expect(() => BlogPost.fromJSON(i)).toThrow();
-
-      i = { ...input1 };
-      delete i.body;
-      expect(() => BlogPost.fromJSON(i)).toThrow();
-
-      i = { ...input1 };
-      delete i.dateAdded;
-      expect(() => BlogPost.fromJSON(i)).toThrow();
-
-      i = { ...input1 };
-      delete i.slug;
-      expect(() => BlogPost.fromJSON(i)).toThrow();
-
-      i = { ...input1 };
-      delete i.tags;
-      expect(() => BlogPost.fromJSON(i)).toThrow();
-
-      i = { ...input1 };
-      delete i.title;
-      expect(() => BlogPost.fromJSON(i)).toThrow();
-    });
-  });
-
-  describe('isBlogPostInterface', () => {
-    const validPost = {
-      id: 'id',
-      title: 'title',
-      slug: 'slug',
-      body: 'body',
-      tags: ['tag1', 'tag2'],
-      authorId: 'authorId',
-      dateAdded: '2022-04-14T08:05:00.000Z',
-      updateAuthorId: 'updateAuthorId',
-      dateUpdated: '2022-04-14T08:06:00.000Z',
-    };
-
-    test('returns true if the input conforms to a BlogPostInterface', () => {
-      expect(BlogPost.isBlogPostInterface(validPost)).toBe(true);
-    });
-
-    test('returns true if update information is missing', () => {
-      const newPost: Record<string, unknown> = { ...validPost };
-      delete newPost.updateAuthorId;
-      delete newPost.dateUpdated;
-
-      expect(BlogPost.isBlogPostInterface(newPost)).toBe(true);
-    });
-
-    test('returns false if updateAuthorId is present, but not dateUpdated', () => {
-      const newPost: Record<string, unknown> = { ...validPost };
-      delete newPost.updateAuthorId;
-
-      expect(BlogPost.isBlogPostInterface(newPost)).toBe(false);
-    });
-
-    test('returns false if dateUpdate is present, but not updateAuthorId', () => {
-      const newPost: Record<string, unknown> = { ...validPost };
-      delete newPost.dateUpdated;
-
-      expect(BlogPost.isBlogPostInterface(newPost)).toBe(false);
-    });
-
-    test('returns false if any of the required values are missing', () => {
-      let alias: Record<string, unknown>;
-
-      alias = { ...validPost };
-      delete alias.id;
-      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
-
-      alias = { ...validPost };
-      delete alias.title;
-      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
-
-      alias = { ...validPost };
-      delete alias.slug;
-      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
-
-      alias = { ...validPost };
-      delete alias.body;
-      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
-
-      alias = { ...validPost };
-      delete alias.authorId;
-      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
-
-      alias = { ...validPost };
-      delete alias.dateAdded;
-      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
-
-      alias = { ...validPost };
-      delete alias.tags;
-      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
-    });
-  });
-});
+import {
+  BlogPost,
+  BlogPostInterface,
+  NewBlogPost,
+  NewBlogPostInterface,
+} from '@/src/models/blog_post';
 
 describe('NewBlogPost', () => {
+  const validPost: NewBlogPostInterface = {
+    title: 'title',
+    slug: 'slug',
+    body: 'body',
+    tags: ['tag1', 'tag2'],
+    authorId: 'authorId',
+    dateAdded: '2022-04-14T08:05:00.000Z',
+    status: 'draft',
+    updateAuthorId: 'updateAuthorId',
+    dateUpdated: '2022-04-14T08:06:00.000Z',
+  };
+
   describe('constructor', () => {});
 
-  describe('toJSON', () => {});
+  describe('toJSON', () => {
+    test('returns an expected value', () => {
+      const newPost = NewBlogPost.fromJSON(validPost);
+      expect(newPost.toJSON()).toStrictEqual(validPost);
+    });
+  });
 
-  describe('fromJSON', () => {});
+  describe('fromJSON', () => {
+    test('returns a new blog post', () => {
+      const newPost = NewBlogPost.fromJSON(validPost);
+      expect(newPost.toJSON()).toStrictEqual(validPost);
+    });
+
+    test('returns a new blog post if updateAuthorId or dateUpdated is missing', () => {
+      const expectation = { ...validPost };
+      delete expectation.updateAuthorId;
+      delete expectation.dateUpdated;
+
+      let input: Record<string, unknown>;
+
+      input = { ...validPost };
+      delete input.updateAuthorId;
+      const newPost1 = NewBlogPost.fromJSON(input);
+      expect(newPost1.toJSON()).toStrictEqual(expectation);
+
+      input = { ...validPost };
+      delete input.dateUpdated;
+      const newPost2 = NewBlogPost.fromJSON(input);
+      expect(newPost2.toJSON()).toStrictEqual(expectation);
+
+      input = { ...validPost };
+      delete input.updateAuthorId;
+      delete input.dateUpdated;
+      const newPost3 = NewBlogPost.fromJSON(input);
+      expect(newPost3.toJSON()).toStrictEqual(expectation);
+    });
+
+    test('returns a new blog post with default status if it is missing', () => {
+      const input = { ...validPost };
+      delete input.status;
+
+      const newPost = NewBlogPost.fromJSON(input);
+      expect(newPost.toJSON()).toStrictEqual({
+        ...validPost,
+        status: 'posted',
+      });
+    });
+
+    test('throws an error if required items are missing', () => {
+      let input: Record<string, unknown>;
+
+      input = { ...validPost };
+      delete input.title;
+      expect(() => NewBlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.slug;
+      expect(() => NewBlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.body;
+      expect(() => NewBlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.tags;
+      expect(() => NewBlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.authorId;
+      expect(() => NewBlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.dateAdded;
+      expect(() => NewBlogPost.fromJSON(input)).toThrow();
+    });
+
+    test('throws an error if slug is empty', () => {
+      const input = { ...validPost };
+      input.slug = '';
+      expect(() => NewBlogPost.fromJSON(input)).toThrow();
+    });
+
+    test('throws an error if invalid input is provided', () => {
+      expect(() => NewBlogPost.fromJSON(1)).toThrow();
+      expect(() => NewBlogPost.fromJSON('1')).toThrow();
+      expect(() => NewBlogPost.fromJSON({})).toThrow();
+      expect(() => NewBlogPost.fromJSON([])).toThrow();
+      expect(() => NewBlogPost.fromJSON(null)).toThrow();
+      expect(() => NewBlogPost.fromJSON(undefined)).toThrow();
+      expect(() => NewBlogPost.fromJSON(new Date())).toThrow();
+    });
+  });
 
   describe('isNewBlogPostInterface', () => {
-    const validPost = {
-      title: 'title',
-      slug: 'slug',
-      body: 'body',
-      tags: ['tag1', 'tag2'],
-      authorId: 'authorId',
-      dateAdded: '2022-04-14T08:05:00.000Z',
-      updateAuthorId: 'updateAuthorId',
-      dateUpdated: '2022-04-14T08:06:00.000Z',
-    };
-
     test('returns true if the input conforms to a NewBlogPostInterface', () => {
       expect(NewBlogPost.isNewBlogPostInterface(validPost)).toBe(true);
     });
 
+    test('returns true if status is missing', () => {
+      const newPost = { ...validPost };
+      delete newPost.status;
+
+      expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(true);
+    });
+
     test('returns true if update information is missing', () => {
-      const newPost: Record<string, unknown> = { ...validPost };
+      const newPost = { ...validPost };
       delete newPost.updateAuthorId;
       delete newPost.dateUpdated;
 
       expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(true);
     });
 
-    test('returns false if updateAuthorId is present, but not dateUpdated', () => {
-      const newPost: Record<string, unknown> = { ...validPost };
+    test('returns true if updateAuthorId is present, but not dateUpdated', () => {
+      const newPost = { ...validPost };
       delete newPost.updateAuthorId;
 
-      expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(false);
+      expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(true);
     });
 
-    test('returns false if dateUpdate is present, but not updateAuthorId', () => {
-      const newPost: Record<string, unknown> = { ...validPost };
+    test('returns true if dateUpdate is present, but not updateAuthorId', () => {
+      const newPost = { ...validPost };
       delete newPost.dateUpdated;
 
-      expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(false);
+      expect(NewBlogPost.isNewBlogPostInterface(newPost)).toBe(true);
     });
 
     test('returns false if any of the required values are missing', () => {
@@ -235,6 +179,189 @@ describe('NewBlogPost', () => {
       const alias = { ...validPost };
       alias.dateAdded = 'abc';
       expect(NewBlogPost.isNewBlogPostInterface(alias)).toBe(false);
+    });
+  });
+});
+
+describe('BlogPost', () => {
+  const validPost: BlogPostInterface = {
+    id: 'id',
+    title: 'title',
+    slug: 'slug',
+    body: 'body',
+    tags: ['tag1', 'tag2'],
+    authorId: 'authorId',
+    dateAdded: '2022-04-14T08:05:00.000Z',
+    status: 'posted',
+    updateAuthorId: 'updateAuthorId',
+    dateUpdated: '2022-04-14T08:06:00.000Z',
+  };
+
+  describe('constructor', () => {});
+
+  describe('toJSON', () => {
+    test('returns an expected value', () => {
+      const newPost = BlogPost.fromJSON(validPost);
+
+      expect(newPost.toJSON()).toStrictEqual(validPost);
+    });
+  });
+
+  describe('fromJSON', () => {
+    test('returns a blog post', () => {
+      const newPost = BlogPost.fromJSON(validPost);
+      expect(newPost.toJSON()).toStrictEqual(validPost);
+    });
+
+    test('returns a blog post if updateAuthorId or dateUpdated is missing', () => {
+      const expectation = { ...validPost };
+      delete expectation.updateAuthorId;
+      delete expectation.dateUpdated;
+
+      let input: Record<string, unknown>;
+
+      input = { ...validPost };
+      delete input.updateAuthorId;
+      const newPost1 = BlogPost.fromJSON(input);
+      expect(newPost1.toJSON()).toStrictEqual(expectation);
+
+      input = { ...validPost };
+      delete input.dateUpdated;
+      const newPost2 = BlogPost.fromJSON(input);
+      expect(newPost2.toJSON()).toStrictEqual(expectation);
+
+      input = { ...validPost };
+      delete input.updateAuthorId;
+      delete input.dateUpdated;
+      const newPost3 = BlogPost.fromJSON(input);
+      expect(newPost3.toJSON()).toStrictEqual(expectation);
+    });
+
+    test('returns a blog post with default status if it is missing', () => {
+      const input = { ...validPost };
+      delete input.status;
+
+      const newPost = BlogPost.fromJSON(input);
+      expect(newPost.toJSON()).toStrictEqual({
+        ...validPost,
+        status: 'posted',
+      });
+    });
+
+    test('throws an error if required items are missing', () => {
+      let input: Record<string, unknown>;
+
+      input = { ...validPost };
+      delete input.id;
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.title;
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.slug;
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.body;
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.tags;
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.authorId;
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+
+      input = { ...validPost };
+      delete input.dateAdded;
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+    });
+
+    test('throws an error if slug is empty', () => {
+      const input = { ...validPost };
+      input.slug = '';
+      expect(() => BlogPost.fromJSON(input)).toThrow();
+    });
+
+    test('throws an error if invalid input is provided', () => {
+      expect(() => BlogPost.fromJSON(1)).toThrow();
+      expect(() => BlogPost.fromJSON('1')).toThrow();
+      expect(() => BlogPost.fromJSON({})).toThrow();
+      expect(() => BlogPost.fromJSON([])).toThrow();
+      expect(() => BlogPost.fromJSON(null)).toThrow();
+      expect(() => BlogPost.fromJSON(undefined)).toThrow();
+      expect(() => BlogPost.fromJSON(new Date())).toThrow();
+    });
+  });
+
+  describe('isBlogPostInterface', () => {
+
+    test('returns true if the input conforms to a BlogPostInterface', () => {
+      expect(BlogPost.isBlogPostInterface(validPost)).toBe(true);
+    });
+
+    test('returns true if status is missing', () => {
+      const newPost = { ...validPost };
+      delete newPost.status;
+
+      expect(BlogPost.isBlogPostInterface(newPost)).toBe(true);
+    });
+
+    test('returns true if update information is missing', () => {
+      const newPost = { ...validPost };
+      delete newPost.updateAuthorId;
+      delete newPost.dateUpdated;
+
+      expect(BlogPost.isBlogPostInterface(newPost)).toBe(true);
+    });
+
+    test('returns true if updateAuthorId is present, but not dateUpdated', () => {
+      const newPost = { ...validPost };
+      delete newPost.updateAuthorId;
+
+      expect(BlogPost.isBlogPostInterface(newPost)).toBe(true);
+    });
+
+    test('returns true if dateUpdate is present, but not updateAuthorId', () => {
+      const newPost = { ...validPost };
+      delete newPost.dateUpdated;
+
+      expect(BlogPost.isBlogPostInterface(newPost)).toBe(true);
+    });
+
+    test('returns false if any of the required values are missing', () => {
+      let alias: Record<string, unknown>;
+
+      alias = { ...validPost };
+      delete alias.id;
+      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
+
+      alias = { ...validPost };
+      delete alias.title;
+      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
+
+      alias = { ...validPost };
+      delete alias.slug;
+      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
+
+      alias = { ...validPost };
+      delete alias.body;
+      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
+
+      alias = { ...validPost };
+      delete alias.authorId;
+      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
+
+      alias = { ...validPost };
+      delete alias.dateAdded;
+      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
+
+      alias = { ...validPost };
+      delete alias.tags;
+      expect(BlogPost.isBlogPostInterface(alias)).toBe(false);
     });
   });
 });

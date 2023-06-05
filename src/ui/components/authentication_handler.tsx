@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -6,8 +6,13 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { actions, AppDispatch } from '@/src/store';
 import { getFirebaseConfig } from '@/src/shared/get_firebase_config';
 
-export function AuthenticationHandler() {
+interface AuthenticationGuardProps {
+  children: React.ReactNode;
+}
+
+export function AuthenticationHandler(props: AuthenticationGuardProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const firebaseConfig = getFirebaseConfig();
@@ -20,13 +25,23 @@ export function AuthenticationHandler() {
       // const idTokenResult = await user?.getIdTokenResult();
       // console.log(idTokenResult?.token);
 
+      // console.log('auth state changed');
+
       if (user === null) {
         dispatch(actions.setLogout());
       } else {
         dispatch(actions.setLogin());
       }
+
+      setLoaded(true);
     });
   });
 
-  return (<span></span>);
+  if (!loaded) {
+    return <span>Loading</span>;
+  }
+
+  return (<span>
+    {props.children}
+  </span>);
 }

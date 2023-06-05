@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { BlogPost } from '@/src/models/blog_post';
 import { Card } from '@/src/ui/components/card';
+import { RegularButton } from './regular_button';
 
 interface BlogCardInput {
   blogPost: BlogPost;
+  showUpdateButton?: boolean;
 }
 
 function BlogPostTitle(props: BlogCardInput) {
@@ -96,9 +98,26 @@ function BlogPostDate(props: BlogCardInput) {
   </span>;
 }
 
+function UpdatePostButton(props: { action: (() => Promise<void>) | (() => void) }) {
+  return <RegularButton
+    action={props.action}
+    text="Update" />;
+}
+
 export function BlogContent(props: BlogCardInput) {
+  const navigate = useNavigate();
+
+  let updateButton = null;
+  if (props.showUpdateButton) {
+    updateButton = <UpdatePostButton action={() => {
+      navigate(`/update/${props.blogPost.slug}`);
+    }} />;
+  }
+
   return (
     <span>
+      {updateButton}
+
       <BlogPostTitle blogPost={props.blogPost} />
 
       <BlogPostDate blogPost={props.blogPost} />

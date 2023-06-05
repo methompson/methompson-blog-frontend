@@ -103,6 +103,19 @@ module.exports = {
     camelcase: 'off',
     'no-console': 'warn',
     'import/no-extraneous-dependencies': 'off',
+    'no-restricted-imports': [
+      'warn',
+      {
+        'patterns': [
+          {
+            'group': [
+              '../*',
+            ],
+            'message': 'Usage of relative parent imports is not allowed.',
+          },
+        ],
+      },
+    ],
     'no-underscore-dangle': 'off',
     'no-multi-spaces': [
       'error',

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
-import { actions, AppDispatch } from '@/src/store';
+import { actions, AppDispatch, selectors } from '@/src/store';
 import { BlogPostCollection } from '@/src/models/blog_collection';
 import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { ShortBlogCard } from '@/src/ui/components/blog_content';
@@ -98,6 +98,8 @@ function NoPostsBlock() {
 }
 
 export function Home() {
+  const isLoggedIn = useSelector(selectors.isLoggedIn);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const [blogPosts, setBlogPosts] = useState(new BlogPostCollection({}));
@@ -109,7 +111,11 @@ export function Home() {
   useEffect(() => {
     (async function getBlogPosts() {
       try {
-        const result = dispatch(actions.getBlogList({ page }));
+        const action = isLoggedIn
+          ? actions.getFullBlogList
+          : actions.getBlogList;
+
+        const result = dispatch(action({ page }));
         // const payload = result.payload;
         const payload = await result.unwrap();
 
@@ -123,7 +129,7 @@ export function Home() {
         });
       }
     })();
-  }, [dispatch, page]);
+  }, [dispatch, isLoggedIn, page]);
 
   const blogComponents = blogPosts.sortedList.map((bp) => <ShortBlogCard key={bp.id} blogPost={bp} />);
 

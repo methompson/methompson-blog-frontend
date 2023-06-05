@@ -35,6 +35,37 @@ class BlogAPI {
     };
   }
 
+  async getFullBlogList(page = 1, pagination = 10) {
+    const baseUrl = getBaseApiUrl();
+    const queryParams = `page=${page}&pagination=${pagination}`;
+    const url = `${baseUrl}/blog/allPosts?${queryParams}`;
+
+    const token = await getAuthToken();
+    const headers = {
+      'Content-Type': 'application/json',
+      authorization: token,
+    };
+
+    const result = await fetch(url, {
+      headers,
+    });
+
+    if (!result.ok) {
+      throw getErrorByStatus(result.status, 'Error attempting to retrieve blog post');
+    }
+
+    const body = await result.json();
+
+    // console.log('body', body);
+
+    const posts = BlogPostCollection.fromJSON(body.posts);
+
+    return {
+      posts,
+      morePages: body.morePages ?? false,
+    };
+  }
+
   async getBlogPost(slug: string) {
     const baseUrl = getBaseApiUrl();
     const url = `${baseUrl}/blog/${slug}`;
@@ -71,7 +102,7 @@ class BlogAPI {
     const json = await resp.json();
 
     if (!resp.ok) {
-      const errMsg = json.error;
+      const errMsg = json.message;
       const msg: string = isString(errMsg) ? errMsg : 'Unknown Error';
 
       throw new AddBlogError(msg);
@@ -97,7 +128,45 @@ class BlogAPI {
 
     const json = await resp.json();
 
-    console.log('json', json);
+    if (!resp.ok) {
+      const errMsg = json.message;
+      const msg: string = isString(errMsg) ? errMsg : 'Unknown Error';
+
+      throw new AddBlogError(msg);
+    }
+  }
+
+  async updateBlogPost(oldSlug: string, post: BlogPost): Promise<BlogPost> {
+    const baseUrl = getBaseApiUrl();
+    const url = `${baseUrl}/blog/update`;
+
+    const token = await getAuthToken();
+    const headers = {
+      'Content-Type': 'application/json',
+      authorization: token,
+    };
+
+    const body = JSON.stringify({
+      updatedPost: post.toJSON(),
+      oldSlug,
+    });
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    const json = await resp.json();
+
+    if (!resp.ok) {
+      const errMsg = json.message;
+      const msg: string = isString(errMsg) ? errMsg : 'Unknown Error';
+
+      throw new AddBlogError(msg);
+    }
+
+    return BlogPost.fromJSON(json);
   }
 }
 

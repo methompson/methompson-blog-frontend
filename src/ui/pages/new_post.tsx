@@ -1,87 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import slugify from 'slugify';
 
 import { AppDispatch, actions } from '@/src/store';
-import { BlogPost, NewBlogPost } from '@/src/models/blog_post';
-import { getUserId } from '@/src/shared/auth_functions';
-import { Duration } from '@/src/shared/duration';
-import { TextEditor } from '@/src/shared/text_editor';
 
-import { CenteredStandardPage } from '@/src/ui/components/standard_page';
-import { LabeledTextInput } from '@/src/ui/components/new_post/text_input';
-import { BlogContent } from '@/src/ui/components/blog_content';
-import { RegularButton } from '@/src/ui/components/regular_button';
+import { BlogPost, NewBlogPost } from '@/src/models/blog_post';
+
+import { Duration } from '@/src/shared/duration';
 import { messengerInstance } from '@/src/shared/messenger';
 
-function removeAllChildNodes(parent: Element) {
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
-}
+import { AuthenticationGuard } from '@/src/ui/components/navigation_guard';
+import { PostEditSection, SubmitPostInterface } from '@/src/ui/components/post_edit_section';
+import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 
 export function NewPost() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [title, setTitle] = useState('');
-  const [tagsString, setTagsString] = useState('');
   const [shouldRedirectSlug, setShouldRedirectSlug] = useState('');
-  const [preview, setPreview] = useState('');
-  const [draft, setDraft] = useState(false);
-  // We never change the text editor, but we want to make sure it doesn't change when
-  // this is re-rendered We don't define ths above the React component because we want
-  // to be able to eventually provide already created content into the TextEditor for
-  // when this function allows for editing posts
-  const [textEditor] = useState(new TextEditor({
-    transactionCallback() {
-      const content = textEditor.getMarkdownContent();
-      setPreview(content);
-    },
-  }));
 
-  const editorId = 'editor';
-
-  useEffect(() => {
-    const editorDiv = document.querySelector(`#${editorId}`);
-
-    if (editorDiv === null) {
-      return;
-    }
-
-    removeAllChildNodes(editorDiv);
-    textEditor.makeAndInsertEditor(editorDiv);
-  }, [textEditor]);
-
-  const addNewPostAction = async () => {
-    if (title.length === 0) {
-      messengerInstance.addErrorMessage({
-        message: 'Blog Title is required',
-        duration: new Duration({minutes: 1}),
-      });
-
-      return;
-    }
-
-    const userId = await getUserId();
-
-    const body = textEditor.getMarkdownContent();
-    const slug = slugify(title, {lower: true});
-
-    let tags = tagsString.split(',');
-    tags = tags.map((tag) => tag.trim());
-
-    const status = draft ? 'draft' : 'posted';
-
+  async function submitPostAction(post: SubmitPostInterface) {
     try {
       const newPost = NewBlogPost.fromJSON({
-        title,
-        slug,
-        body,
-        tags,
-        authorId: userId,
-        status,
-        dateAdded: (new Date()).toISOString(),
+        title: post.title,
+        slug: post.slug,
+        body: post.body,
+        tags: post.tags,
+        authorId: post.authorId,
+        status: post.status,
+        dateAdded: post.dateAdded,
       });
 
       const result = await dispatch(actions.addBlogPost({ newPost }));
@@ -89,68 +35,23 @@ export function NewPost() {
       const bp = BlogPost.fromJSON(result.payload);
 
       setShouldRedirectSlug(bp.slug);
-    } catch(e) {
+
+    } catch (e) {
       const message = `Error Adding New Blog Post ${e}`;
       messengerInstance.addErrorMessage({
         message,
         duration: new Duration({minutes: 1}),
       });
     }
-  };
+  }
 
   if (shouldRedirectSlug.length > 0) {
     return <Navigate to={`/post/${shouldRedirectSlug}`} />;
   }
 
-  const bp = BlogPost.forPreview({
-    title,
-    body: preview,
-  });
-
-  const checkHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target.checked);
-    setDraft(!draft);
-  };
-
-  return (
+  return <AuthenticationGuard>
     <CenteredStandardPage>
-
-      <LabeledTextInput
-        name='Title'
-        value={title}
-        stretch={true}
-        onChange={(e) => setTitle(e.target.value)} />
-
-      <div
-        className='border border-slate-300 dark:border-slate-600 rounded-md'
-        id={editorId} />
-
-      <LabeledTextInput
-        name='Tags'
-        value={tagsString}
-        stretch={true}
-        onChange={(e) => setTagsString(e.target.value)} />
-
-      <div className="py-2">
-        <input
-          type="checkbox"
-          id="draft"
-          name="draft"
-          onChange={checkHandler}
-          checked={draft} />
-        <label className="px-2" htmlFor="draft">Draft</label>
-      </div>
-
-      <div>
-        <RegularButton
-          action={addNewPostAction}
-          text="Submit Post" />
-      </div>
-
-      <div>Preview</div>
-
-      <BlogContent blogPost={bp} />
-
+      <PostEditSection submitPostAction={submitPostAction}/>
     </CenteredStandardPage>
-  );
+  </AuthenticationGuard>;
 }

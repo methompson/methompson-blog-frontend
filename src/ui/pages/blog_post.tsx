@@ -9,7 +9,6 @@ import { Duration } from '@/src/shared/duration';
 import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { BlogContent } from '@/src/ui/components/blog_content';
 import { FullHeightCard } from '@/src/ui/components/card';
-import { DeletePostButton } from '@/src/ui/components/delete_post_button';
 import { messengerInstance } from '@/src/shared/messenger';
 
 export function BlogPostPage() {
@@ -44,35 +43,13 @@ export function BlogPostPage() {
   }
 
   let content = (<div>Loading</div>);
-  let deleteButton = null;
 
   // Can show if blogPost is not null and blog status is Posted or the user is logged in
   const canShowBlogpost = blogPost !== null && (
     blogPost.status === BlogStatus.Posted || isLoggedIn);
 
-  const deletePost = async () => {
-    try {
-      await dispatch(actions.deleteBlogPost(slug));
-      messengerInstance.addSuccessMessage({
-        message: 'Post Deleted',
-        duration: new Duration({minutes: 1}),
-      });
-      setShouldRedirectHome(true);
-    } catch (e) {
-      const message = `Error Deleting Blog Post ${e}`;
-      messengerInstance.addErrorMessage({
-        message,
-        duration: new Duration({minutes: 1}),
-      });
-    }
-  };
-
   if (loaded && canShowBlogpost) {
-    content = <BlogContent blogPost={blogPost} />;
-
-    deleteButton = isLoggedIn
-    ? <DeletePostButton action={deletePost} />
-    : null;
+    content = <BlogContent blogPost={blogPost} showUpdateButton={isLoggedIn} />;
   } else if (loaded) {
     // TODO redirect to 404 or show 404
     content = (<div>
@@ -84,8 +61,5 @@ export function BlogPostPage() {
     <FullHeightCard>
       {content}
     </FullHeightCard>
-    <div className='centeredPageContainer'>
-      {deleteButton}
-    </div>
   </CenteredStandardPage>;
 }
