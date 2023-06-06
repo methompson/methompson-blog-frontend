@@ -518,7 +518,6 @@ export function ImageUploadPage() {
   let uploadButton = <SubtmittingButton />;
 
   if (!submitting) {
-    console.log('Not Submitting');
 
     const enabled = files.length > 0 && Object.keys(imageOps).length > 0;
     uploadButton = <UploadButton action={uploadImages} enabled={enabled}/>;

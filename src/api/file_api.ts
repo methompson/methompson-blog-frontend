@@ -91,8 +91,6 @@ export class FileAPI {
 
     const json = await resp.json();
 
-    console.log(json);
-
     if (!Array.isArray(json)) {
       throw new Error('Invalid response from server');
     }

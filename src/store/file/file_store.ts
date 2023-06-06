@@ -17,7 +17,6 @@ const getFileList = createAsyncThunk<unknown, GetFileListRequest>(
 
     try {
       const result = await fapi.getFileList();
-      console.log(result);
     } catch (e) {
       console.error('Error getting file list:', e);
     }
@@ -32,7 +31,6 @@ const uploadFiles = createAsyncThunk<unknown, FileUploadRequest>(
 
     try {
       const result = await fapi.uploadFiles(uploadFilesRequest);
-      console.log(result);
     } catch (e) {
       console.error('Error getting file list:', e);
     }
@@ -46,7 +44,6 @@ const uploadImages = createAsyncThunk<unknown, ImageFileUploadRequest>(
     const fapi = new FileAPI();
 
     const result = await fapi.uploadImages(uploadFilesRequest);
-    console.log(result);
 
     return null;
   },
