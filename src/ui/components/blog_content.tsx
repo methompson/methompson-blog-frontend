@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BlogPost } from '@/src/models/blog_post';
 import { Card } from '@/src/ui/components/card';
 import { RegularButton } from './regular_button';
+import { BlogStatus } from '@/src/models/blog_post';
 
 interface BlogCardInput {
   blogPost: BlogPost;
@@ -11,7 +12,10 @@ interface BlogCardInput {
 }
 
 function BlogPostTitle(props: BlogCardInput) {
-  return <h1 className='text-3xl font-black'>{props.blogPost.title}</h1>;
+  const title = props.blogPost.status === BlogStatus.Posted
+    ? props.blogPost.title
+    : `Draft: ${props.blogPost.title}`;
+  return <h1 className='text-3xl font-black'>{title}</h1>;
 }
 
 function getDay(date: Date): string {
@@ -131,6 +135,7 @@ export function BlogContent(props: BlogCardInput) {
 
 export function BlogContentShort(props: BlogCardInput) {
   const link = `/post/${props.blogPost.slug}`;
+
   return (
     <span>
       <Link className='underline' to={link}>

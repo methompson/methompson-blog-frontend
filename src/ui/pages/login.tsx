@@ -47,6 +47,12 @@ export function LoginPage() {
     e.preventDefault();
   }
 
+  function onEnter(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      logUserIn();
+    }
+  }
+
   return (
     <StandardPage>
       <div className='flex justify-center items-center grow'>
@@ -57,6 +63,7 @@ export function LoginPage() {
               <TextInput
                 value={email}
                 placeholder='Email'
+                onKeyUp={onEnter}
                 onChange={(e) => setEmail(e.target.value)} />
             </div>
 
@@ -65,6 +72,7 @@ export function LoginPage() {
                 value={password}
                 placeholder='Password'
                 type='password'
+                onKeyUp={onEnter}
                 onChange={(e) => setPassword(e.target.value)} />
             </div>
 

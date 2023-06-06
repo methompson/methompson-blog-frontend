@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 interface TextInputProps {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void | Promise<void>;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void | Promise<void>;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void | Promise<void>;
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void | Promise<void>;
   placeholder?: string;
   value: string;
   className?: string;
@@ -43,6 +44,7 @@ export function TextInput(props: TextInputProps) {
     value={value}
     type={type}
     name={name}
+    onKeyUp={props.onKeyUp}
     onFocus={props.onFocus}
     onBlur={props.onBlur}
     onChange={setInputValue} />;
