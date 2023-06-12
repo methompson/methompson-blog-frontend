@@ -1,35 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { MenuIcon } from '@heroicons/react/solid';
 
-import { selectors, actions, AppDispatch } from '@/src/store';
 import { LargeScreenMenuList, SmallScreenMenuList } from '@/src/ui/components/menu';
 
 export const commonColors = 'bg-red-600 dark:bg-red-900 text-red-100 dark:text-red-300';
 
 export function BlogHeader() {
-  const isLoggedIn = useSelector(selectors.isLoggedIn);
-  const dispatch = useDispatch<AppDispatch>();
-
-  const logout = () => {
-    dispatch(actions.logOut());
-  };
-  const children = [];
-
-  children.push(<span className='headerMenuItem' key='header_home_link'><Link to='/'>Home</Link></span>);
-
-  if (isLoggedIn) {
-    // children.push(<span className='headerMenuItem' key='header_debug_link'><Link to='/debug'>Debug</Link></span>);
-    children.push(<span className='headerMenuItem' key='header_new_post_link'><Link to='/new_post'>New Post</Link></span>);
-  }
-
-  const logInOutLink = isLoggedIn
-    ? <Link to='/' onClick={logout}>Logout</Link>
-    : <Link to='/login'>Login</Link>;
-
-  children.push(<span className='headerMenuItem' key='log_in_or_out_link'>{logInOutLink}</span>);
-
   return (
     <header className='w-full'>
       <HeaderMenuWithButton />

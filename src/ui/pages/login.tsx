@@ -22,7 +22,7 @@ export function LoginPage() {
     try {
       await dispatch(actions.logIn({email, password})).unwrap();
       // If We get here, we've successfully signed in.
-      navigate('/');
+      navigate('/dashboard');
     } catch(e) {
       let msg: string;
       if (isRecord(e) && isString(e['message'])) {

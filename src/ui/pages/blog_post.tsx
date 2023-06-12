@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { BlogPost, BlogStatus } from '@/src/models/blog_post';
 import { actions, AppDispatch, selectors } from '@/src/store';
-import { Duration } from '@/src/shared/duration';
 
 import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { BlogContent } from '@/src/ui/components/blog_content';
 import { FullHeightCard } from '@/src/ui/components/card';
-import { messengerInstance } from '@/src/shared/messenger';
 
 export function BlogPostPage() {
   const isLoggedIn = useSelector(selectors.isLoggedIn);
@@ -17,7 +15,6 @@ export function BlogPostPage() {
   const dispatch = useDispatch<AppDispatch>();
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [loaded, setLoaded] = useState(false);
-  const [shouldRedirectHome, setShouldRedirectHome] = useState(false);
 
   const params = useParams();
   const slug = params.slug ?? '';
@@ -37,10 +34,6 @@ export function BlogPostPage() {
       setLoaded(true);
     })();
   }, [slug, dispatch]);
-
-  if (shouldRedirectHome) {
-    return <Navigate to={'/'} />;
-  }
 
   let content = (<div>Loading</div>);
 

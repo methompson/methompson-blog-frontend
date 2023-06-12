@@ -1,6 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { BlogHeader } from '@/src/ui/components/header';
 import { BlogFooter } from '@/src/ui/components/footer';
@@ -9,7 +8,6 @@ import { LoadingSpinner } from './loading_spinner';
 
 interface StandardPageProps {
   children: React.ReactNode;
-  authRestricted?: boolean;
 }
 
 function StandardPageLayout(props: StandardPageProps) {
@@ -29,15 +27,10 @@ function StandardPageLayout(props: StandardPageProps) {
 }
 
 export function StandardPage(props: StandardPageProps) {
-  const isLoggedIn = useSelector(selectors.isLoggedIn);
   const isAuthLoaded = useSelector(selectors.isAuthLoaded);
 
   if (!isAuthLoaded) {
     return <StandardPageLayout><CenteredLoadingScreen /></StandardPageLayout>;
-  }
-
-  if (props.authRestricted === true && !isLoggedIn) {
-    return <Navigate to={'/'} />;
   }
 
   return <StandardPageLayout>
@@ -46,7 +39,7 @@ export function StandardPage(props: StandardPageProps) {
 }
 
 export function CenteredStandardPage(props: StandardPageProps) {
-  return <StandardPage authRestricted={props.authRestricted}>
+  return <StandardPage>
     <div className='centeredPageContainer flex flex-col grow w-full lg:max-w-3xl px-4 lg:px-0'>
       {props.children}
     </div>

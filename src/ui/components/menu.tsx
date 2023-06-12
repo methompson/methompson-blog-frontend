@@ -17,10 +17,8 @@ function MenuChildren(): React.ReactNode[] {
   // children.push(<span className='headerMenuItem' key='header_budget_link'><Link to='/budget'>Budget</Link></span>);
 
   if (isLoggedIn) {
-    children.push(<span className='headerMenuItem' key='header_debug_link'><Link to='/debug'>Debug</Link></span>);
+    children.push(<span className='headerMenuItem' key='header_dashboard_link'><Link to='/dashboard'>Dashboard</Link></span>);
     children.push(<span className='headerMenuItem' key='header_new_post_link'><Link to='/new_post'>New Post</Link></span>);
-    children.push(<span className='headerMenuItem' key='header_upload_image_link'><Link to='/upload_image'>Upload An Image</Link></span>);
-    children.push(<span className='headerMenuItem' key='header_files_link'><Link to='/files'>Files</Link></span>);
   }
 
   const logInOutLink = isLoggedIn
