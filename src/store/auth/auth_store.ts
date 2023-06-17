@@ -9,7 +9,13 @@ import {
 } from 'firebase/auth';
 import { FirebaseError } from '@firebase/util';
 
-import { FirebasePersistenceError, FirebaseLoginError } from '@/src/errors/firebase_errors';
+import {
+  FirebasePersistenceError,
+  FirebaseLoginError,
+} from '@/src/errors/firebase_errors';
+import { getAuthToken } from '@/src/shared/auth_functions';
+
+const COOKIE_NAME = 'idToken';
 
 interface AuthState {
   loggedIn: boolean;
@@ -57,7 +63,11 @@ const logIn = createAsyncThunk(
 
     try {
       // cred = await signInWithEmailAndPassword(auth, loginRequest.email, loginRequest.password);
-      await signInWithEmailAndPassword(auth, loginRequest.email, loginRequest.password);
+      await signInWithEmailAndPassword(
+        auth,
+        loginRequest.email,
+        loginRequest.password,
+      );
     } catch (e) {
       let msg: string;
 
@@ -86,26 +96,21 @@ const logIn = createAsyncThunk(
   },
 );
 
-const logOut = createAsyncThunk(
-  'auth/logOut',
-  async () => {
-    signOut(getAuth());
-  },
-);
+const logOut = createAsyncThunk('auth/logOut', async () => {
+  signOut(getAuth());
+});
 
-const setLogin = createAsyncThunk(
-  'auth/setLogin',
-  async (_, thunkAPI) => {
-    thunkAPI.dispatch(authSlice.actions.setUserData());
-  },
-);
+const setLogin = createAsyncThunk('auth/setLogin', async (_, thunkAPI) => {
+  const token = await getAuthToken();
+  thunkAPI.dispatch(authSlice.actions.setUserData());
+  const cookie = `${COOKIE_NAME}=${token}`;
+  document.cookie = cookie;
+});
 
-const setLogout = createAsyncThunk(
-  'auth/setLogout',
-  async (_, thunkAPI) => {
-    thunkAPI.dispatch(authSlice.actions.unsetUserData());
-  },
-);
+const setLogout = createAsyncThunk('auth/setLogout', async (_, thunkAPI) => {
+  thunkAPI.dispatch(authSlice.actions.unsetUserData());
+  document.cookie = `${COOKIE_NAME}=; expireds=${new Date(0).toUTCString()}`;
+});
 
 const authActions = {
   logIn,
@@ -114,7 +119,4 @@ const authActions = {
   setLogout,
 };
 
-export {
-  authActions,
-  authSlice,
-};
+export { authActions, authSlice };

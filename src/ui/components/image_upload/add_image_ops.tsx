@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { CheckBox } from '@/src/ui/components/check_box';
-import { TextInput } from '@/src/ui/components/new_post/text_input';
+import { TextInput } from '@/src/ui/components/text_input';
 import { ImageOp } from '@/src/shared/image_op';
 import { diffBg, dropShadow } from '@/src/ui/components/image_upload/common_themes';
 import { RegularButton } from '@/src/ui/components/regular_button';

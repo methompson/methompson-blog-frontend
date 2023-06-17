@@ -1,6 +1,6 @@
 import { getAuth } from 'firebase/auth';
 
-import { getBaseApiUrl } from '@/src/shared/get_base_url';
+import { getApiUrlBase } from '@/src/shared/get_base_url';
 
 import { BlogPostCollection } from '@/src/models/blog_collection';
 import { BlogPost, NewBlogPost } from '@/src/models/blog_post';
@@ -13,14 +13,17 @@ import { isString } from '@/src/shared/type_guards';
 
 class BlogAPI {
   async getBlogList(page = 1, pagination = 10) {
-    const baseUrl = getBaseApiUrl();
+    const baseUrl = getApiUrlBase();
     const queryParams = `page=${page}&pagination=${pagination}`;
-    const url = `${baseUrl}/blog?${queryParams}`;
+    const url = `${baseUrl}/api/blog?${queryParams}`;
 
     const result = await fetch(url);
 
     if (!result.ok) {
-      throw getErrorByStatus(result.status, 'Error attempting to retrieve blog post');
+      throw getErrorByStatus(
+        result.status,
+        'Error attempting to retrieve blog post',
+      );
     }
 
     const body = await result.json();
@@ -36,9 +39,9 @@ class BlogAPI {
   }
 
   async getFullBlogList(page = 1, pagination = 10) {
-    const baseUrl = getBaseApiUrl();
+    const baseUrl = getApiUrlBase();
     const queryParams = `page=${page}&pagination=${pagination}`;
-    const url = `${baseUrl}/blog/allPosts?${queryParams}`;
+    const url = `${baseUrl}/api/blog/allPosts?${queryParams}`;
 
     const token = await getAuthToken();
     const headers = {
@@ -51,7 +54,10 @@ class BlogAPI {
     });
 
     if (!result.ok) {
-      throw getErrorByStatus(result.status, 'Error attempting to retrieve blog post');
+      throw getErrorByStatus(
+        result.status,
+        'Error attempting to retrieve blog post',
+      );
     }
 
     const body = await result.json();
@@ -67,13 +73,16 @@ class BlogAPI {
   }
 
   async getBlogPost(slug: string) {
-    const baseUrl = getBaseApiUrl();
-    const url = `${baseUrl}/blog/${slug}`;
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/blog/${slug}`;
 
     const result = await fetch(url);
 
     if (!result.ok) {
-      throw getErrorByStatus(result.status, 'Error attempting to retrieve blog post');
+      throw getErrorByStatus(
+        result.status,
+        'Error attempting to retrieve blog post',
+      );
     }
 
     const body = await result.json();
@@ -82,8 +91,8 @@ class BlogAPI {
   }
 
   async addBlogPost(newPost: NewBlogPost) {
-    const baseUrl = getBaseApiUrl();
-    const url = `${baseUrl}/blog`;
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/blog`;
 
     const token = await getAuthToken();
     const headers = {
@@ -112,8 +121,8 @@ class BlogAPI {
   }
 
   async deleteBlogPost(slug: string) {
-    const baseUrl = getBaseApiUrl();
-    const url = `${baseUrl}/blog/delete/${slug}`;
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/blog/delete/${slug}`;
 
     const token = await getAuthToken();
     const headers = {
@@ -137,8 +146,8 @@ class BlogAPI {
   }
 
   async updateBlogPost(oldSlug: string, post: BlogPost): Promise<BlogPost> {
-    const baseUrl = getBaseApiUrl();
-    const url = `${baseUrl}/blog/update`;
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/blog/update`;
 
     const token = await getAuthToken();
     const headers = {
@@ -170,6 +179,4 @@ class BlogAPI {
   }
 }
 
-export {
-  BlogAPI,
-};
+export { BlogAPI };

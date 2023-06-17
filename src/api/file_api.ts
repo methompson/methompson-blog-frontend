@@ -1,7 +1,7 @@
 import { FileDetails, FileDetailsJSON } from '@/src/models/file_models';
 
 import { getAuthToken } from '@/src/shared/auth_functions';
-import { getBaseApiUrl } from '@/src/shared/get_base_url';
+import { getApiUrlBase } from '@/src/shared/get_base_url';
 import { basicHttpErrorHandling } from '@/src/shared/http_error_handling';
 import { ImageOp } from '@/src/shared/image_op';
 import { isBoolean, isNumber, isRecord } from '@/src/shared/type_guards';
@@ -24,11 +24,14 @@ export interface FileUploadRequest {
 }
 
 export class FileAPI {
-  async getFileList(_page = 1, _pagination = 20): Promise<FileListResponse> {
-    const baseUrl = getBaseApiUrl();
-    const queryParams = `page=${_page}&pagination=${_pagination}`;
+  async getFileList(
+    pageArg = 1,
+    paginationArg = 20,
+  ): Promise<FileListResponse> {
+    const baseUrl = getApiUrlBase();
+    const queryParams = `page=${pageArg}&pagination=${paginationArg}`;
 
-    const url = `${baseUrl}/file/list?${queryParams}`;
+    const url = `${baseUrl}/api/file/list?${queryParams}`;
 
     const token = await getAuthToken();
     const headers = {
@@ -58,7 +61,9 @@ export class FileAPI {
       throw new Error('Invalid response from server');
     }
 
-    const filesOutput = files.map((file) => FileDetails.fromJSON(file).toJSON());
+    const filesOutput = files.map((file) =>
+      FileDetails.fromJSON(file).toJSON(),
+    );
 
     return {
       files: filesOutput,
@@ -69,8 +74,8 @@ export class FileAPI {
   }
 
   async uploadFiles(req: FileUploadRequest) {
-    const baseUrl = getBaseApiUrl();
-    const url = `${baseUrl}/upload`;
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/upload`;
 
     const token = await getAuthToken();
     const headers = {
@@ -83,9 +88,12 @@ export class FileAPI {
       body.append('file', file);
     }
 
-    body.append('ops', JSON.stringify({
-      isPrivate: req.isPrivate,
-    }));
+    body.append(
+      'ops',
+      JSON.stringify({
+        isPrivate: req.isPrivate,
+      }),
+    );
 
     const resp = await fetch(url, { method: 'POST', headers, body });
 
@@ -101,8 +109,8 @@ export class FileAPI {
   }
 
   async uploadImages(req: ImageFileUploadRequest) {
-    const baseUrl = getBaseApiUrl();
-    const url = `${baseUrl}/file/image_upload`;
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/file/image_upload`;
 
     const token = await getAuthToken();
     const headers = {

@@ -1,6 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { FileAPI, FileUploadRequest, ImageFileUploadRequest } from '@/src/api/file_api';
+import {
+  FileAPI,
+  FileListResponse,
+  FileUploadRequest,
+  ImageFileUploadRequest,
+} from '@/src/api/file_api';
 
 export const fileSlice = createSlice({
   name: 'file',
@@ -8,19 +13,20 @@ export const fileSlice = createSlice({
   reducers: {},
 });
 
-interface GetFileListRequest {}
+interface GetFileListRequest {
+  page?: number;
+  pagination?: number;
+}
 
-const getFileList = createAsyncThunk<unknown, GetFileListRequest>(
+const getFileList = createAsyncThunk<FileListResponse, GetFileListRequest>(
   'file/getFileList',
-  async (getFileListRequest: GetFileListRequest): Promise<unknown> => {
+  async (getFileListRequest: GetFileListRequest): Promise<FileListResponse> => {
     const fapi = new FileAPI();
 
-    try {
-      const result = await fapi.getFileList();
-    } catch (e) {
-      console.error('Error getting file list:', e);
-    }
-    return null;
+    return fapi.getFileList(
+      getFileListRequest?.page,
+      getFileListRequest?.pagination,
+    );
   },
 );
 
@@ -29,11 +35,7 @@ const uploadFiles = createAsyncThunk<unknown, FileUploadRequest>(
   async (uploadFilesRequest: FileUploadRequest): Promise<unknown> => {
     const fapi = new FileAPI();
 
-    try {
-      const result = await fapi.uploadFiles(uploadFilesRequest);
-    } catch (e) {
-      console.error('Error getting file list:', e);
-    }
+    const result = await fapi.uploadFiles(uploadFilesRequest);
     return null;
   },
 );

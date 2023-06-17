@@ -9,7 +9,7 @@ import { Duration } from '@/src/shared/duration';
 import { TextEditor } from '@/src/shared/text_editor';
 import { actions, AppDispatch } from '@/src/store';
 
-import { LabeledTextInput } from '@/src/ui/components/new_post/text_input';
+import { LabeledTextInput } from '@/src/ui/components/text_input';
 import { BlogContent } from '@/src/ui/components/blog_content';
 import { RegularButton } from '@/src/ui/components/regular_button';
 import { messengerInstance } from '@/src/shared/messenger';
@@ -199,6 +199,7 @@ export function PostEditSection(props: PostEditSectionProps) {
 
   return (
     <span>
+      <span id='content'></span>
       <LabeledTextInput
         name='Title'
         value={title}

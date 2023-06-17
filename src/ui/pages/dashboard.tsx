@@ -19,9 +19,8 @@ export function Dashboard() {
           <ul className='list-disc my-4'>
             <li>Blog List</li>
             <li><Link to='/new_post' className={linkClasses}>Add a New Blog Post</Link></li>
-            <li>Images List</li>
-            <li><Link to='/upload_image' className={linkClasses}>Upload an Image</Link></li>
             <li><Link to='/files' className={linkClasses}>Files List</Link></li>
+            <li><Link to='/upload_image' className={linkClasses}>Upload an Image</Link></li>
             <li>Upload a File</li>
             <li><Link to='/debug' className={linkClasses}>Debug Menu</Link></li>
           </ul>

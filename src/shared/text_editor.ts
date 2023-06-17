@@ -6,13 +6,14 @@ import {
   schema,
   defaultMarkdownParser,
   defaultMarkdownSerializer,
+  MarkdownParser,
 } from 'prosemirror-markdown';
 import { exampleSetup } from 'prosemirror-example-setup';
 
 interface TextEditorInput {
   inputText?: string;
-  transactionCallback?: () => void,
-};
+  transactionCallback?: () => void;
+}
 
 export class TextEditor {
   protected mySchema: Schema;
@@ -30,7 +31,13 @@ export class TextEditor {
 
     const inputText = input.inputText ?? '';
 
-    const doc = defaultMarkdownParser.parse(inputText) ?? undefined;
+    const parser = new MarkdownParser(
+      this.mySchema,
+      defaultMarkdownParser.tokenizer,
+      defaultMarkdownParser.tokens,
+    );
+
+    const doc = parser.parse(inputText) ?? undefined;
 
     this.state = EditorState.create({
       doc,
