@@ -14,6 +14,7 @@ import {
   FirebaseLoginError,
 } from '@/src/errors/firebase_errors';
 import { getAuthToken } from '@/src/shared/auth_functions';
+import { getBaseDomain } from '@/src/shared/get_base_url';
 
 const COOKIE_NAME = 'idToken';
 
@@ -103,13 +104,13 @@ const logOut = createAsyncThunk('auth/logOut', async () => {
 const setLogin = createAsyncThunk('auth/setLogin', async (_, thunkAPI) => {
   const token = await getAuthToken();
   thunkAPI.dispatch(authSlice.actions.setUserData());
-  const cookie = `${COOKIE_NAME}=${token}`;
+  const cookie = `${COOKIE_NAME}=${token}; domain=${getBaseDomain()}`;
   document.cookie = cookie;
 });
 
 const setLogout = createAsyncThunk('auth/setLogout', async (_, thunkAPI) => {
   thunkAPI.dispatch(authSlice.actions.unsetUserData());
-  document.cookie = `${COOKIE_NAME}=; expireds=${new Date(0).toUTCString()}`;
+  document.cookie = `${COOKIE_NAME}=; expires=${new Date(0).toUTCString()}`;
 });
 
 const authActions = {
