@@ -1,12 +1,6 @@
-.fileTable, .imageOpTable {
+.fileTable, .imageOpTable, .filesList {
   td, th {
     padding: 0.25em 1.5em 0.25em 0.25em;
-  }
-
-  tbody {
-    td:last-child {
-      text-align: end;
-    }
   }
 
   thead {
@@ -16,6 +10,14 @@
 
     th h1 {
       padding-bottom: 0.5em;
+    }
+  }
+}
+
+.fileTable, .imageOpTable {
+  tbody {
+    td:last-child {
+      text-align: end;
     }
   }
 }

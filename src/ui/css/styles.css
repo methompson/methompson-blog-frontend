@@ -57,8 +57,7 @@ code {
   white-space: break-spaces;
   -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none;
-  font-feature-settings: "liga" 0;
-  /* the above doesn't seem to work in Edge */
+  font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
 }
 
 .ProseMirror pre {
@@ -245,8 +244,7 @@ img.ProseMirror-separator {
 .ProseMirror-icon {
   display: inline-block;
   line-height: 0.8;
-  vertical-align: -2px;
-  /* Compensate for padding */
+  vertical-align: -2px; /* Compensate for padding */
   padding: 2px 8px;
   cursor: pointer;
 }
@@ -509,18 +507,16 @@ img.ProseMirror-separator {
     opacity: 0;
   }
 }
-.filesList td, .filesList th, .imageOpTable td, .imageOpTable th,
-.fileTable td, .fileTable th, .imageOpTable td, .imageOpTable th {
+.fileTable td, .fileTable th, .imageOpTable td, .imageOpTable th, .filesList td, .filesList th {
   padding: 0.25em 1.5em 0.25em 0.25em;
 }
-.fileTable tbody td:last-child, .imageOpTable tbody td:last-child {
-  text-align: end;
-}
-.filesList thead .tableLeft th, .imageOpTable thead .tableLeft th,
-.fileTable thead .tableLeft th, .imageOpTable thead .tableLeft th {
+.fileTable thead .tableLeft th, .imageOpTable thead .tableLeft th, .filesList thead .tableLeft th {
   text-align: left;
 }
-.filesList thead th h1, .imageOpTable thead th h1,
-.fileTable thead th h1, .imageOpTable thead th h1 {
+.fileTable thead th h1, .imageOpTable thead th h1, .filesList thead th h1 {
   padding-bottom: 0.5em;
+}
+
+.fileTable tbody td:last-child, .imageOpTable tbody td:last-child {
+  text-align: end;
 }

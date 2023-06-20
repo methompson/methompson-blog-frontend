@@ -4,7 +4,13 @@ import { getAuthToken } from '@/src/shared/auth_functions';
 import { getApiUrlBase } from '@/src/shared/get_base_url';
 import { basicHttpErrorHandling } from '@/src/shared/http_error_handling';
 import { ImageOp } from '@/src/shared/image_op';
-import { isBoolean, isNumber, isRecord } from '@/src/shared/type_guards';
+import {
+  isBoolean,
+  isNumber,
+  isRecord,
+  isString,
+} from '@/src/shared/type_guards';
+import { DataModificationError } from '@/src/errors/blog_errors';
 
 export interface FileListResponse {
   files: FileDetailsJSON[];
@@ -144,7 +150,33 @@ export class FileAPI {
     return output;
   }
 
-  async deleteFiles() {
-    throw new Error('Unimplemented');
+  async deleteFiles(filesToDelete: string[]) {
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/file/delete`;
+
+    const token = await getAuthToken();
+    const headers = {
+      'Content-Type': 'application/json',
+      authorization: token,
+    };
+
+    const body = JSON.stringify(filesToDelete);
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    const json = await resp.json();
+
+    if (!resp.ok) {
+      const errMsg = json.message;
+      const msg: string = isString(errMsg) ? errMsg : 'Unknown Error';
+
+      throw new DataModificationError(msg);
+    }
+
+    return filesToDelete;
   }
 }

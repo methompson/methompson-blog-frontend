@@ -1,6 +1,6 @@
 import { diffBg } from '@/src/ui/components/image_upload/common_themes';
 import { FileItem } from '@/src/ui/components/image_upload/file_item';
-import { TrashCanButton } from '@/src/ui/components/image_upload/icon_buttons';
+import { TrashCanButton } from '@/src/ui/components/icon_buttons';
 
 interface FileRowProps {
   file: FileItem;

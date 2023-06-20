@@ -11,19 +11,16 @@ import { FileDetails } from '@/src/models/file_models';
 import { diffBg } from '@/src/ui/components/image_upload/common_themes';
 import { AuthenticationGuard } from '@/src/ui/components/navigation_guard';
 import { CenteredLoadingScreen, StandardPage } from '@/src/ui/components/standard_page';
-import { LinkButton, TrashCanButton } from '@/src/ui/components/image_upload/icon_buttons';
+import { LinkButton, TrashCanButton } from '@/src/ui/components/icon_buttons';
 
 export function FileListPage() {
   const isLoggedIn = useSelector(selectors.isLoggedIn);
   const dispatch = useDispatch<AppDispatch>();
 
   const [filesList, setFilesList] = useState<FileDetails[]>([]);
-  // const [totalFiles, setTotalFiles] = useState(0);
-  // const [page, setPage] = useState(0);
-  // const [pagination, setPagination] = useState(0);
 
-  // const [filesListResponse, setFilesListResponse] = useState<FileListResponse | undefined>(undefined);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -38,21 +35,19 @@ export function FileListPage() {
         const files = payload.files.map((f) => FileDetails.fromJSON(f));
         setFilesList(files);
 
-        // setTotalFiles(payload.totalFiles);
-        // setPage(payload.page);
-        // setPagination(payload.pagination);
-
-        // setFilesListResponse(payload);
-
         setIsLoaded(true);
       } catch (e) {
 
       }
     })();
-  }, [isLoggedIn, dispatch]);
+  }, [isLoggedIn, dispatch, reloadKey]);
+
+  const onDelete = (id: string) => {
+    setReloadKey(reloadKey + 1);
+  };
 
   const content = isLoaded
-    ? <FileList files={filesList} />
+    ? <FileList files={filesList} onDelete={onDelete} />
     : <CenteredLoadingScreen />;
 
   return (
@@ -64,7 +59,15 @@ export function FileListPage() {
   );
 }
 
-function FileRow(props: { file: FileDetails }) {
+interface FileRowProps {
+  file: FileDetails;
+  onDelete?: (id: string) => void | Promise<void>
+}
+
+function FileRow(props: FileRowProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
   const baseUrl = getApiUrlBase();
   const fileUrl = `${baseUrl}/files/${props.file.filename}`;
 
@@ -85,7 +88,27 @@ function FileRow(props: { file: FileDetails }) {
     });
   };
 
-  const deleteClick = () => {};
+  const deleteClick = async () => {
+    if (isDeleting === true) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const result = dispatch(actions.deleteFiles([props.file.filename]));
+      await result.unwrap();
+      props.onDelete?.(props.file.filename);
+    } catch(e) {
+      messengerInstance.addErrorMessage({
+        message: 'Error Deleting file',
+      });
+    }
+
+    setIsDeleting(false);
+  };
+
+  const classes = isDeleting ? 'text-red-500 hover:text-red-500 active:text-red-500' : '';
 
   return <tr>
     <td>
@@ -101,14 +124,20 @@ function FileRow(props: { file: FileDetails }) {
     <td>{`${fileSize.size.toFixed(2)} ${unit}`}</td>
     <td>{isPrivate}</td>
     <td><LinkButton onClick={copyClick} /></td>
-    <td><TrashCanButton onClick={deleteClick} /></td>
+    <td><TrashCanButton className={classes} onClick={deleteClick} /></td>
   </tr>;
 }
 
-function FileList(props: { files: FileDetails[] }) {
+interface FileListProps {
+  files: FileDetails[];
+  onDelete?: (id: string) => void | Promise<void>;
+}
+
+function FileList(props: FileListProps) {
   const rows = props
     .files
     .map((file) => <FileRow
+      onDelete={props.onDelete}
       file={file}
       key={file.filename} />);
 

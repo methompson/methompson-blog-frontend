@@ -40,6 +40,16 @@ const uploadFiles = createAsyncThunk<unknown, FileUploadRequest>(
   },
 );
 
+const deleteFiles = createAsyncThunk<unknown, string[]>(
+  'file/deleteFiles',
+  async (filesToDelete: string[]): Promise<unknown> => {
+    const fapi = new FileAPI();
+
+    const result = await fapi.deleteFiles(filesToDelete);
+    return undefined;
+  },
+);
+
 const uploadImages = createAsyncThunk<unknown, ImageFileUploadRequest>(
   'file/uploadImages',
   async (uploadFilesRequest: ImageFileUploadRequest): Promise<unknown> => {
@@ -55,4 +65,5 @@ export const fileActions = {
   getFileList,
   uploadFiles,
   uploadImages,
+  deleteFiles,
 };
