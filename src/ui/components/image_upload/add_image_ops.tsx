@@ -12,11 +12,9 @@ interface AddImageOpProps {
 
 export function AddImageOps(props: AddImageOpProps) {
   const [identifier, setIdentifier] = useState('');
-  const [retainImage, setRetainImage] = useState(false);
   const [imageFormat, setImageFormat] = useState('same');
   const [longestSideRes, setLongestSideRes] = useState('');
   const [longestSideResErr, setLongestSideResErr] = useState(false);
-  const [stripMeta, setStripMeta] = useState(false);
   const [isPrivate, setIsPrivate] = useState(true);
 
   const flexBetween = 'flex flex-row justify-between items-center py-2';
@@ -40,21 +38,16 @@ export function AddImageOps(props: AddImageOpProps) {
   const addImageOp = () => {
     const imageOp: ImageOp = {
       identifier,
-      retainImage,
       isPrivate,
     };
 
-    if (!retainImage) {
-      if (imageFormat !== 'same') {
-        imageOp.imageFormat = imageFormat;
-      }
+    if (imageFormat !== 'same') {
+      imageOp.imageFormat = imageFormat;
+    }
 
-      if (longestSideRes.length > 0) {
-        const res = Number.parseInt(longestSideRes, 10);
-        imageOp.longestSideResolution = res;
-      }
-
-      imageOp.stripMetadata = stripMeta;
+    if (longestSideRes.length > 0) {
+      const res = Number.parseInt(longestSideRes, 10);
+      imageOp.longestSideResolution = res;
     }
 
     props.addImageOp(imageOp);
@@ -86,17 +79,6 @@ export function AddImageOps(props: AddImageOpProps) {
       </div>
 
       <div className={flexBetween}>
-        <span className={leftSide}>Retain Image</span>
-        <span className={`${rightSide} flex items-center justify-center`}>
-          <CheckBox
-            startingValue={retainImage}
-            onCheck={(checked: boolean) => {
-              setRetainImage(checked);
-            }}/>
-        </span>
-      </div>
-
-      <div className={flexBetween}>
         <span className={leftSide}>Image Format</span>
         <select
           className={`${rightSide} bg-white dark:bg-slate-800`}
@@ -110,7 +92,6 @@ export function AddImageOps(props: AddImageOpProps) {
           <option value='png'>PNG</option>
           <option value='jpeg'>JPEG</option>
           <option value='gif'>GIF</option>
-          <option value='heic'>HEIC</option>
           <option value='bmp'>BMP</option>
           <option value='tiff'>TIFF</option>
         </select>
@@ -135,17 +116,6 @@ export function AddImageOps(props: AddImageOpProps) {
             setLongestSideRes(val);
             setLongestSideResErr(err);
           }}/>
-      </div>
-
-      <div className={flexBetween}>
-        <span className={leftSide}>Strip Metadata</span>
-        <span className={`${rightSide} flex items-center justify-center`}>
-          <CheckBox
-            startingValue={stripMeta}
-            onCheck={(checked: boolean) => {
-              setStripMeta(checked);
-            }}/>
-        </span>
       </div>
 
       <div className='text-center'>

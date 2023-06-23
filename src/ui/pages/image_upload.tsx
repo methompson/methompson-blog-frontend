@@ -15,6 +15,8 @@ import { FilesTable } from '@/src/ui/components/image_upload/files_table';
 import { UploadButton, SubtmittingButton } from '@/src/ui/components/image_upload/upload_button';
 import { AddImageOps } from '@/src/ui/components/image_upload/add_image_ops';
 import { ImageOpsTable } from '@/src/ui/components/image_upload/image_ops_table';
+import { ConversionResult, processImage } from '@/src/image_conversion/convert';
+import { FileOp } from '@/src/api/file_api';
 
 function Banner() {
   return <div className='flex justify-center m-2'>
@@ -64,7 +66,6 @@ export function ImageUploadPage() {
   }
 
   async function uploadImages() {
-
     const ops = Object.values(imageOps);
     const fileList = files.map((f) => f.file);
 
@@ -74,15 +75,37 @@ export function ImageUploadPage() {
 
     setSubmitting(true);
 
-    try {
-      await dispatch(actions.uploadImages({
-        files: fileList,
-        ops,
-      }));
+    const imagePromises: Promise<ConversionResult[]>[] = [];
+    for (const file of fileList) {
+      console.log(file.name);
+      imagePromises.push(processImage(file, imageOps, file.name));
+    }
 
-      // await new Promise((resolve) => {
-      //   setTimeout(resolve, 1000);
+    try {
+      const results = await Promise.all(imagePromises);
+      const files = results.flat();
+
+      console.log('files', files);
+
+      // files.forEach((file) => {
+      //   downloadFile(file.file);
       // });
+
+      const fileOps: Record<string, FileOp> = {};
+      for (const file of files) {
+        fileOps[file.file.name] = {
+          isPrivate: file.isPrivate,
+        };
+      }
+
+      const filesToUpload = files.map((file) => file.file);
+
+      console.log('filesToUpload', filesToUpload);
+
+      await dispatch(actions.uploadFiles({
+        files: filesToUpload,
+        fileOps,
+      }));
 
       let successMessage = <SuccessMessage successUrl='/' />;
 
@@ -90,6 +113,11 @@ export function ImageUploadPage() {
         message: successMessage,
         // duration: new Duration({minutes: 10}),
       });
+
+      // Clear State
+      setFiles([]);
+      setImageOps({});
+
     } catch(e) {
       messengerInstance.addErrorMessage({
         message: `Error Uploading Images: ${e}`,
@@ -102,7 +130,6 @@ export function ImageUploadPage() {
   let uploadButton = <SubtmittingButton />;
 
   if (!submitting) {
-
     const enabled = files.length > 0 && Object.keys(imageOps).length > 0;
     uploadButton = <UploadButton action={uploadImages} enabled={enabled}/>;
   }
@@ -129,4 +156,23 @@ export function ImageUploadPage() {
       </CenteredStandardPage>
     </AuthenticationGuard>
   );
+}
+
+function downloadFile(file: File) {
+  // const b64encoded = arrayBufferToBase64(bytesArray);
+  // const blob = new Blob([bytesArray]);
+  const fileUrl = URL.createObjectURL(file);
+
+  const downloadEl = document.createElement('a');
+  downloadEl.setAttribute('href', fileUrl);
+  downloadEl.setAttribute('download', file.name);
+
+  downloadEl.style.display = 'none';
+  document.body.appendChild(downloadEl);
+
+  downloadEl.innerHTML = 'link';
+
+  downloadEl.click();
+
+  document.body.removeChild(downloadEl);
 }
