@@ -20,7 +20,7 @@ export function ImageOpsTable(props: ImageOpsTableProps) {
     <table className='table-auto w-full text-sm'>
       <thead className={diffBg}>
         <tr>
-          <th colSpan={6}>
+          <th colSpan={5}>
             <h1 className='text-lg font-bold'>
               Image Operations
             </h1>
@@ -28,10 +28,9 @@ export function ImageOpsTable(props: ImageOpsTableProps) {
         </tr>
         <tr className='tableLeft'>
           <th>Identifier</th>
-          <th>Retain Image</th>
+          <th>Is Private</th>
           <th>Image Format</th>
           <th>Longest Side Resolution</th>
-          <th>Strip Metadata</th>
           <th></th>
         </tr>
       </thead>
@@ -61,10 +60,9 @@ function OpRow(props: OpRowProps) {
 
   return <tr>
     <td>{op.identifier}</td>
-    <td>{tfText(op.retainImage)}</td>
+    <td>{tfText(op.isPrivate)}</td>
     <td>{op.imageFormat ? op.imageFormat : 'N/A'}</td>
     <td>{op.longestSideResolution ? op.longestSideResolution : 'N/A'}</td>
-    <td>{tfText(op.stripMetadata)}</td>
     <td><TrashCanButton onClick={() => props.deleteOp(op.identifier)}/></td>
   </tr>;
 }

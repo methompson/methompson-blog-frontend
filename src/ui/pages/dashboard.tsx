@@ -4,11 +4,13 @@ import { AuthenticationGuard } from '@/src/ui/components/navigation_guard';
 import { CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { Card } from '@/src/ui/components/card';
 
-export function Dashboard() {
+export function DashboardPage() {
   const linkClasses = [
     'underline',
     'text-slate-900',
     'hover:text-slate-500',
+    'dark:text-slate-300',
+    'hover:dark:text-slate-400',
   ].join(' ');
 
   return <AuthenticationGuard>

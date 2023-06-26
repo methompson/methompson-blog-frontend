@@ -16,7 +16,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint'],
+  plugins: ['react', '@typescript-eslint', 'import'],
   settings: {
     react: {
       createClass: 'createReactClass', // Regex for Component Factory to use,
@@ -79,6 +79,7 @@ module.exports = {
     ],
     'arrow-body-style': ['error', 'as-needed'],
     'arrow-parens': ['error', 'always'],
+    'import/no-cycle': 2,
     'no-empty': [
       'error',
       {

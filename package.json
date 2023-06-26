@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "lint": "eslint --fix-dry-run \"src/**/*.ts\"",
+    "postinstall": "cp node_modules/@saschazar/wasm-heif/wasm_heif.wasm public/wasm_heif.wasm",
     "serve": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -14,6 +17,7 @@
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "@reduxjs/toolkit": "^1.8.2",
+    "@saschazar/wasm-heif": "^2.0.0",
     "firebase": "^9.8.3",
     "luxon": "^3.3.0",
     "markdown-it": "^13.0.1",
@@ -60,7 +64,7 @@
     "ts-jest": "^28.0.3",
     "ts-node": "^10.8.0",
     "typescript": "^4.6.3",
-    "vite": "^4.0.3"
+    "vite": "^4.3.9"
   },
   "eslintConfig": {
     "extends": "react-app"

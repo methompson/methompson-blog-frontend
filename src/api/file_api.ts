@@ -24,9 +24,14 @@ export interface ImageFileUploadRequest {
   ops: ImageOp[];
 }
 
+export interface FileOp {
+  isPrivate: boolean;
+}
+
 export interface FileUploadRequest {
   files: File[];
-  isPrivate: boolean;
+  isPrivate?: boolean;
+  fileOps?: Record<string, FileOp>;
 }
 
 export class FileAPI {
@@ -81,7 +86,7 @@ export class FileAPI {
 
   async uploadFiles(req: FileUploadRequest) {
     const baseUrl = getApiUrlBase();
-    const url = `${baseUrl}/api/upload`;
+    const url = `${baseUrl}/api/file/upload`;
 
     const token = await getAuthToken();
     const headers = {
@@ -97,7 +102,8 @@ export class FileAPI {
     body.append(
       'ops',
       JSON.stringify({
-        isPrivate: req.isPrivate,
+        fileOps: req.fileOps ?? {},
+        isPrivate: req.isPrivate ?? true,
       }),
     );
 

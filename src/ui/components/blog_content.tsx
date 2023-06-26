@@ -1,9 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-import { BlogPost } from '@/src/models/blog_post';
+import { BlogPost, BlogStatus } from '@/src/models/blog_post';
 import { Card } from '@/src/ui/components/card';
 import { RegularButton } from './regular_button';
-import { BlogStatus } from '@/src/models/blog_post';
 
 interface BlogCardInput {
   blogPost: BlogPost;
@@ -135,9 +134,25 @@ export function BlogContent(props: BlogCardInput) {
 export function BlogContentShort(props: BlogCardInput) {
   const link = `/post/${props.blogPost.slug}`;
 
+  const headerLinkClasses = [
+    'underline',
+    'text-slate-900',
+    'hover:text-slate-500',
+    'dark:text-slate-300',
+    'hover:dark:text-slate-400',
+  ].join(' ');
+
+  const readMoreLinkClasses = [
+    'text-blue-500',
+    'hover:text-blue-600',
+    'dark:text-blue-300',
+    'hover:dark:text-blue-400',
+    'font-bold underline',
+  ].join(' ');
+
   return (
     <span>
-      <Link className='underline' to={link}>
+      <Link className={headerLinkClasses} to={link}>
         <BlogPostTitle blogPost={props.blogPost} />
       </Link>
 
@@ -147,7 +162,7 @@ export function BlogContentShort(props: BlogCardInput) {
         <div dangerouslySetInnerHTML={{ __html: props.blogPost.bodyInHtml }}></div>
       </div>
 
-      <Link className='text-blue-600 font-bold underline' to={link}>
+      <Link className={readMoreLinkClasses} to={link}>
         Read More
       </Link>
     </span>
