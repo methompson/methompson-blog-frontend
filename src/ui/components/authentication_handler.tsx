@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import { actions, AppDispatch } from '@/src/store';
 import { getFirebaseConfig } from '@/src/shared/get_firebase_config';
+import { CenteredLoadingScreen } from './standard_page';
 
 interface AuthenticationGuardProps {
   children: React.ReactNode;
@@ -38,7 +39,7 @@ export function AuthenticationHandler(props: AuthenticationGuardProps) {
   });
 
   if (!loaded) {
-    return <span>Loading</span>;
+    return <CenteredLoadingScreen />;
   }
 
   return (<span>

@@ -1,5 +1,3 @@
-import { getAuth } from 'firebase/auth';
-
 import { getApiUrlBase } from '@/src/shared/get_base_url';
 
 import { BlogPostCollection } from '@/src/models/blog_collection';

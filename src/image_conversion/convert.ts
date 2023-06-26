@@ -1,10 +1,4 @@
-import wasm_heif from '@saschazar/wasm-heif';
 import { ImageOp } from '@/src/shared/image_op';
-
-import init, {
-  process_image,
-  process_rgb_data,
-} from '@/src/image_conversion/rust_image_conversion/rust_image_converter';
 import { isNullOrUndefined } from '@/src/shared/type_guards';
 
 export interface ConversionResult {
@@ -24,7 +18,11 @@ export async function processImage(
   imgOps: Record<string, ImageOp>,
   filename: string,
 ): Promise<ConversionResult[]> {
-  await init();
+  const rust_image_converter = await import(
+    '@/src/image_conversion/rust_image_conversion/rust_image_converter'
+  );
+  // await init();
+  await rust_image_converter.default();
 
   if (file.type === 'image/heic') {
     return convertHeif(file, imgOps, filename);
@@ -50,10 +48,11 @@ async function convertImage(
       image_quality: 60,
     };
 
-    const result = process_image(uint8Arr, input);
+    const rust_image_converter = await import(
+      '@/src/image_conversion/rust_image_conversion/rust_image_converter'
+    );
 
-    console.log(uint8Arr.length);
-    console.log(result.length);
+    const result = rust_image_converter.process_image(uint8Arr, input);
 
     results.push(makeConversionResult(result, filename, op, file));
   }
@@ -66,7 +65,9 @@ async function convertHeif(
   imgOps: Record<string, ImageOp>,
   filename: string,
 ): Promise<ConversionResult[]> {
-  const heifModule = await wasm_heif();
+  const wasm_heif = await import('@saschazar/wasm-heif');
+
+  const heifModule = await wasm_heif.default();
 
   const buff = await file.arrayBuffer();
   const uint8Arr = new Uint8Array(buff);
@@ -91,15 +92,17 @@ async function convertHeif(
       new_format: op.imageFormat,
       image_quality: 60,
     };
-    const result = process_rgb_data(
+
+    const rust_image_converter = await import(
+      '@/src/image_conversion/rust_image_conversion/rust_image_converter'
+    );
+
+    const result = rust_image_converter.process_rgb_data(
       decodedValue,
       dimensions.width,
       dimensions.height,
       input,
     );
-
-    console.log(decodedValue.length);
-    console.log(result.length);
 
     results.push(makeConversionResult(result, filename, op, file));
   }
@@ -116,7 +119,6 @@ function makeConversionResult(
   file: File,
 ): ConversionResult {
   const name = getFilename(filename, op, file);
-  console.log('name', name);
 
   const resultFile = new File([result], name, {
     type: getMimeType(op, file),
@@ -149,7 +151,6 @@ function getMimeType(op: ImageOp, file: File): string {
 }
 
 function getFilename(filename: string, op: ImageOp, file: File): string {
-  console.log(op.imageFormat);
   let ext = '';
   if (op.imageFormat === 'same' || op.imageFormat === undefined) {
     ext = extractExtension(file.name);

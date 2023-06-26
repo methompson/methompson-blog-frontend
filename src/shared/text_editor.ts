@@ -1,6 +1,6 @@
-import { Schema, DOMParser } from 'prosemirror-model';
+import { Schema } from 'prosemirror-model';
 import { addListNodes } from 'prosemirror-schema-list';
-import { EditorState, Transaction } from 'prosemirror-state';
+import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import {
   schema,

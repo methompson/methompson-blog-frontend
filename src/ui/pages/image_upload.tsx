@@ -77,15 +77,12 @@ export function ImageUploadPage() {
 
     const imagePromises: Promise<ConversionResult[]>[] = [];
     for (const file of fileList) {
-      console.log(file.name);
       imagePromises.push(processImage(file, imageOps, file.name));
     }
 
     try {
       const results = await Promise.all(imagePromises);
       const files = results.flat();
-
-      console.log('files', files);
 
       // files.forEach((file) => {
       //   downloadFile(file.file);
@@ -99,8 +96,6 @@ export function ImageUploadPage() {
       }
 
       const filesToUpload = files.map((file) => file.file);
-
-      console.log('filesToUpload', filesToUpload);
 
       await dispatch(actions.uploadFiles({
         files: filesToUpload,

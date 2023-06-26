@@ -1,7 +1,18 @@
-import { isString, isRecord, isStringArray, isNullOrUndefined, isUndefined } from '@/src/shared/type_guards';
-import { ValidDate, isValidDate, isValidDateString } from '@/src/shared/valid_date';
-import { InvalidInputError } from '@/src/errors/invalid_input_error';
 import MarkdownIt from 'markdown-it';
+
+import {
+  isString,
+  isRecord,
+  isStringArray,
+  isNullOrUndefined,
+  isUndefined,
+} from '@/src/shared/type_guards';
+import {
+  ValidDate,
+  isValidDate,
+  isValidDateString,
+} from '@/src/shared/valid_date';
+import { InvalidInputError } from '@/src/errors/invalid_input_error';
 
 export enum BlogStatus {
   Posted = 'posted',
@@ -129,7 +140,10 @@ export class NewBlogPost {
 
     const options: BlogPostInputOptions = {};
 
-    if (isValidDateString(input.dateUpdated) && isString(input.updateAuthorId)) {
+    if (
+      isValidDateString(input.dateUpdated) &&
+      isString(input.updateAuthorId)
+    ) {
       options.dateUpdated = new Date(input.dateUpdated);
       options.updateAuthorId = input.updateAuthorId;
     }
@@ -217,10 +231,7 @@ export class BlogPost extends NewBlogPost {
   }
 
   static forPreview(input: unknown): BlogPost {
-    if (!isRecord(input)
-      || !isString(input.title)
-      || !isString(input.body)
-    ) {
+    if (!isRecord(input) || !isString(input.title) || !isString(input.body)) {
       throw new InvalidInputError('Invalid Blog Post Input');
     }
 

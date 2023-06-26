@@ -30,7 +30,7 @@ export function StandardPage(props: StandardPageProps) {
   const isAuthLoaded = useSelector(selectors.isAuthLoaded);
 
   if (!isAuthLoaded) {
-    return <StandardPageLayout><CenteredLoadingScreen /></StandardPageLayout>;
+    return <CenteredLoadingScreen />;
   }
 
   return <StandardPageLayout>
@@ -47,7 +47,9 @@ export function CenteredStandardPage(props: StandardPageProps) {
 }
 
 export function CenteredLoadingScreen() {
-  return <div className='grow flex justify-center items-center'>
-    <LoadingSpinner />
-  </div>;
+  return <StandardPageLayout>
+    <div className='grow flex justify-center items-center'>
+      <LoadingSpinner />
+    </div>
+  </StandardPageLayout>;
 }
