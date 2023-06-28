@@ -5,6 +5,7 @@ import {
   FileListResponse,
   FileUploadRequest,
   ImageFileUploadRequest,
+  UpdateFileRequest,
 } from '@/src/api/file_api';
 
 export const fileSlice = createSlice({
@@ -40,6 +41,16 @@ const uploadFiles = createAsyncThunk<unknown, FileUploadRequest>(
   },
 );
 
+const updateFile = createAsyncThunk<unknown, UpdateFileRequest>(
+  'file/updateFile',
+  async (updateFileRequest: UpdateFileRequest): Promise<void> => {
+    const fapi = new FileAPI();
+    await fapi.updateFile(updateFileRequest);
+
+    return undefined;
+  },
+);
+
 const deleteFiles = createAsyncThunk<unknown, string[]>(
   'file/deleteFiles',
   async (filesToDelete: string[]): Promise<unknown> => {
@@ -65,5 +76,6 @@ export const fileActions = {
   getFileList,
   uploadFiles,
   uploadImages,
+  updateFile,
   deleteFiles,
 };

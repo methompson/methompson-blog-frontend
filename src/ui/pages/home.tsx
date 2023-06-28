@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 
 import { actions, AppDispatch, selectors } from '@/src/store';
 import { BlogPostCollection } from '@/src/models/blog_collection';
-import { CenteredStandardPage } from '@/src/ui/components/standard_page';
+import { CenteredLoadingScreen, CenteredStandardPage } from '@/src/ui/components/standard_page';
 import { ShortBlogCard } from '@/src/ui/components/blog_content';
 import { messengerInstance } from '@/src/shared/messenger';
 
@@ -97,13 +97,14 @@ function NoPostsBlock() {
   </h1>;
 }
 
-export function Home() {
+export function HomePage() {
   const isLoggedIn = useSelector(selectors.isLoggedIn);
 
   const dispatch = useDispatch<AppDispatch>();
 
   const [blogPosts, setBlogPosts] = useState(new BlogPostCollection({}));
   const [morePages, setMorePages] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const pageStr = useParams().page ?? '1';
   const page = getPage(pageStr);
@@ -128,8 +129,14 @@ export function Home() {
           message: `Error Receiving Blog Posts: ${e}`,
         });
       }
+
+      setLoaded(true);
     })();
   }, [dispatch, isLoggedIn, page]);
+
+  if (!loaded) {
+    return <CenteredLoadingScreen />;
+  }
 
   const blogComponents = blogPosts.sortedList.map((bp) => <ShortBlogCard key={bp.id} blogPost={bp} />);
 

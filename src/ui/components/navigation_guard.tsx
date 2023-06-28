@@ -9,7 +9,6 @@ interface AuthenticationGuardProps {
 }
 
 export function AuthenticationGuard(props: AuthenticationGuardProps) {
-  console.log('Authentication guard');
   const isLoggedIn = useSelector(selectors.isLoggedIn);
 
   if (!isLoggedIn) {

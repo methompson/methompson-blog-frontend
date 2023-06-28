@@ -7,8 +7,8 @@ import {
 import { InvalidInputError } from '@/src/errors/invalid_input_error';
 
 export interface NewFileDetailsJSON {
-  originalFilename: string;
   filename: string;
+  id: string;
   dateAdded: string;
   authorId: string;
   mimetype: string;
@@ -18,8 +18,8 @@ export interface NewFileDetailsJSON {
 
 export class NewFileDetails {
   constructor(
-    protected _originalFilename: string,
     protected _filename: string,
+    protected _id: string,
     protected _dateAdded: Date,
     protected _authorId: string,
     protected _mimetype: string,
@@ -27,11 +27,11 @@ export class NewFileDetails {
     protected _isPrivate: boolean,
   ) {}
 
-  get originalFilename(): string {
-    return this._originalFilename;
-  }
   get filename(): string {
     return this._filename;
+  }
+  get id(): string {
+    return this._id;
   }
   get dateAdded(): Date {
     return this._dateAdded;
@@ -51,8 +51,8 @@ export class NewFileDetails {
 
   toJSON(): NewFileDetailsJSON {
     return {
-      originalFilename: this.originalFilename,
       filename: this.filename,
+      id: this.id,
       dateAdded: this.dateAdded.toISOString(),
       authorId: this.authorId,
       mimetype: this.mimetype,
@@ -69,8 +69,8 @@ export class NewFileDetails {
     const dateAdded = new Date(input.dateAdded);
 
     return new NewFileDetails(
-      input.originalFilename,
       input.filename,
+      input.id,
       dateAdded,
       input.authorId,
       input.mimetype,
@@ -84,7 +84,7 @@ export class NewFileDetails {
       return false;
     }
 
-    const originalFilenameTest = isString(input.originalFilename);
+    const idTest = isString(input.id);
     const filenameTest = isString(input.filename);
     const dateAddedTest = isString(input.dateAdded);
     const authorIdTest = isString(input.authorId);
@@ -93,7 +93,7 @@ export class NewFileDetails {
     const isPrivateTest = isBoolean(input.isPrivate);
 
     return (
-      originalFilenameTest &&
+      idTest &&
       filenameTest &&
       dateAddedTest &&
       authorIdTest &&
@@ -104,51 +104,17 @@ export class NewFileDetails {
   }
 }
 
-export interface FileDetailsJSON extends NewFileDetailsJSON {
-  id: string;
-}
-
 export class FileDetails extends NewFileDetails {
-  constructor(
-    protected _id: string,
-    originalFilename: string,
-    filename: string,
-    dateAdded: Date,
-    authorId: string,
-    mimetype: string,
-    size: number,
-    isPrivate: boolean,
-  ) {
-    super(
-      originalFilename,
-      filename,
-      dateAdded,
-      authorId,
-      mimetype,
-      size,
-      isPrivate,
-    );
-  }
-
-  get id(): string {
-    return this._id;
-  }
-
-  toJSON(): FileDetailsJSON {
+  toJSON(): NewFileDetailsJSON {
     return {
       ...super.toJSON(),
-      id: this.id,
     };
   }
 
-  static fromNewFileDetails(
-    id: string,
-    fileDetails: NewFileDetails,
-  ): FileDetails {
+  static fromNewFileDetails(fileDetails: NewFileDetails): FileDetails {
     return new FileDetails(
-      id,
-      fileDetails.originalFilename,
       fileDetails.filename,
+      fileDetails.id,
       fileDetails.dateAdded,
       fileDetails.authorId,
       fileDetails.mimetype,
@@ -165,9 +131,8 @@ export class FileDetails extends NewFileDetails {
     const dateAdded = new Date(input.dateAdded);
 
     return new FileDetails(
-      input.id,
-      input.originalFilename,
       input.filename,
+      input.id,
       dateAdded,
       input.authorId,
       input.mimetype,
@@ -176,13 +141,12 @@ export class FileDetails extends NewFileDetails {
     );
   }
 
-  static isFileDetailsJSON(input: unknown): input is FileDetailsJSON {
+  static isFileDetailsJSON(input: unknown): input is NewFileDetailsJSON {
     if (!isRecord(input)) {
       return false;
     }
 
     const idTest = isString(input.id);
-    const originalFilenameTest = isString(input.originalFilename);
     const filenameTest = isString(input.filename);
     const dateAddedTest = isString(input.dateAdded);
     const authorIdTest = isString(input.authorId);
@@ -192,7 +156,6 @@ export class FileDetails extends NewFileDetails {
 
     return (
       idTest &&
-      originalFilenameTest &&
       filenameTest &&
       dateAddedTest &&
       authorIdTest &&

@@ -7,7 +7,7 @@ import { actions, AppDispatch, selectors } from '@/src/store';
 
 import { StandardPage } from '@/src/ui/components/standard_page';
 import { TextInput } from '@/src/ui/components/text_input';
-import { FullWidthButton, RegularButton } from '@/src/ui/components/regular_button';
+import { FullWidthButton } from '@/src/ui/components/regular_button';
 import { isRecord } from '@/src/shared/type_guards';
 import { messengerInstance } from '@/src/shared/messenger';
 

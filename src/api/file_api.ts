@@ -1,19 +1,14 @@
-import { FileDetails, FileDetailsJSON } from '@/src/models/file_models';
+import { FileDetails, NewFileDetailsJSON } from '@/src/models/file_models';
 
 import { getAuthToken } from '@/src/shared/auth_functions';
 import { getApiUrlBase } from '@/src/shared/get_base_url';
 import { basicHttpErrorHandling } from '@/src/shared/http_error_handling';
 import { ImageOp } from '@/src/shared/image_op';
-import {
-  isBoolean,
-  isNumber,
-  isRecord,
-  isString,
-} from '@/src/shared/type_guards';
+import { isNumber, isRecord, isString } from '@/src/shared/type_guards';
 import { DataModificationError } from '@/src/errors/blog_errors';
 
 export interface FileListResponse {
-  files: FileDetailsJSON[];
+  files: NewFileDetailsJSON[];
   totalFiles: number;
   page: number;
   pagination: number;
@@ -32,6 +27,12 @@ export interface FileUploadRequest {
   files: File[];
   isPrivate?: boolean;
   fileOps?: Record<string, FileOp>;
+}
+
+export interface UpdateFileRequest {
+  id: string;
+  filename?: string;
+  isPrivate?: boolean;
 }
 
 export class FileAPI {
@@ -131,21 +132,15 @@ export class FileAPI {
 
     const body = new FormData();
 
-    // console.log('Files', req.files);
-
     for (const file of req.files) {
       body.append('image', file);
     }
 
     body.append('ops', JSON.stringify(req.ops));
 
-    // console.log('body', body);
-
     const resp = await fetch(url, { method: 'POST', headers, body });
 
     const json = await resp.json();
-
-    // console.log(json);
 
     if (!Array.isArray(json)) {
       throw new Error('Invalid response from server');
@@ -154,6 +149,31 @@ export class FileAPI {
     const output = json.map((el) => FileDetails.fromJSON(el));
 
     return output;
+  }
+
+  async updateFile(req: UpdateFileRequest): Promise<void> {
+    const baseUrl = getApiUrlBase();
+    const url = `${baseUrl}/api/file/update`;
+
+    const token = await getAuthToken();
+    const headers = {
+      'Content-Type': 'application/json',
+      authorization: token,
+    };
+
+    const body = JSON.stringify(req);
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    const json = await resp.json();
+
+    if (!isRecord(json)) {
+      throw new Error('Invalid response from server');
+    }
   }
 
   async deleteFiles(filesToDelete: string[]) {

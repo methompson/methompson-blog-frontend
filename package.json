@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "lint:fix": "eslint \"src/**/*.ts\" --fix",
-    "lint": "eslint --fix-dry-run \"src/**/*.ts\"",
+    "lint:fix": "npx eslint --fix --ext .ts,.tsx src/",
+    "lint": "npx eslint --fix-dry-run --ext .ts,.tsx src/",
     "postinstall": "cp node_modules/@saschazar/wasm-heif/wasm_heif.wasm public/wasm_heif.wasm",
     "serve": "vite",
     "build": "tsc && vite build",
@@ -15,7 +15,7 @@
     "typescript_errors": "tsc --noEmit"
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.6",
+    "@heroicons/react": "^2.0.18",
     "@reduxjs/toolkit": "^1.8.2",
     "@saschazar/wasm-heif": "^2.0.0",
     "firebase": "^9.8.3",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
-import { XIcon } from '@heroicons/react/solid';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
 import { actions, AppDispatch, selectors } from '@/src/store';
 
@@ -170,7 +170,7 @@ function MessageCard(props: MessageCardProps) {
     <span>{props.message.message}</span>
 
     <button onClick={close}>
-      <XIcon className={iconClasses.join(' ')} />
+      <XMarkIcon className={iconClasses.join(' ')} />
     </button>
   </div>;
 }

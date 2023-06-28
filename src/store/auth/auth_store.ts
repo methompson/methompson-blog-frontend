@@ -104,13 +104,15 @@ const logOut = createAsyncThunk('auth/logOut', async () => {
 const setLogin = createAsyncThunk('auth/setLogin', async (_, thunkAPI) => {
   const token = await getAuthToken();
   thunkAPI.dispatch(authSlice.actions.setUserData());
-  const cookie = `${COOKIE_NAME}=${token}; domain=${getBaseDomain()}`;
+  const cookie = `${COOKIE_NAME}=${token}; SameSite=Strict; domain=${getBaseDomain()}`;
   document.cookie = cookie;
 });
 
 const setLogout = createAsyncThunk('auth/setLogout', async (_, thunkAPI) => {
   thunkAPI.dispatch(authSlice.actions.unsetUserData());
-  document.cookie = `${COOKIE_NAME}=; expires=${new Date(0).toUTCString()}`;
+  document.cookie = `${COOKIE_NAME}=; SameSite=Strict; expires=${new Date(
+    0,
+  ).toUTCString()}`;
 });
 
 const authActions = {

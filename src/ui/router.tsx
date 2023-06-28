@@ -5,7 +5,7 @@ import { FourOhFour } from '@/src/ui/pages/404';
 import { CenteredLoadingScreen } from './components/standard_page';
 
 export function BlogRouter() {
-  const Home = lazy(() => import('@/src/ui/pages/home').then((module) => ({ default: module.Home })));
+  const Home = lazy(() => import('@/src/ui/pages/home').then((module) => ({ default: module.HomePage })));
   const BlogPostPage = lazy(() => import('@/src/ui/pages/blog_post').then((module) => ({ default: module.BlogPostPage })));
   const LoginPage = lazy(() => import('@/src/ui/pages/login').then((module) => ({ default: module.LoginPage })));
   const DebugPage = lazy(() => import('@/src/ui/pages/debug').then((module) => ({ default: module.DebugPage })));

@@ -102,7 +102,7 @@ export function ImageUploadPage() {
         fileOps,
       }));
 
-      let successMessage = <SuccessMessage successUrl='/' />;
+      let successMessage = <SuccessMessage successUrl='/files' />;
 
       messengerInstance.addSuccessMessage({
         message: successMessage,

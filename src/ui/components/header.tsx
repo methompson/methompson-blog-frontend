@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MenuIcon } from '@heroicons/react/solid';
+import { Bars3Icon } from '@heroicons/react/24/solid';
 
 import { LargeScreenMenuList, SmallScreenMenuList } from '@/src/ui/components/menu';
 
@@ -62,7 +62,7 @@ function HeaderMenuWithButton() {
         <button onClick={() => {
           setMenuOpen(!menuOpen);
         }}>
-          <MenuIcon className='h-8 w-8 messageIcon' />
+          <Bars3Icon className='h-8 w-8 messageIcon' />
         </button>
       </span>
     </BlogHeaderContainer>

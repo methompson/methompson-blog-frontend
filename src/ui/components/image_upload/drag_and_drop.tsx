@@ -14,29 +14,9 @@ interface DragAndDropProps {
   onAddFiles: (files: File[]) => void;
 }
 
-function readFileAsBytes(file: File) {
-  const fr = new FileReader();
-  fr.addEventListener('load', () => {
-    console.log('File read');
-    console.log(fr.result);
-
-    const result = fr.result;
-    if (Array.isArray(result)) {
-      result.forEach((byte) => {
-        console.log(byte);
-      });
-    } else {
-      console.log('not an array');
-    }
-  });
-
-  fr.readAsArrayBuffer(file);
-  console.log('reading file');
-}
-
 export function DragAndDrop(props: DragAndDropProps) {
   function onDrop(ev: React.DragEvent) {
-    console.log('drop ev', ev);
+    // console.log('drop ev', ev);
     ev.preventDefault();
 
     const files: File[] = [];
@@ -45,7 +25,7 @@ export function DragAndDrop(props: DragAndDropProps) {
         const file = item.getAsFile();
 
         if (file) {
-          readFileAsBytes(file);
+          // readFileAsBytes(file);
           files.push(file);
         }
       }
@@ -78,7 +58,7 @@ export function DragAndDrop(props: DragAndDropProps) {
             className='hidden'
             accept={acceptedTypes}
             onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-              console.log('input ev', ev);
+              // console.log('input ev', ev);
               const rawFiles = ev.target.files;
 
               if (!rawFiles) {

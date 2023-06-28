@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { CheckIcon } from '@heroicons/react/solid';
+import { CheckIcon } from '@heroicons/react/24/solid';
 
 interface CheckBoxProps {
   onCheck: ((checked: boolean) => Promise<void>) | ((checked: boolean) => void);
