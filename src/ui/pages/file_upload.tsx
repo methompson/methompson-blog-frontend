@@ -13,6 +13,7 @@ import { FileItem } from '@/src/models/file_item';
 import { arrayToMap } from '@/src/shared/array_to_map';
 import { messengerInstance } from '@/src/shared/messenger';
 import { actions, AppDispatch } from '@/src/store';
+import { Link } from 'react-router-dom';
 
 function Banner() {
   return <div className='flex justify-center m-2'>
@@ -90,10 +91,10 @@ export function FileUpload() {
       }));
 
       messengerInstance.addSuccessMessage({
-        message: 'Files Uploaded Successfully',
+        message: <span>Files Uploaded Successfully. <Link to='/files'>See your file list</Link></span>,
       });
 
-      // clearFiles();
+      clearFiles();
 
     } catch (e) {
       messengerInstance.addErrorMessage({

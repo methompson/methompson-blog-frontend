@@ -35,7 +35,6 @@ export function NewPost() {
       const bp = BlogPost.fromJSON(result.payload);
 
       setShouldRedirectSlug(bp.slug);
-
     } catch (e) {
       const message = `Error Adding New Blog Post ${e}`;
       messengerInstance.addErrorMessage({
