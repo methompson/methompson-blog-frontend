@@ -95,7 +95,6 @@ export function FileUpload() {
       });
 
       clearFiles();
-
     } catch (e) {
       messengerInstance.addErrorMessage({
         message: `Error Uploading files: ${e}`,
