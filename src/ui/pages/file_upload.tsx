@@ -28,6 +28,10 @@ export function FileUpload() {
   const [files, setFiles] = useState<Record<string | number, FileItem>>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
 
+  function clearFiles() {
+    setFiles({});
+  }
+
   function addFiles(fileList: File[]) {
     const fileItems: FileItem[] = fileList.map((file) => ({
       file,
@@ -49,7 +53,6 @@ export function FileUpload() {
   }
 
   function setPrivate(id: string, isPrivate: boolean) {
-    console.log('setting prviate', id, isPrivate);
     const file = files[id];
     if (!file) {
       return;
@@ -59,8 +62,6 @@ export function FileUpload() {
       ...file,
       isPrivate,
     };
-
-    console.log('new file', newFile);
 
     setFiles({
       ...files,
@@ -89,12 +90,14 @@ export function FileUpload() {
       messengerInstance.addSuccessMessage({
         message: 'Files Uploaded Successfully',
       });
+
     } catch (e) {
       messengerInstance.addErrorMessage({
         message: `Error Uploading files: ${e}`,
       });
     }
 
+    clearFiles();
     setSubmitting(false);
   }
 

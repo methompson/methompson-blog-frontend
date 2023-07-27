@@ -1,8 +1,8 @@
-import { diffBg } from '@/src/ui/components/file_upload/common_themes';
 import { FileItem } from '@/src/models/file_item';
+import { CheckBox } from '@/src/ui/components/check_box';
+import { diffBg } from '@/src/ui/components/file_upload/common_themes';
 import { TrashCanButton } from '@/src/ui/components/icon_buttons';
 import { isNullOrUndefined } from '@/src/shared/type_guards';
-import { CheckBox } from '../check_box';
 
 interface FileRowProps {
   file: FileItem;

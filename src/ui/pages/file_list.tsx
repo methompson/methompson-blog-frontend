@@ -2,50 +2,47 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
 
-import { actions, AppDispatch, selectors } from '@/src/store';
+import { UpdateFileRequest } from '@/src/api/file_api';
+import { FileDetails } from '@/src/models/file_models';
+
+import { arrayToMap } from '@/src/shared/array_to_map';
 import { getFileSize, shortUnitName } from '@/src/shared/file_size';
 import { getApiUrlBase } from '@/src/shared/get_base_url';
 import { messengerInstance } from '@/src/shared/messenger';
-import { FileDetails } from '@/src/models/file_models';
+import { isNullOrUndefined } from '@/src/shared/type_guards';
+import { actions, AppDispatch, selectors } from '@/src/store';
 
 import { diffBg } from '@/src/ui/components/file_upload/common_themes';
-import { AuthenticationGuard } from '@/src/ui/components/navigation_guard';
-import { CenteredLoadingScreen, StandardPage } from '@/src/ui/components/standard_page';
-import { EditButton, LinkButton, TrashCanButton } from '@/src/ui/components/icon_buttons';
 import { CheckBox } from '@/src/ui/components/check_box';
+import { EditButton, LinkButton, TrashCanButton } from '@/src/ui/components/icon_buttons';
+import { AuthenticationGuard } from '@/src/ui/components/navigation_guard';
 import { RegularButton } from '@/src/ui/components/regular_button';
-import { isNullOrUndefined } from '@/src/shared/type_guards';
+import { CenteredLoadingScreen, StandardPage } from '@/src/ui/components/standard_page';
 import { TextInput } from '@/src/ui/components/text_input';
-import { UpdateFileRequest } from '@/src/api/file_api';
 
 export function FileListPage() {
   const isLoggedIn = useSelector(selectors.isLoggedIn);
   const dispatch = useDispatch<AppDispatch>();
 
-  const [filesList, setFilesList] = useState<FileDetails[]>([]);
+  const [filesMap, setFilesMap] = useState<Record<string, FileDetails>>({});
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
 
   const getFileList = useCallback(async () => {
     try {
       const result = dispatch(actions.getFileList({}));
       const payload = await result.unwrap();
 
-      const files = payload.files.map((f) => FileDetails.fromJSON(f));
-      setFilesList(files);
+      const filesList = payload.files.map((f) => FileDetails.fromJSON(f));
+      const files = arrayToMap(filesList, (f) => f.id);
+
+      setFilesMap(files);
     } catch (e) {
       messengerInstance.addErrorMessage({
         message: `Error Receiving File List: ${e}`,
       });
     }
-  }, [dispatch, setFilesList]);
-
-  const updateFile = async (request: UpdateFileRequest) => {
-    const result = await dispatch(actions.updateFile(request));
-
-    await getFileList();
-  };
+  }, [dispatch, setFilesMap]);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -58,19 +55,40 @@ export function FileListPage() {
     })();
   }, [getFileList, isLoggedIn]);
 
-  const onDelete = (id: string) => {
-    setReloadKey(reloadKey + 1);
+  async function updateFile(request: UpdateFileRequest) {
+    const result = await dispatch(actions.updateFile(request));
+
+    await getFileList();
+  };
+
+  async function onDelete(id: string) {
+    try {
+      const result = dispatch(actions.deleteFiles([id]));
+      await result.unwrap();
+
+      const files = {...filesMap};
+      delete files[id];
+      setFilesMap(files);
+
+      await getFileList();
+    } catch(e) {
+      messengerInstance.addErrorMessage({
+        message: 'Error Deleting file',
+      });
+    }
   };
 
   if (!isLoaded) {
     return <CenteredLoadingScreen />;
   }
 
+  const files = Object.values(filesMap).sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime());
+
   return (
     <AuthenticationGuard>
       <StandardPage>
       <FileList
-        files={filesList}
+        files={files}
         onDelete={onDelete}
         updateFile={updateFile}/>
       </StandardPage>
@@ -142,7 +160,7 @@ function FileEditModal(props: FileEditModalProps) {
 
 interface FileRowProps {
   file: FileDetails;
-  onDelete?: (id: string) => void | Promise<void>
+  onDelete?: (id: string) => Promise<void>
   onEdit?: (id: string) => void | Promise<void>
 }
 
@@ -178,15 +196,7 @@ function FileRow(props: FileRowProps) {
 
     setIsDeleting(true);
 
-    try {
-      const result = dispatch(actions.deleteFiles([props.file.id]));
-      await result.unwrap();
-      props.onDelete?.(props.file.id);
-    } catch(e) {
-      messengerInstance.addErrorMessage({
-        message: 'Error Deleting file',
-      });
-    }
+   await props.onDelete?.(props.file.id);
 
     setIsDeleting(false);
   };
@@ -218,7 +228,7 @@ function FileRow(props: FileRowProps) {
 
 interface FileListProps {
   files: FileDetails[];
-  onDelete?: (id: string) => void | Promise<void>;
+  onDelete?: (id: string) => Promise<void>;
   updateFile?: (request: UpdateFileRequest) => void | Promise<void>;
 }
 
