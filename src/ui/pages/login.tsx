@@ -61,6 +61,7 @@ export function LoginPage() {
             <h1 className='text-2xl font-extrabold pb-2'>Log In</h1>
             <div className={commonClasses + divClasses}>
               <TextInput
+                type={'email'}
                 value={email}
                 placeholder='Email'
                 onKeyUp={onEnter}

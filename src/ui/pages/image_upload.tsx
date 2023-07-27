@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,12 +9,12 @@ import { messengerInstance } from '@/src/shared/messenger';
 import { actions, AppDispatch } from '@/src/store';
 import { AuthenticationGuard } from '@/src/ui/components/navigation_guard';
 
-import { DragAndDrop } from '@/src/ui/components/image_upload/drag_and_drop';
-import { FileItem } from '@/src/ui/components/image_upload/file_item';
-import { FilesTable } from '@/src/ui/components/image_upload/files_table';
-import { UploadButton, SubtmittingButton } from '@/src/ui/components/image_upload/upload_button';
-import { AddImageOps } from '@/src/ui/components/image_upload/add_image_ops';
-import { ImageOpsTable } from '@/src/ui/components/image_upload/image_ops_table';
+import { DragAndDrop } from '@/src/ui/components/file_upload/drag_and_drop';
+import { FileItem } from '@/src/models/file_item';
+import { FilesTable } from '@/src/ui/components/file_upload/files_table';
+import { UploadButton, SubtmittingButton } from '@/src/ui/components/file_upload/upload_button';
+import { AddImageOps } from '@/src/ui/components/file_upload/add_image_ops';
+import { ImageOpsTable } from '@/src/ui/components/file_upload/image_ops_table';
 import { ConversionResult, processImage } from '@/src/image_conversion/convert';
 import { FileOp } from '@/src/api/file_api';
 
@@ -31,6 +31,15 @@ function SuccessMessage(props: {successUrl: string}) {
 }
 
 export function ImageUploadPage() {
+  const acceptedImageTypes = [
+    'image/png',
+    'image/jpeg',
+    'image/gif',
+    'image/heic',
+    'image/bmp',
+    'image/tiff',
+  ];
+
   const dispatch = useDispatch<AppDispatch>();
 
   const [files, setFiles] = useState<FileItem[]>([]);
@@ -138,7 +147,9 @@ export function ImageUploadPage() {
       <CenteredStandardPage>
         <div id='imageUploadContainer' className='my-5'>
           <Banner />
-          <DragAndDrop onAddFiles={addFiles}/>
+          <DragAndDrop
+            onAddFiles={addFiles}
+            acceptedTypes={acceptedImageTypes}/>
           <span className={showRest}>
             <FilesTable
               files={files}

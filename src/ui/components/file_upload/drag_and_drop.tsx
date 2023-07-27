@@ -1,17 +1,10 @@
-import { diffBg, dropShadow } from '@/src/ui/components/image_upload/common_themes';
+import { isNullOrUndefined } from '@/src/shared/type_guards';
+import { diffBg, dropShadow } from '@/src/ui/components/file_upload/common_themes';
 import { RegularButton } from '@/src/ui/components/regular_button';
-
-const acceptedImageTypes = [
-  'image/png',
-  'image/jpeg',
-  'image/gif',
-  'image/heic',
-  'image/bmp',
-  'image/tiff',
-];
 
 interface DragAndDropProps {
   onAddFiles: (files: File[]) => void;
+  acceptedTypes?: string[];
 }
 
 export function DragAndDrop(props: DragAndDropProps) {
@@ -19,9 +12,14 @@ export function DragAndDrop(props: DragAndDropProps) {
     // console.log('drop ev', ev);
     ev.preventDefault();
 
+    const acceptedTypes = props.acceptedTypes;
+
     const files: File[] = [];
     for (const item of ev.dataTransfer.items) {
-      if (acceptedImageTypes.includes(item.type)) {
+      if (
+        (!isNullOrUndefined(acceptedTypes) && acceptedTypes.includes(item.type))
+        || isNullOrUndefined(acceptedTypes)
+      ) {
         const file = item.getAsFile();
 
         if (file) {
@@ -39,7 +37,7 @@ export function DragAndDrop(props: DragAndDropProps) {
     ev.preventDefault();
   };
 
-  const acceptedTypes = acceptedImageTypes.reduce(
+  const acceptedTypes = (props.acceptedTypes || []).reduce(
     (acc, val) => `${acc},${val}`,
     '',
   ).slice(1);
@@ -49,7 +47,7 @@ export function DragAndDrop(props: DragAndDropProps) {
       <div className={`${diffBg} ${dropShadow} flex flex-col items-center py-4 px-20 rounded-lg select-none`}>
         <span>Drag And Drop</span>
         <span>or</span>
-        <span>Hit Add File</span>
+        <span>Click Add File</span>
       </div>
       <span className='text-center mt-2'>
         <label>
@@ -58,7 +56,6 @@ export function DragAndDrop(props: DragAndDropProps) {
             className='hidden'
             accept={acceptedTypes}
             onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-              // console.log('input ev', ev);
               const rawFiles = ev.target.files;
 
               if (!rawFiles) {

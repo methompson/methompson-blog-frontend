@@ -1,4 +1,4 @@
-import { diffBg, dropShadow } from '@/src/ui/components/image_upload/common_themes';
+import { diffBg, dropShadow } from '@/src/ui/components/file_upload/common_themes';
 import { RegularButton } from '@/src/ui/components/regular_button';
 
 interface UploadButtonProps {
@@ -10,7 +10,7 @@ export function UploadButton(props: UploadButtonProps) {
   return <div id='uploadingButton' className='text-center'>
     <RegularButton
       disabled={!props.enabled}
-      text='Upload Images'
+      text='Upload Files'
       classes={`${dropShadow} text-xl font-bold`}
       action={props.action} />
   </div>;

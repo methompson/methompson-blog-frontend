@@ -1,10 +1,14 @@
-import { diffBg } from '@/src/ui/components/image_upload/common_themes';
-import { FileItem } from '@/src/ui/components/image_upload/file_item';
+import { diffBg } from '@/src/ui/components/file_upload/common_themes';
+import { FileItem } from '@/src/models/file_item';
 import { TrashCanButton } from '@/src/ui/components/icon_buttons';
+import { isNullOrUndefined } from '@/src/shared/type_guards';
+import { CheckBox } from '../check_box';
 
 interface FileRowProps {
   file: FileItem;
-  deleteFile: (id: string) => void
+  deleteFile: (id: string) => void;
+  setPrivate?: (id: string, isPrivate: boolean) => void;
+  showPrivate: boolean;
 }
 
 function FileRow(props: FileRowProps) {
@@ -23,9 +27,20 @@ function FileRow(props: FileRowProps) {
     }
   }
 
+  const privateCheck = props.showPrivate && props.setPrivate ?
+    <td>
+      <CheckBox
+        startingValue={props.file.private ?? true}
+        onCheck={(checked: boolean) => {
+          props.setPrivate?.(props.file.id, checked);
+        }}/>
+    </td>
+    : null;
+
   return <tr>
     <td>{props.file.file.name}</td>
     <td>{`${showSize.toFixed(2)} ${showUnit}`}</td>
+    {privateCheck}
     <td><button><TrashCanButton onClick={() => {
       props.deleteFile(props.file.id);
     }} /></button></td>
@@ -35,28 +50,41 @@ function FileRow(props: FileRowProps) {
 interface FilesTableProps {
   files: FileItem[],
   deleteFile: (id: string) => void
+  setPrivate?: (id: string, isPrivate: boolean) => void;
+  showPrivate?: boolean;
 }
 
 export function FilesTable(props: FilesTableProps) {
+  const showPrivate = props.showPrivate === true && !isNullOrUndefined(props.setPrivate);
+
   const fileRows = props.files.map(
     (file) => <FileRow
+      showPrivate={showPrivate}
+      setPrivate={props.setPrivate}
       key={file.id}
       file={file}
       deleteFile={props.deleteFile}/>);
+
+  const privateColumn = showPrivate ?
+    <th>Private</th> :
+    null;
+
+  const colSpan = showPrivate ? 4 : 3;
 
   return <div id='filesTable' className='flex justify-center m-2 fileTable'>
     <table className='table-auto w-full text-sm'>
       <thead className={diffBg}>
         <tr>
-          <th colSpan={3}>
+          <th colSpan={colSpan}>
             <h1 className='text-lg font-bold'>
               Files
             </h1>
           </th>
         </tr>
         <tr className='tableLeft'>
-          <th>Image Name</th>
+          <th>File Name</th>
           <th>Size</th>
+          {privateColumn}
           <th></th>
         </tr>
       </thead>

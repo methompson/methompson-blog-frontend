@@ -58,8 +58,6 @@ module.exports = {
   rules: {
     semi: 'off',
     eqeqeq: ['error'],
-    'no-trailing-spaces': ['error', {}],
-    'no-multi-spaces': 'error',
     'react/jsx-filename-extension': [
       2,
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },

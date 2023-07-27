@@ -15,6 +15,7 @@ export function BlogRouter() {
   const BudgetPage = lazy(() => import('@/src/ui/pages/budget').then((module) => ({ default: module.BudgetPage })));
   const UpdatePostPage = lazy(() => import('@/src/ui/pages/update_post').then((module) => ({ default: module.UpdatePostPage })));
   const DashboardPage = lazy(() => import('@/src/ui/pages/dashboard').then((module) => ({ default: module.DashboardPage })));
+  const FileUploadPage = lazy(() => import('@/src/ui/pages/file_upload').then((module) => ({ default: module.FileUpload })));
 
   return (
     <Suspense fallback={<CenteredLoadingScreen />}>
@@ -31,7 +32,8 @@ export function BlogRouter() {
           <Route path='/posts/:page' element={<Home />} />
           <Route path='/post/:slug' element={<BlogPostPage />} />
           <Route path='/update/:slug' element={<UpdatePostPage />} />
-          <Route path='/upload_image' element={<ImageUploadPage />} />
+          <Route path='/image_upload' element={<ImageUploadPage />} />
+          <Route path='/file_upload' element={<FileUploadPage />} />
           <Route path='*' element={<FourOhFour />} />
         </Routes>
       </span>

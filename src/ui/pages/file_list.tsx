@@ -8,7 +8,7 @@ import { getApiUrlBase } from '@/src/shared/get_base_url';
 import { messengerInstance } from '@/src/shared/messenger';
 import { FileDetails } from '@/src/models/file_models';
 
-import { diffBg } from '@/src/ui/components/image_upload/common_themes';
+import { diffBg } from '@/src/ui/components/file_upload/common_themes';
 import { AuthenticationGuard } from '@/src/ui/components/navigation_guard';
 import { CenteredLoadingScreen, StandardPage } from '@/src/ui/components/standard_page';
 import { EditButton, LinkButton, TrashCanButton } from '@/src/ui/components/icon_buttons';

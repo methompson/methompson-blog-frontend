@@ -22,8 +22,8 @@ export function DashboardPage() {
             <li>Blog List</li>
             <li><Link to='/new_post' className={linkClasses}>Add a New Blog Post</Link></li>
             <li><Link to='/files' className={linkClasses}>Files List</Link></li>
-            <li><Link to='/upload_image' className={linkClasses}>Upload an Image</Link></li>
-            <li>Upload a File</li>
+            <li><Link to='/image_upload' className={linkClasses}>Upload an Image</Link></li>
+            <li><Link to='/file_upload' className={linkClasses}>Upload a File</Link></li>
             <li><Link to='/debug' className={linkClasses}>Debug Menu</Link></li>
           </ul>
         </div>

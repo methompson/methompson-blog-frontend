@@ -1,6 +1,6 @@
 import { ImageOp } from '@/src/shared/image_op';
 import { isNullOrUndefined } from '@/src/shared/type_guards';
-import { diffBg } from '@/src/ui/components/image_upload/common_themes';
+import { diffBg } from '@/src/ui/components/file_upload/common_themes';
 import { TrashCanButton } from '@/src/ui/components/icon_buttons';
 
 interface ImageOpsTableProps {
