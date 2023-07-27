@@ -58,15 +58,17 @@ export function FileUpload() {
       return;
     }
 
-    const newFile = {
+    const newFile: FileItem = {
       ...file,
-      isPrivate,
+      private: isPrivate,
     };
 
-    setFiles({
+    const newFiles = {
       ...files,
       [id]: newFile,
-    });
+    };
+
+    setFiles(newFiles);
   }
 
   async function uploadFiles() {
@@ -91,13 +93,14 @@ export function FileUpload() {
         message: 'Files Uploaded Successfully',
       });
 
+      // clearFiles();
+
     } catch (e) {
       messengerInstance.addErrorMessage({
         message: `Error Uploading files: ${e}`,
       });
     }
 
-    clearFiles();
     setSubmitting(false);
   }
 
