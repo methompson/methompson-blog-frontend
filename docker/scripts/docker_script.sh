@@ -62,6 +62,10 @@ uploadImage() {
   docker push $registryUrl/$appName
 }
 
+registryLogin() {
+  docker login docker.kakomu.com --username methompson
+}
+
 showContainerLogs() {
   docker logs $appName
 }
@@ -99,6 +103,7 @@ containerRunningMenu() {
   printf "7. Build and Export %s for AMD64 architecture\n" $appName
   printf "8. Upload %s to registry\n" $appName
   printf "9. Build, Export, and Upload %s to registry\n" $appName
+  printf "10. Login to registry\n"
   printf "Any other key exits\n"
   read -p "Select: " selection
 
@@ -133,6 +138,9 @@ containerRunningMenu() {
     buildAMD64Container
     exportContainer
     uploadImage
+  elif [[ $selection == 10 ]]
+  then
+    registryLogin
   else
     printf "Exiting\n\n"
     exit 1
@@ -147,6 +155,7 @@ containerNotRunningMenu() {
   printf "4. Build and Export %s for AMD64 architecture\n" $appName
   printf "5. Upload %s to registry\n" $appName
   printf "6. Build, Export, and Upload %s to registry\n" $appName
+  printf "7. Login to registry\n"
   printf "Any other key exits\n"
   read -p "Select: " selection
 
@@ -172,6 +181,9 @@ containerNotRunningMenu() {
     buildAMD64Container
     exportContainer
     uploadImage
+  elif [[ $selection == 7 ]]
+  then
+    registryLogin
   else
     printf "Exiting\n\n"
     exit 1

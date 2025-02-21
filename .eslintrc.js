@@ -100,17 +100,15 @@ module.exports = {
     'max-classes-per-file': 'off',
     strict: 'off',
     camelcase: 'off',
-    'no-console': 'warn',
+    'no-console': 'off',
     'import/no-extraneous-dependencies': 'off',
     'no-restricted-imports': [
       'warn',
       {
-        'patterns': [
+        patterns: [
           {
-            'group': [
-              '../*',
-            ],
-            'message': 'Usage of relative parent imports is not allowed.',
+            group: ['../*'],
+            message: 'Usage of relative parent imports is not allowed.',
           },
         ],
       },
