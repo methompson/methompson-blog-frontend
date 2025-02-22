@@ -1,0 +1,14 @@
+{
+  "name": "rust_image_converter",
+  "version": "0.1.0",
+  "files": [
+    "rust_image_converter_bg.wasm",
+    "rust_image_converter.js",
+    "rust_image_converter.d.ts"
+  ],
+  "module": "rust_image_converter.js",
+  "types": "rust_image_converter.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

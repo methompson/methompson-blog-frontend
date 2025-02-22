@@ -7,7 +7,7 @@ import { App } from './app';
 import '@/src/ui/css/index.css';
 import '@/src/ui/css/styles.css';
 
-console.log('Main.tsx loaded, version 2025-02-21');
+console.log('Main.tsx loaded, version 2025-02-21 / 2');
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
