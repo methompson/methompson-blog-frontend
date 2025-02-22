@@ -1,5 +1,5 @@
 appName=methompson_blog_frontend
-registryUrl=docker.kakomu.com
+registryUrl=con.kakomu.com
 
 compileApp() {
   rm -rf dist
@@ -63,7 +63,7 @@ uploadImage() {
 }
 
 registryLogin() {
-  docker login docker.kakomu.com --username methompson
+  docker login $registryUrl --username methompson
 }
 
 showContainerLogs() {
