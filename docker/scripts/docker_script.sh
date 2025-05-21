@@ -190,7 +190,70 @@ containerNotRunningMenu() {
   fi
 }
 
+openShell() {
+  docker exec -it $appName sh
+}
+
+showHelp() {
+  printf "%s server management script. This script can Start, Stop and Restart the docker container for %s and show or tail logs.
+  Several command line arguments exist for easier access:
+
+  --start - Starts the container, if it's not running
+  --restart - Restarts the container if it's running and starts the container if it's not running.
+  --stop - Stops the container if it's running
+  --shell - Opens a shell in the running container
+  --logs - Displays the logs for the container
+  --follow - Tails the logs for the container. This must be used after the '--logs' argument
+  \n" $appName $appName
+}
+
 isContainerRunning
 containerRunning=$?
 
 getUserInput
+
+if [[ $1 == "--restart" && $containerRunning == 1 ]]
+then
+  restartContainer
+
+elif [[ $1 == "--restart" ]]
+then
+  startContainer
+
+elif [[ $1 == "--start" && $containerRunning == 1 ]]
+then
+  printf "Container already started\n"
+  exit 0
+
+elif [[ $1 == "--start" ]]
+then
+  startContainer
+
+elif [[ $1 == "--stop" && $containerRunning == 0 ]]
+then
+  printf "Container already stopped\n"
+  exit 0
+
+elif [[ $1 == "--stop" ]]
+then
+  stopContainer
+
+elif [[ $1 == "--logs" && $2 == "--follow" ]]
+then
+  tailContainerLogs
+
+elif [[ $1 == "--logs" ]]
+then
+  showContainerLogs
+
+elif [[ $1 == "--shell" ]]
+then
+  openShell
+
+elif [[ $1 == "--help" || $1 == "-h" ]]
+then
+  showHelp
+
+else
+  getUserInput
+fi
