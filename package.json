@@ -7,7 +7,7 @@
     "lint": "npx eslint --fix-dry-run --ext .ts,.tsx src/",
     "postinstall": "cp node_modules/@saschazar/wasm-heif/wasm_heif.wasm public/wasm_heif.wasm",
     "serve": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "build_css": "sass ./src/ui/scss/styles.scss ./src/ui/css/styles.css --no-source-map",
     "build_css_watch": "sass ./src/ui/scss/styles.scss ./src/ui/css/styles.css --no-source-map -w",

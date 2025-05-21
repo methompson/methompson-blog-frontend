@@ -210,8 +210,6 @@ showHelp() {
 isContainerRunning
 containerRunning=$?
 
-getUserInput
-
 if [[ $1 == "--restart" && $containerRunning == 1 ]]
 then
   restartContainer
